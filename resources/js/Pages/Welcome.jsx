@@ -4,7 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import NavBar from "@/Layouts/NavBar";
 import { Head } from "@inertiajs/react";
-import WorkStation from "@/Components/WorkStation";
 import ChatBot from "../Pages/ChatBot/ChatBot";
 import HeroSection from "../Components/HeroSection";
 import Header from "../Components/Header";
@@ -18,76 +17,54 @@ const Testimonials = lazy(() => import("@/Components/Testimonials"));
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
+  // References for animations
+  const welcomeRef = useRef(null);
   const featureSectionsRef = useRef(null);
   const aboutUsRef = useRef(null);
   const testimonialsRef = useRef(null);
 
+  // State tracking for sequential animations
+  const [isWelcomeRefLoaded, setIsWelcomeRefLoaded] = useState(false);
   const [isFeatureSectionsLoaded, setIsFeatureSectionsLoaded] = useState(false);
   const [isAboutUsLoaded, setIsAboutUsLoaded] = useState(false);
 
   useEffect(() => {
-    // Animation for Featuresections
-    if (featureSectionsRef.current) {
-      gsap.fromTo(
-        featureSectionsRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: featureSectionsRef.current,
-            start: "top 80%",
-            end: "bottom 50%",
-            toggleActions: "play none none none",
-          },
-          onComplete: () => setIsFeatureSectionsLoaded(true),
-        }
-      );
-    }
+    const animateElement = (ref, onComplete) => {
+      if (ref.current) {
+        gsap.fromTo(
+          ref.current,
+          { opacity: 0, y: 0 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 3,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ref.current,
+              start: "top 80%",
+              end: "bottom 50%",
+              toggleActions: "play none none none",
+            },
+            onComplete,
+          }
+        );
+      }
+    };
 
-    // Animation for About Us
-    if (aboutUsRef.current && isFeatureSectionsLoaded) {
-      gsap.fromTo(
-        aboutUsRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: aboutUsRef.current,
-            start: "top 80%",
-            end: "bottom 50%",
-            toggleActions: "play none none none",
-          },
-          onComplete: () => setIsAboutUsLoaded(true),
-        }
-      );
-    }
+    // Animate Welcome Section
+    animateElement(welcomeRef, () => setIsWelcomeRefLoaded(true));
 
-    // Animation for Testimonials
-    if (testimonialsRef.current && isAboutUsLoaded) {
-      gsap.fromTo(
-        testimonialsRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: testimonialsRef.current,
-            start: "top 80%",
-            end: "bottom 50%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
-  }, [isFeatureSectionsLoaded, isAboutUsLoaded]);
+    // Animate Featuresections after Welcome animation completes
+    if (isWelcomeRefLoaded)
+      animateElement(featureSectionsRef, () => setIsFeatureSectionsLoaded(true));
+
+    // Animate About Us after Featuresections animation completes
+    if (isFeatureSectionsLoaded)
+      animateElement(aboutUsRef, () => setIsAboutUsLoaded(true));
+
+    // Animate Testimonials after About Us animation completes
+    if (isAboutUsLoaded) animateElement(testimonialsRef);
+  }, [isWelcomeRefLoaded, isFeatureSectionsLoaded, isAboutUsLoaded]);
 
   return (
     <>
@@ -96,29 +73,49 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
         <meta name="description" content="Your Personal CyrBot." />
       </Head>
       <NavBar>
-        {/* Top Section with Background, Header, and HeroSection */}
-        <div className="w-full">
-          <Background />
-          <section className="flex">
-          <Header />
-          <HeroSection />
-          </section>
-        </div>
+        {/* Global Background */}
+        <Background
+          className="fixed"
+          backgrounds={[
+            "/img/landing/global-bg-one.png",
+          ]}
+        />
+
+        {/* Top Section 1 - Welcome */}
+        <section
+          ref={welcomeRef}
+          className="relative w-full min-h-screen  flex flex-col sm:flex-row-reverse justify-between items-center px-4 sm:px-12 lg:px-24 gap-x-4 sm:gap-x-8 lg:gap-x-16"
+        >
+          {/* Header Section */}
+          <div className="w-full sm:w-1/2 flex justify-end">
+            <Header />
+          </div>
+          {/* Hero Section */}
+          <div className="w-full sm:w-1/2 flex justify-start">
+            <HeroSection />
+          </div>
+        </section>
+
+{/* Top Section 2 - Featuresections with its own background */}
+
+<section
+  ref={featureSectionsRef}
+  className="relative w-full min-h-screen overflow-hidden"
+>
+  {/* Gradient Background Container */}
+ 
+  <Suspense fallback={<div>Loading Featuresections...</div>}>
+    <Featuresections />
+  </Suspense>
+</section>
 
         {/* Main Content */}
-        <div className="relative bg-none bg-transparent">
-          <main className="relative container mx-auto z-10">
-            {/* Featuresections Component */}
-            <div ref={featureSectionsRef}>
-              <Suspense fallback={<div>Loading Featuresections...</div>}>
-                <Featuresections />
-              </Suspense>
-            </div>
-
+        <div className="relative bg-transparent">
+          <main className="relative container mx-auto z-10 px-4 sm:px-12 lg:px-24">
             {/* FeatureAboutUs Component */}
             {isFeatureSectionsLoaded && (
               <div ref={aboutUsRef}>
-                <Suspense fallback={<div>Loading About Us...</div>}>
+                <Suspense fallback={<div>Loading Feature About Us...</div>}>
                   <FeatureAboutUs />
                 </Suspense>
               </div>
