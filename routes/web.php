@@ -36,14 +36,21 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });
 
-Route::prefix('/')->group(function () {
-    Route::get('dashboard', [PageController::class, 'dashboard'])->name('dashboard');
-    Route::get('private-equity', [PageController::class, 'privateEquity'])->name('private-equity');
-    Route::get('real-estate', [PageController::class, 'realEstate'])->name('real-estate');
-    Route::get('about-us', [PageController::class, 'about'])->name('about-us');
-    Route::get('contact', [PageController::class, 'contact'])->name('contact');
-});
+// Public Pages
 
+Route::get('{page}', [PageController::class, 'renderPage'])
+    ->where('page', 'about|contact|real-estate|private-equity')
+    ->name('dynamic.page');
+
+Route::prefix('{page}')
+    ->whereIn('page', ['contact', 'real-estate', 'private-equity']) // Exclude static pages
+    ->group(function () {
+        Route::post('store', [PageController::class, 'store'])->name('page.store');
+        Route::get('{id}', [PageController::class, 'show'])->name('page.show');
+        Route::get('{id}/edit', [PageController::class, 'edit'])->name('page.edit');
+        Route::put('{id}', [PageController::class, 'update'])->name('page.update');
+        Route::delete('{id}', [PageController::class, 'destroy'])->name('page.destroy');
+    });
 // Chatbot and Cookie Consent
 Route::view('/cookie-consent-html', 'vendor.cookie-consent.dialogContents');
 Route::post('/chat', [ChatbotController::class, 'handleChat'])->name('api.chat');

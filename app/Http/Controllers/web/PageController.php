@@ -3,32 +3,91 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\web\ContactController;
+use App\Http\Controllers\web\PrivateEquityController;
+use App\Http\Controllers\web\RealEstateController;
 use Inertia\Inertia;
+use Inertia\Response;
+use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public function dashboard()
+    /**
+     * Render a static page dynamically.
+     */
+    public function renderPage(string $page): Response
     {
-        return Inertia::render('nav/Dashboard/Dashboard');
+        return match ($page) {
+            'private-equity' => app(PrivateEquityController::class)->index(),
+            'contact' => app(ContactController::class)->index(),
+            'real-estate' => app(RealEstateController::class)->index(),
+            'about' => Inertia::render("nav/About/About"),
+            default => abort(404),
+        };
     }
 
-    public function privateEquity()
+    /**
+     * Handle form store dynamically.
+     */
+    public function store(Request $request, string $page)
     {
-        return Inertia::render('nav/PrivateEquity/PrivateEquity');
+        return match ($page) {
+            'private-equity' => app(PrivateEquityController::class)->store($request),
+            'contact' => app(ContactController::class)->store($request),
+            'real-estate' => app(RealEstateController::class)->store($request),
+            default => abort(404),
+        };
     }
 
-    public function realEstate()
+    /**
+     * Show specific item.
+     */
+    public function show(string $page, int $id): Response
     {
-        return Inertia::render('nav/RealEstate/RealEstate');
+        return match ($page) {
+            'private-equity' => app(PrivateEquityController::class)->show($id),
+            'contact' => app(ContactController::class)->show($id),
+            'real-estate' => app(RealEstateController::class)->show($id),
+            default => abort(404),
+        };
     }
 
-    public function about()
+    /**
+     * Edit item dynamically.
+     */
+    public function edit(string $page, int $id): Response
     {
-        return Inertia::render('nav/About/About');
+        return match ($page) {
+            'private-equity' => app(PrivateEquityController::class)->edit($id),
+            'contact' => app(ContactController::class)->edit($id),
+            'real-estate' => app(RealEstateController::class)->edit($id),
+            default => abort(404),
+        };
     }
 
-    public function contact()
+    /**
+     * Update an item dynamically.
+     */
+    public function update(Request $request, string $page, int $id)
     {
-        return Inertia::render('nav/Contact/Contact');
+        return match ($page) {
+            'private-equity' => app(PrivateEquityController::class)->update($request, $id),
+            'contact' => app(ContactController::class)->update($request, $id),
+            'real-estate' => app(RealEstateController::class)->update($request, $id),
+            default => abort(404),
+        };
+    }
+
+    /**
+     * Delete an item dynamically.
+     */
+    public function destroy(string $page, int $id)
+    {
+        return match ($page) {
+            'private-equity' => app(PrivateEquityController::class)->destroy($id),
+            'contact' => app(ContactController::class)->destroy($id),
+            'real-estate' => app(RealEstateController::class)->destroy($id),
+            default => abort(404),
+        };
     }
 }

@@ -76,7 +76,7 @@ const navigation = {
 
 export default function Footer() {
     return (
-        <footer className="backdrop-blur">
+        <footer className="bg-none dark:bg-[#5B1FAD] bg-opacity-50 dark:bg-opacity-10 backdrop-blur-3xl">
             <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     <ApplicationLogo />

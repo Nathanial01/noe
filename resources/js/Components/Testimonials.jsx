@@ -1,16 +1,16 @@
 export default function Testimonials() {
     const testimonials = [
       {
-        logo: "https://tailwindui.com/plus/img/logos/tuple-logo-white.svg",
+        logo: "https://tailwindui.com/plus-assets/img/logos/tuple-logo-white.svg",
         text: `“Amet amet eget scelerisque tellus sit neque faucibus non eleifend. Integer eu praesent at a. Ornare
                 arcu gravida natoque erat et cursus tortor consequat at. Vulputate gravida sociis enim nullam
                 ultricies habitant malesuada lorem ac. Tincidunt urna dui pellentesque sagittis.”`,
-        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+        image: "//images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
         name: "Judith Black",
         role: "CEO of Tuple",
       },
       {
-        logo: "https://tailwindui.com/plus/img/logos/reform-logo-white.svg",
+        logo: "https://tailwindui.com/plus-assets/img/logos/reform-logo-white.svg",
         text: `“Excepteur veniam labore ullamco eiusmod. Pariatur consequat proident duis dolore nulla veniam
                 reprehenderit nisi officia voluptate incididunt exercitation exercitation elit. Nostrud veniam sint
                 dolor nisi ullamco.”`,
@@ -18,9 +18,9 @@ export default function Testimonials() {
         name: "Joseph Rodriguez",
         role: "CEO of Reform",
       },
-    
+
     ];
-  
+
     return (
       <section className="bg-transparent backdrop-blur py-24 sm:py-32 mt-24 mb-96">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
