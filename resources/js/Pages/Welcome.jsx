@@ -84,7 +84,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
         {/* Top Section 1 - Welcome */}
         <section
           ref={welcomeRef}
-          className="relative w-full min-h-screen  flex flex-col sm:flex-row-reverse justify-between items-center px-4 sm:px-12 lg:px-24 gap-x-4 sm:gap-x-8 lg:gap-x-16"
+          className="relative w-full min-h-screen  sm:flex-row-reverse justify-between items-center px-4 sm:px-12 lg:px-24 gap-x-4 sm:gap-x-8 lg:gap-x-16"
         >
           {/* Header Section */}
           <div className="w-full sm:w-1/2 flex justify-end">

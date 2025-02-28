@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Header() {
   return (
-    <div className="flex flex-col items-start justify-center w-full sm:w-1/2 pr-8 text-left">
+    <div className="flex flex-col items-start justify-center w-full sm:w-1/2 pr-8 text-center mt-40">
       {/* Top Section */}
       <div className="max-w-[400px] sm:max-w-[500px] md:max-w-[600px]">
         <h3 className="text-yellow-400 text-xl sm:text-2xl font-bold">
