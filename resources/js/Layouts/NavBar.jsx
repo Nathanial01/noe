@@ -1,7 +1,7 @@
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import NavLink from "@/Components/NavLink";
-import { usePage } from "@inertiajs/react";
-import { useState } from "react";
+import { usePage, Link } from "@inertiajs/react";
+import { useState, useRef, useEffect } from "react";
 import DarkModeToggle from "@/Components/DarkModeToggle";
 import Footer from "@/Components/Footer";
 import Background from "@/Components/Background.jsx";
@@ -10,8 +10,23 @@ export default function AuthenticatedLayout({ header, children }) {
     const { auth } = usePage().props;
     const user = auth.user;
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
+    const accountDropdownRef = useRef(null);
 
     const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+    const toggleAccountDropdown = () => setIsAccountDropdownOpen((prev) => !prev);
+    const closeDropdowns = () => setIsAccountDropdownOpen(false);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!accountDropdownRef.current?.contains(event.target)) {
+                closeDropdowns();
+            }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
 
     // Navigation links for the required pages.
     const navLinks = [
@@ -46,11 +61,26 @@ export default function AuthenticatedLayout({ header, children }) {
 
                         {/* Mobile Menu Toggle */}
                         <div className="lg:hidden">
-                            <button onClick={toggleMobileMenu} className="w-14 h-14 relative focus:outline-none bg-inherit rounded text-dark-mode-hovers">
+                            <button
+                                onClick={toggleMobileMenu}
+                                className="w-14 h-14 relative focus:outline-none bg-inherit rounded text-dark-mode-hovers"
+                            >
                                 <div className="block w-3 absolute left-6 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <span className={`hamburger-menu-dark-mode ${isMobileMenuOpen ? "rotate-45" : "-translate-y-1.5"}`}></span>
-                                    <span className={`hamburger-menu-dark-mode ${isMobileMenuOpen ? "opacity-0" : ""}`}></span>
-                                    <span className={`hamburger-menu-dark-mode ${isMobileMenuOpen ? "-rotate-45" : "translate-y-1.5"}`}></span>
+                  <span
+                      className={`hamburger-menu-dark-mode ${
+                          isMobileMenuOpen ? "rotate-45" : "-translate-y-1.5"
+                      }`}
+                  ></span>
+                                    <span
+                                        className={`hamburger-menu-dark-mode ${
+                                            isMobileMenuOpen ? "opacity-0" : ""
+                                        }`}
+                                    ></span>
+                                    <span
+                                        className={`hamburger-menu-dark-mode ${
+                                            isMobileMenuOpen ? "-rotate-45" : "translate-y-1.5"
+                                        }`}
+                                    ></span>
                                 </div>
                             </button>
                         </div>
@@ -59,7 +89,11 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="hidden sm:flex flex-1 items-center justify-center sm:items-stretch sm:justify-end">
                             <nav className="flex space-x-4">
                                 {navLinks.map((link) => (
-                                    <NavLink key={link.href} href={link.href} className="text-dark-mode-hovers hover:underline">
+                                    <NavLink
+                                        key={link.href}
+                                        href={link.href}
+                                        className="text-dark-mode-hovers hover:underline"
+                                    >
                                         {link.label}
                                     </NavLink>
                                 ))}
@@ -70,23 +104,84 @@ export default function AuthenticatedLayout({ header, children }) {
                         <div className="hidden lg:flex items-center space-x-4">
                             {user ? (
                                 <form method="POST" action={route("logout")}>
-                                    <button type="submit" className="logout-link-dark-mode-hovers">Uitloggen</button>
+                                    <button type="submit" className="logout-link-dark-mode-hovers">
+                                        Uitloggen
+                                    </button>
                                 </form>
                             ) : (
                                 <>
-                                    <NavLink href="/login" className="logout-link-dark-mode-hovers">Inloggen</NavLink>
-                                    <NavLink href="/register" className="register-link-dark-hovers">Account aanmaken</NavLink>
+                                    <NavLink href="/login" className="logout-link-dark-mode-hovers">
+                                        Inloggen
+                                    </NavLink>
+                                    <NavLink href="/register" className="register-link-dark-hovers">
+                                        Account aanmaken
+                                    </NavLink>
                                 </>
                             )}
                             <DarkModeToggle />
                         </div>
                     </div>
+
+                    {/* Mobile Menu Dropdown */}
+                    {isMobileMenuOpen && (
+                        <div
+                            id="mobile-menu"
+                            className="lg:hidden relative overflow-hidden text-dark-mode-reverse p-8"
+                        >
+                            <div className="flex flex-col space-y-2">
+                                {navLinks.map((link) => (
+                                    <NavLink
+                                        key={link.href}
+                                        href={link.href}
+                                        className="flex justify-between items-center text-dark-mode-hovers"
+                                    >
+                                        {link.label}
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-5 w-5 text-dark-mode"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                d="M9 5l7 7-7 7"
+                                            />
+                                        </svg>
+                                    </NavLink>
+                                ))}
+                                {user ? (
+                                    <form method="POST" action={route("logout")}>
+                                        <button type="submit" className="logout-link-dark-mode-hovers">
+                                            Uitloggen
+                                        </button>
+                                    </form>
+                                ) : (
+                                    <>
+                                        <NavLink href="/login" className="logout-link-dark-mode-hovers">
+                                            Inloggen
+                                        </NavLink>
+                                        <NavLink href="/register" className="register-link-dark-hovers">
+                                            Account aanmaken
+                                        </NavLink>
+                                    </>
+                                )}
+                            </div>
+                            <div className="mt-12 flex justify-center">
+                                <DarkModeToggle />
+                            </div>
+                        </div>
+                    )}
                 </nav>
 
                 {/* Header (if provided) */}
                 {header && (
                     <header className="bg-white shadow dark:bg-gray-800">
-                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
+                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {header}
+                        </div>
                     </header>
                 )}
 
