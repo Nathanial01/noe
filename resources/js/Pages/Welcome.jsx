@@ -90,10 +90,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
           <div className="w-full sm:w-1/2 flex justify-end">
             <Header />
           </div>
-          {/* Hero Section */}
-          <div className="w-full sm:w-1/2 flex justify-start">
-            <HeroSection />
-          </div>
+      
         </section>
 
 {/* Top Section 2 - Featuresections with its own background */}
