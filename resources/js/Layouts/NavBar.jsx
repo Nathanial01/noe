@@ -29,7 +29,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 className="fixed inset-0 w-full h-full opacity-50 -z-10"
                 backgrounds={["/img/landing/global-bg-one.png"]}
             />
-            <div className="fixed inset-0 bg-white/20 dark:bg-black/20 backdrop-blur-2xl -z-5"></div>
+            <div className="fixed inset-0 bg-none backdrop-blur-2xl -z-5"></div>
             {/* Sticky Navigation */}
             <nav className="sticky top-0 py-4 z-50 nav-bar-dark-mode">
                 <div className="mx-auto flex justify-between items-center px-4 w-full">
