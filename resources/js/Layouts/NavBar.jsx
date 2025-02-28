@@ -34,7 +34,7 @@ export default function AuthenticatedLayout({ header, children }) {
             <nav className="sticky top-0 py-4 z-50 nav-bar-dark-mode">
                 <div className="mx-auto flex justify-between items-center px-4 w-full">
                     {/* Logo wrapped in NavLink */}
-                    <div className="flex items-center ml-12">
+                    <div className="flex items-center sm:ml-12">
                         <NavLink href="/">
                             <ApplicationLogo className="h-9 w-auto fill-current text-dark-mode" />
                         </NavLink>
