@@ -1,13 +1,14 @@
 import React from "react";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import NavBar from "@/Layouts/NavBar";
+import Background from "@/Components/Background.jsx";
 
 export default function Contact() {
     return (
-        <AuthenticatedLayout>
+        <NavBar>
             <div className="min-h-screen bg-gray-200 dark:bg-gray-900 flex items-center justify-center px-8">
+
                 <div className=" rounded-lg flex flex-col lg:flex-row max-w-6xl w-full overflow-hidden ">
-                    <div className="w-full rounded-lg lg:w-1/3 bg-yellow-400 text-gray-900 dark:bg-yellow-500 dark:text-gray-900 p-8 flex flex-col justify-between">
-                        <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 mt-6 mb-6">
+                    <div className="w-full rounded-lg lg:w-1/3 nav-bar-dark-mode text-gray-900 p-8 flex flex-col justify-between">                  <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100 mt-6 mb-6">
                             Neem contact op
                         </h2>
                         <ul className="space-y-6">
@@ -63,7 +64,7 @@ export default function Contact() {
                             <iframe
                                 className="w-full h-64 rounded-lg"
                                 src="https://www.google.com/maps/embed/v1/place?q=67+Wisteria+Way,+Croydon+South+VIC+3136+AU&key=YOUR_GOOGLE_MAPS_API_KEY"
-                                allowfullscreen=""
+                                allowFullScreen=""
                                 loading="lazy"
                             ></iframe>
                         </div>
@@ -105,7 +106,7 @@ export default function Contact() {
                                         className="w-full h-14 px-4 rounded-lg bg-gray-300 text-white border border-gray-700 focus:outline-none peer dark:bg-gray-900 dark:text-gray-900 dark:border-gray-600"
                                     />
                                     <label
-                                        for="name"
+                                        form="name"
                                         className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white transition-all duration-200 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400  peer-focus:text-gray-900 dark:peer-focus:text-gray-100 peer-focus:text-sm peer-focus:top-0 peer-focus:transform peer-focus:-translate-y-0"
                                     >
                                         Name
@@ -121,7 +122,7 @@ export default function Contact() {
                                     className="w-full h-14 px-4 rounded-lg bg-gray-300 text-white border border-gray-700 focus:outline-none peer dark:bg-gray-900 dark:text-gray-900 dark:border-gray-600"
                                 />
                                 <label
-                                    for="last_name"
+                                    form="last_name"
                                     className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white transition-all duration-200 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:text-gray-900 dark:peer-focus:text-gray-100 peer-focus:text-sm peer-focus:top-0 peer-focus:transform peer-focus:-translate-y-0"
                                 >
                                     Achternaam
@@ -136,7 +137,7 @@ export default function Contact() {
                                     className="w-full h-14 px-4 rounded-lg bg-gray-300 text-white border border-gray-700 focus:outline-none peer dark:bg-gray-900 dark:text-gray-900 dark:border-gray-600"
                                 />
                                 <label
-                                    for="email"
+                                    form="email"
                                     className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white transition-all duration-200 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400  peer-focus:text-gray-900 dark:peer-focus:text-gray-100 peer-focus:text-sm peer-focus:top-0 peer-focus:transform peer-focus:-translate-y-0"
                                 >
                                     E-mailadres
@@ -151,7 +152,7 @@ export default function Contact() {
                                     className="w-full h-14 px-4 rounded-lg bg-gray-300 text-white border border-gray-700 focus:outline-none peer dark:bg-gray-900 dark:text-gray-900 dark:border-gray-600"
                                 />
                                 <label
-                                    for="phone"
+                                    form="phone"
                                     className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white transition-all duration-200 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400 peer-focus:text-gray-900 dark:peer-focus:text-gray-100 peer-focus:text-sm peer-focus:top-0 peer-focus:transform peer-focus:-translate-y-0"
                                 >
                                     Telefoonnummer
@@ -166,7 +167,7 @@ export default function Contact() {
                                     className="w-full px-4 py-3 rounded-lg bg-gray-300 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400 peer dark:bg-gray-900 dark:text-gray-900 dark:border-gray-600"
                                 ></textarea>
                                 <label
-                                    for="message"
+                                    form="message"
                                     className="absolute left-4 text-white transition-all duration-200 peer-placeholder-shown:text-lg peer-placeholder-shown:text-gray-400  peer-focus:text-gray-900 dark:peer-focus:text-gray-100 peer-focus:text-sm peer-focus:top-0 peer-focus:transform peer-focus:-translate-y-0"
                                 >
                                     Typ hier je bericht
@@ -189,11 +190,11 @@ export default function Contact() {
                                     </a>
                                 </label>
                             </div>
-                            <button class="button group relative flex items-center justify-center w-full h-14 px-5 rounded-full font-semibold text-gray-900 dark:text-gray-100 uppercase bg-transparent border-0 overflow-hidden transition-all duration-300 ease-in-out z-10">
-                                <span class="text whitespace-nowrap leading-5 pr-11 z-20">
+                            <button className="button group relative flex items-center justify-center w-full h-14 px-5 rounded-full font-semibold text-gray-900 dark:text-gray-100 uppercase bg-transparent border-0 overflow-hidden transition-all duration-300 ease-in-out z-10">
+                                <span className="text whitespace-nowrap leading-5 pr-11 z-20">
                                     Bericht versturen
                                 </span>
-                                <span class="icon absolute top-1/2 right-2 transform -translate-y-1/2 w-12 h-8 flex items-center justify-center rounded-full z-20">
+                                <span className="icon absolute top-1/2 right-2 transform -translate-y-1/2 w-12 h-8 flex items-center justify-center rounded-full z-20">
                                     <svg
                                         viewBox="0 0 512 512"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -205,13 +206,13 @@ export default function Contact() {
                                         <path d="M476 3.2L12.5 270.6c-18.1 10.4-15.8 35.6 2.2 43.2L121 358.4l287.3-253.2c5.5-4.9 13.3 2.6 8.6 8.3L176 407v80.5c0 23.6 28.5 32.9 42.5 15.8L282 426l124.6 52.2c14.2 6 30.4-2.9 33-18.2l72-432C515 7.8 493.3-6.8 476 3.2z"></path>
                                     </svg>
                                 </span>
-                                <span class="button-after absolute inset-0 border-2 border-yellow-500 rounded-full z-10"></span>
-                                <span class="button-before absolute inset-0 bg-yellow-500 z-0 transform translate-x-[90%] transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
+                                <span className="button-after absolute inset-0 border-2 border-yellow-500 rounded-full z-10"></span>
+                                <span className="button-before absolute inset-0 bg-yellow-500 z-0 transform translate-x-[90%] transition-transform duration-300 ease-out group-hover:translate-x-0"></span>
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
-        </AuthenticatedLayout>
+        </NavBar>
     );
 }

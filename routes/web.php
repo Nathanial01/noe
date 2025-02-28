@@ -1,20 +1,11 @@
 <?php
 
-use App\Http\Controllers\{
-    ProfileController,
-    ChatbotController,
-    CookieController,
-    PageController,
-    AdminController
-};
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\{Route, Auth};
-use Laravel\Socialite\Facades\Socialite;
-use Inertia\Inertia;
+use App\Http\Controllers\{AdminController, ChatbotController, ProfileController, web\PageController};
 use App\Models\User;
-
-
-
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\{Auth, Route};
+use Inertia\Inertia;
+use Laravel\Socialite\Facades\Socialite;
 
 
 // Welcome to Route
@@ -45,18 +36,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });
 
-// Public Pages
 Route::prefix('/')->group(function () {
-    Route::get('home', [PageController::class, 'home'])->name('home');
-    Route::get('about', [PageController::class, 'about'])->name('about');
-    Route::get('services', [PageController::class, 'services'])->name('services');
-    Route::get('blog', [PageController::class, 'blog'])->name('blog');
-    Route::get('faq', [PageController::class, 'faq'])->name('faq');
+    Route::get('dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('private-equity', [PageController::class, 'privateEquity'])->name('private-equity');
+    Route::get('real-estate', [PageController::class, 'realEstate'])->name('real-estate');
+    Route::get('about-us', [PageController::class, 'about'])->name('about-us');
     Route::get('contact', [PageController::class, 'contact'])->name('contact');
-    Route::get('prijzen', [PageController::class, 'prijzen'])->name('prijzen');
-    Route::get('demo', [PageController::class, 'demo'])->name('demo');
-    Route::get('toepassing', [PageController::class, 'toepassing'])->name('toepassing');
-    Route::get('chatbot', [PageController::class, 'chatbot'])->name('chatbot');
 });
 
 // Chatbot and Cookie Consent

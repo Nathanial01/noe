@@ -2,7 +2,7 @@ import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import WorkStation from "@/Components/WorkStation";
-import ImmoScanSection from "../Components/ImmoScanSection";
+
 
 export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
     return (
@@ -18,7 +18,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
             <main className="container mx-auto py-12">
 
             <ImmoScanSection />
-            
+
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     {/* Welcome Message */}
                     <div className="flex items-center justify-center h-full py-12">
@@ -49,7 +49,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                                 </div>
                             </div>
                         </div>
-                    
+
 
                     {/* WorkStation Component */}
                     <div className="mt-6">
@@ -58,8 +58,8 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                 </div>
             </div>
 
-           
-              
+
+
             </main>
         </AuthenticatedLayout>
     );

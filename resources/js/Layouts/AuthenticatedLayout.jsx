@@ -3,7 +3,7 @@ import NavLink from "@/Components/NavLink";
 import { Link, usePage } from "@inertiajs/react";
 import { useState, useRef, useEffect } from "react";
 import DarkModeToggle from "../Components/DarkModeToggle";
-import NotificationBar from "@/Components/NotificationBar";
+
 
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -61,7 +61,7 @@ export default function AuthenticatedLayout({ header, children }) {
 
     return (
         <div className="min-h-screen bg-gray-200 dark:bg-gray-900">
-            <NotificationBar />
+
             {/* Sticky Navigation */}
             <nav className="sticky py-12 top-0 backdrop-blur bg-gray-200 dark:bg-gray-900 z-50 ">
                 <div className="mx-auto flex justify-between items-center px-6">

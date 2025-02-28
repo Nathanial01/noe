@@ -7,9 +7,7 @@
 /*    @apply bg-cover bg-center min-h-[300px] bg-[url('/img/bg/bg_day.svg')] dark:bg-[url('/img/bg/bg_dark.svg')];*/
 /*}*/
 
-.notification-bar-dark-mode {
-    @apply backdrop-blur bg-gradient-to-r from-amber-500 via-yellow-600 to-blue-500  z-50;
-}
+
 .nav-bar-dark-mode {
     @apply backdrop-blur z-50;
 }
@@ -142,9 +140,7 @@
 /*.bg-img{*/
 /*    @apply bg-cover  bg-center min-h-screen bg-[url('/public/img/bg/bg_day.svg')] dark:bg-[url('/public/img/bg/bg_dark.svg')];*/
 /*}*/
-.notification-bar-dark-mode {
-    @apply backdrop-blur bg-gradient-to-r from-amber-500 via-yellow-600 to-blue-500  z-50;
-}
+
 .nav-bar-dark-mode {
     @apply backdrop-blur bg-gray-300/50 dark:bg-gray-700/50 z-50;
 }
@@ -277,9 +273,7 @@
 /*.bg-img{*/
 /*    @apply bg-cover  bg-center min-h-screen bg-[url('/public/img/bg/bg_day.svg')] dark:bg-[url('/public/img/bg/bg_dark.svg')];*/
 /*}*/
-.notification-bar-dark-mode {
-    @apply backdrop-blur bg-gradient-to-r from-amber-500 via-yellow-600 to-blue-500  z-50;
-}
+
 .nav-bar-dark-mode {
     @apply backdrop-blur bg-gray-300/50 dark:bg-gray-700/50 z-50;
 }

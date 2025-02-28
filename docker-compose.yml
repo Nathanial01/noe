@@ -1,5 +1,5 @@
 services:
-    Cbot_backend:
+    noe:
         build:
             context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
