@@ -44,23 +44,19 @@ const features = [
 export default function Featuresections() {
     return (
         <div className="bg-none py-24 sm:py-32 mt-2 w-full">
-            <div className="flex flex-col sm:flex-row items-center w-full px-6 gap-8 sm:gap-24 justify-evenly">
+            <div className="flex flex-col sm:flex-row items-center w-full px-6 gap-24 justify-evenly">
                 {/* Text Section */}
                 <div
-                    className="w-full sm:w-1/2 text-center sm:text-left text-white font-poppins font-semibold leading-normal"
-                    style={{
-                        textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                        WebkitTextStrokeWidth: "4px",
-                        WebkitTextStrokeColor: "#FFF",
-                    }}
+                    className="w-full sm:w-1/2 text-left text-white font-poppins sm:font-semibold leading-normal [text-shadow:0px_4px_4px_rgba(0,0,0,0.25)] [-webkit-text-stroke:4px_#FFF]"
                 >
                     <p className="text-4xl sm:text-5xl md:text-6xl lg:text-[96px]">
                         From Vision to Value— We Scale, We Succeed.
                     </p>
+
                 </div>
 
-                {/* Lottie Background Section */}
-                <div className="w-full sm:w-1/2 ml-auto transform translate-x-0 sm:translate-x-40 mt-16">
+                {/* Lottie Background Section pushed further to the right */}
+                <div className="w-full sm:w-1/2 ml-auto  transform sm:translate-x-40 sm:mt-16 scale-75">
                     <LottieBackground />
                 </div>
             </div>

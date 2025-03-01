@@ -15,10 +15,10 @@ export default function Header() {
                         WebkitTextStrokeColor: "#FFF",
                     }}
                 >
-                <h1 className="mt-4 text-4xl sm:text-8xl font-light sm:font-extrabold text-white leading-tight">
-                    Noé Capital <br />
-                    <span className="text-4xl sm:text-6xl">CONSULTANCY</span>
-                </h1></div>
+                    <h1 className="mt-4 text-4xl sm:text-8xl font-light sm:font-extrabold text-white leading-tight">
+                        Noé Capital <br />
+                        <span className="text-4xl sm:text-6xl">CONSULTANCY</span>
+                    </h1></div>
                 <p className="mt-6 text-xl sm:text-2xl text-white opacity-90">
                     Noé is a leading global investment firm. We aim to deliver strong returns
                     and shared success to those we serve and the world at large.
@@ -28,31 +28,31 @@ export default function Header() {
                     {/* Buttons Section */}
 
 
-                        <button className="relative flex items-center justify-center w-[144.115px] h-[70.435px] flex-shrink-0">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="144.115px"
-                                height="70.435px"
-                                viewBox="0 0 138 69"
-                                fill="none"
-                                className="absolute inset-0"
-                                style={{
-                                    fill: "rgba(111, 9, 121, 0)",
-                                    strokeWidth: "1px",
-                                    stroke: "#F8B147",
-                                }}
-                            >
-                                <path
-                                    d="M18.7063 7.20381L113.63 1.1496C118.975 0.808729 123.902 4.03882 125.721 9.07583L136.292 38.3446C138.92 45.6224 134.1 53.4545 126.419 54.3873L14.6419 67.961C6.6425 68.9324 -0.0348595 61.9246 1.32159 53.9814L7.6039 17.1931C8.54313 11.6931 13.138 7.55895 18.7063 7.20381Z"
-                                />
-                            </svg>
-                            <span className="relative text-white text-center font-[Poppins] font-semibold text-sm">
+                    <button className="relative flex items-center justify-center w-[144.115px] h-[70.435px] flex-shrink-0">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="144.115px"
+                            height="70.435px"
+                            viewBox="0 0 138 69"
+                            fill="none"
+                            className="absolute inset-0"
+                            style={{
+                                fill: "rgba(111, 9, 121, 0)",
+                                strokeWidth: "1px",
+                                stroke: "#F8B147",
+                            }}
+                        >
+                            <path
+                                d="M18.7063 7.20381L113.63 1.1496C118.975 0.808729 123.902 4.03882 125.721 9.07583L136.292 38.3446C138.92 45.6224 134.1 53.4545 126.419 54.3873L14.6419 67.961C6.6425 68.9324 -0.0348595 61.9246 1.32159 53.9814L7.6039 17.1931C8.54313 11.6931 13.138 7.55895 18.7063 7.20381Z"
+                            />
+                        </svg>
+                        <span className="relative text-white text-center font-[Poppins] font-semibold text-sm">
               Learn more
             </span>
-                        </button>
+                    </button>
 
 
-                        <a
+                    <a
                         href="/dashboard"
                         className="flex items-center space-x-2 text-white font-semibold uppercase hover:underline"
                     >

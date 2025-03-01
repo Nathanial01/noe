@@ -7,7 +7,7 @@ import { Head } from "@inertiajs/react";
 import ChatBot from "../Pages/ChatBot/ChatBot";
 import Header from "../Components/Header";
 import Background from "../Components/Background";
-
+import HeroSection from "../Components/HeroSection.jsx";
 // Lazy-load components with prefetch magic comments
 const Featuresections = lazy(() => import(/* webpackPrefetch: true */ "@/Components/Featuresections"));
 const FeatureAboutUs = lazy(() => import(/* webpackPrefetch: true */ "@/Components/FeatureAboutUs"));
@@ -70,6 +70,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                     className="relative w-full h-screen flex flex-col items-center justify-center bottom-0 sm:bottom-20 px-4 sm:px-12 lg:px-24 gap-4"
                 >
                     <Header />
+                <HeroSection/>
                     <div
                         ref={welcomeRef}
                         className="sm:mt-40"

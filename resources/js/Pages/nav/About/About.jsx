@@ -245,30 +245,6 @@ export default function AboutUs() {
                 {/* End Call to Action Section */}
                 {/* ======================================================= */}
 
-                {/* ======================================================= */}
-                {/* Footer */}
-                {/* ======================================================= */}
-                <footer className="py-8 bg-gray-800">
-                    <div className="max-w-6xl mx-auto px-6 text-center">
-                        <p className="text-white text-sm">
-                            © {new Date().getFullYear()} Company Name. All rights reserved.
-                        </p>
-                        <div className="mt-4 flex justify-center gap-4">
-                            <a href="/privacy" className="text-gray-400 hover:text-white">
-                                Privacy Policy
-                            </a>
-                            <a href="/terms" className="text-gray-400 hover:text-white">
-                                Terms of Service
-                            </a>
-                            <a href="/contact" className="text-gray-400 hover:text-white">
-                                Contact Us
-                            </a>
-                        </div>
-                    </div>
-                </footer>
-                {/* ======================================================= */}
-                {/* End Footer */}
-                {/* ======================================================= */}
             </section>
         </NavBar>
     );
