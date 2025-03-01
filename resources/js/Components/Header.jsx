@@ -15,7 +15,7 @@ export default function Header() {
                         WebkitTextStrokeColor: "#FFF",
                     }}
                 >
-                <h1 className="mt-4 text-6xl sm:text-8xl font-extrabold text-white leading-tight">
+                <h1 className="mt-4 text-4xl sm:text-8xl font-light sm:font-extrabold text-white leading-tight">
                     Noé Capital <br />
                     <span className="text-4xl sm:text-6xl">CONSULTANCY</span>
                 </h1></div>
