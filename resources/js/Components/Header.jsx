@@ -2,33 +2,39 @@ import React from "react";
 
 export default function Header() {
     return (
-        <header className="w-full bg-none">
-            <div className="relative z-10 px-4 text-center">
+        <header className=" relative w-full bg-none md:left-0">
+            <div className="relative z-10 px-4 text-left mb-20">
                 <h3 className="text-yellow-400 text-2xl sm:text-3xl font-bold uppercase tracking-wide">
                     #1 TOP INVEST 2025
                 </h3>
-                <div
-                    className="w-full text-center sm:text-center text-white font-poppins font-semibold leading-normal"
-                    style={{
-                        textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                        WebkitTextStrokeWidth: "4px",
-                        WebkitTextStrokeColor: "#FFF",
-                    }}
-                >
-                    <h1 className="mt-4 text-4xl sm:text-8xl font-light sm:font-extrabold text-white leading-tight">
-                        Noé Capital <br />
-                        <span className="text-4xl sm:text-6xl">CONSULTANCY</span>
-                    </h1></div>
-                <p className="mt-6 text-xl sm:text-2xl text-white opacity-90">
-                    Noé is a leading global investment firm. We aim to deliver strong returns
-                    and shared success to those we serve and the world at large.
-                </p>
+                <section>
+                    <div
+                        className="w-full text-center sm:text-center text-white font-Poppins font-semibold leading-normal"
+                        style={{
+                            textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+                            WebkitTextStrokeWidth: "4px",
+                            WebkitTextStrokeColor: "#FFF",
+                        }}
+                    >
+                        <h1 className="mt-4 text-4xl sm:text-8xl font-light sm:font-extrabold text-white leading-tight text-left tracking-wide">
+                            Noé<br/> Capital <br/>
+                            <span className="text-4xl sm:text-6xl">CONSULTANCY</span>
+                        </h1>
+                    </div>
+                    <h2 className="mt-6 text-xl sm:text-xl text-white opacity-90 font-Poppins sm:font-extrabold">
+                        Noé is a leading global investment firm. We aim to deliver strong returns
+                        and shared success to those we serve and the world at large.
+                    </h2>
+
+                </section>
+
                 <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-8">
 
                     {/* Buttons Section */}
 
 
-                    <button className="relative flex items-center justify-center w-[144.115px] h-[70.435px] flex-shrink-0">
+                    <button
+                        className="relative flex items-center justify-center w-[144.115px] h-[70.435px] flex-shrink-0">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="144.115px"

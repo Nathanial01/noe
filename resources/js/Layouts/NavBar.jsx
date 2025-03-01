@@ -50,8 +50,8 @@ export default function AuthenticatedLayout({ header, children }) {
             {/* Page Content */}
             <div className="relative z-10">
                 {/* Sticky Navigation */}
-                <nav className="sticky top-0 py-4 z-50 nav">
-                    <div className="mx-auto flex justify-between items-center px-4 w-full">
+                <nav className="sticky top-0 py-4 z-50 nav ">
+                    <div className="mx-auto flex justify-between items-center px-4 w-full container">
                         {/* Logo wrapped in NavLink */}
                         <div className="flex items-center sm:ml-12">
                             <NavLink href="/">

@@ -64,24 +64,42 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                 />
                 <div className="fixed inset-0 bg-[#6B00FE]/10 dark:bg-black/20 backdrop-blur-sm -z-5"></div>
 
-                {/* Full-screen Welcome (Hero) Section */}
+                {/* Mobile Full-screen Welcome (Hero) Section */}
                 <section
                     ref={welcomeRef}
-                    className="relative w-full h-screen flex flex-col items-center justify-center bottom-0 sm:bottom-20 px-4 sm:px-12 lg:px-24 gap-4"
+                    className="grid grid-flow-col-2 grid-rows-1 gap-4 sm:hidden"
                 >
-                    <Header />
-                <HeroSection/>
-                    <div
-                        ref={welcomeRef}
-                        className="sm:mt-40"
-                    >
-                    <img
-                        src="/img/landing/scroll.svg"
-                        alt="Scroll Down"
-                        className="h-10 mt-10 animate-bounce"
-                    />
+                    <div className="gap-4">
+                        <Header />
+                    </div>
+                    <div ref={welcomeRef} className="flex justify-center items-center">
+                        <img
+                            src="/img/landing/scroll.svg"
+                            alt="Scroll Down"
+                            className="h-10 mt-10 animate-bounce"
+                        />
                     </div>
                 </section>
+
+                {/* Desktop Full-screen Welcome (Hero) Section */}
+                <section
+                    ref={welcomeRef}
+                    className="hidden sm:flex items-center p-4 w-full h-screen"
+                >
+                    {/* Left Side: HeroSection */}
+                    <div className="w-5/12 sm:scale-125 sm:mt-44 sm:mr-40">
+                        <HeroSection />
+                    </div>
+
+                    {/* Spacer */}
+                    <div className="flex-grow" />
+
+                    {/* Right Side: Header */}
+                    <div className="w-5/12">
+                        <Header />
+                    </div>
+                </section>
+
 
                 {/* Featuresections */}
                 <section
