@@ -67,7 +67,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                 {/* Full-screen Welcome (Hero) Section */}
                 <section
                     ref={welcomeRef}
-                    className="relative w-full h-screen flex flex-col items-center justify-center bottom-10 sm:bottom-40 px-4 sm:px-12 lg:px-24 gap-4"
+                    className="relative w-full h-screen flex flex-col items-center justify-center bottom-0 sm:bottom-40 px-4 sm:px-12 lg:px-24 gap-4"
                 >
                     <Header />
                     <div
