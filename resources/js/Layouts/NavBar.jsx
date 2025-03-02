@@ -6,6 +6,26 @@ import DarkModeToggle from "@/Components/DarkModeToggle";
 import Footer from "@/Components/Footer";
 import Background from "@/Components/Background.jsx";
 
+// Extracted component to render user links (login/sign-up or logout)
+const UserLinks = ({ user }) => {
+    return user ? (
+        <form method="POST" action={route("logout")}>
+            <button type="submit" className="logout-link-dark-mode-hovers">
+                Uitloggen
+            </button>
+        </form>
+    ) : (
+        <>
+            <NavLink href="/login" className="logout-link-dark-mode-hovers">
+                Inloggen
+            </NavLink>
+            <NavLink href="/register" className="register-link-dark-hovers">
+                Account aanmaken
+            </NavLink>
+        </>
+    );
+};
+
 export default function AuthenticatedLayout({ header, children }) {
     const { auth } = usePage().props;
     const user = auth.user;
@@ -13,10 +33,20 @@ export default function AuthenticatedLayout({ header, children }) {
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState(false);
     const accountDropdownRef = useRef(null);
 
-    const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
-    const toggleAccountDropdown = () => setIsAccountDropdownOpen((prev) => !prev);
-    const closeDropdowns = () => setIsAccountDropdownOpen(false);
+    // Detect orientation change (landscape vs portrait)
+    const [isLandscape, setIsLandscape] = useState(window.matchMedia("(orientation: landscape)").matches);
 
+    useEffect(() => {
+        const handleOrientationChange = () => {
+            setIsLandscape(window.matchMedia("(orientation: landscape)").matches);
+        };
+
+        window.addEventListener("resize", handleOrientationChange);
+        return () => window.removeEventListener("resize", handleOrientationChange);
+    }, []);
+    const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev),
+        toggleAccountDropdown = () => setIsAccountDropdownOpen((prev) => !prev),
+        closeDropdowns = () => setIsAccountDropdownOpen(false);
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (!accountDropdownRef.current?.contains(event.target)) {
@@ -59,34 +89,36 @@ export default function AuthenticatedLayout({ header, children }) {
                             </NavLink>
                         </div>
 
-                        {/* Mobile Menu Toggle */}
-                        <div className="lg:hidden">
-                            <button
-                                onClick={toggleMobileMenu}
-                                className="w-14 h-14 relative focus:outline-none bg-inherit rounded text-dark-mode-hovers"
-                            >
-                                <div className="block w-3 absolute left-6 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <span
-                      className={`hamburger-menu-dark-mode ${
-                          isMobileMenuOpen ? "rotate-45" : "-translate-y-1.5"
-                      }`}
-                  ></span>
-                                    <span
-                                        className={`hamburger-menu-dark-mode ${
-                                            isMobileMenuOpen ? "opacity-0" : ""
-                                        }`}
-                                    ></span>
-                                    <span
-                                        className={`hamburger-menu-dark-mode ${
-                                            isMobileMenuOpen ? "-rotate-45" : "translate-y-1.5"
-                                        }`}
-                                    ></span>
-                                </div>
-                            </button>
-                        </div>
+                        {/* Mobile Menu Toggle - hide if in landscape */}
+                        {!isLandscape && (
+                            <div className="lg:hidden md:hidden">
+                                <button
+                                    onClick={toggleMobileMenu}
+                                    className="w-14 h-14 relative focus:outline-none bg-inherit rounded text-dark-mode-hovers"
+                                >
+                                    <div className="block w-3 absolute left-6 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                        <span
+                                            className={`hamburger-menu-dark-mode ${
+                                                isMobileMenuOpen ? "rotate-45" : "-translate-y-1.5"
+                                            }`}
+                                        ></span>
+                                        <span
+                                            className={`hamburger-menu-dark-mode ${
+                                                isMobileMenuOpen ? "opacity-0" : ""
+                                            }`}
+                                        ></span>
+                                        <span
+                                            className={`hamburger-menu-dark-mode ${
+                                                isMobileMenuOpen ? "-rotate-45" : "translate-y-1.5"
+                                            }`}
+                                        ></span>
+                                    </div>
+                                </button>
+                            </div>
+                        )}
 
                         {/* Desktop Navigation */}
-                        <div className="hidden sm:flex flex-1 items-center justify-center sm:items-stretch sm:justify-end">
+                        <div className={`${isLandscape ? "flex" : "hidden sm:flex"} flex-1 items-center justify-center sm:items-stretch sm:justify-end`}>
                             <nav className="flex space-x-4">
                                 {navLinks.map((link) => (
                                     <NavLink
@@ -100,34 +132,16 @@ export default function AuthenticatedLayout({ header, children }) {
                             </nav>
                         </div>
 
-                        {/* User & Dark Mode (Desktop) */}
-                        <div className="hidden lg:flex items-center space-x-4">
-                            {user ? (
-                                <form method="POST" action={route("logout")}>
-                                    <button type="submit" className="logout-link-dark-mode-hovers">
-                                        Uitloggen
-                                    </button>
-                                </form>
-                            ) : (
-                                <>
-                                    <NavLink href="/login" className="logout-link-dark-mode-hovers">
-                                        Inloggen
-                                    </NavLink>
-                                    <NavLink href="/register" className="register-link-dark-hovers">
-                                        Account aanmaken
-                                    </NavLink>
-                                </>
-                            )}
+                        {/* User & Dark Mode (Desktop and Landscape) */}
+                        <div className={`${isLandscape ? "flex" : "hidden lg:flex"} items-center space-x-4`}>
+                            <UserLinks user={user} />
                             <DarkModeToggle />
                         </div>
                     </div>
 
-                    {/* Mobile Menu Dropdown */}
-                    {isMobileMenuOpen && (
-                        <div
-                            id="mobile-menu"
-                            className="lg:hidden relative overflow-hidden text-dark-mode-reverse p-8"
-                        >
+                    {/* Mobile Menu Dropdown - only show when not in landscape */}
+                    {!isLandscape && isMobileMenuOpen && (
+                        <div id="mobile-menu" className="lg:hidden relative overflow-hidden text-dark-mode-reverse p-8">
                             <div className="flex flex-col space-y-2">
                                 {navLinks.map((link) => (
                                     <NavLink
@@ -144,30 +158,11 @@ export default function AuthenticatedLayout({ header, children }) {
                                             stroke="currentColor"
                                             strokeWidth="2"
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                d="M9 5l7 7-7 7"
-                                            />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                                         </svg>
                                     </NavLink>
                                 ))}
-                                {user ? (
-                                    <form method="POST" action={route("logout")}>
-                                        <button type="submit" className="logout-link-dark-mode-hovers">
-                                            Uitloggen
-                                        </button>
-                                    </form>
-                                ) : (
-                                    <>
-                                        <NavLink href="/login" className="logout-link-dark-mode-hovers">
-                                            Inloggen
-                                        </NavLink>
-                                        <NavLink href="/register" className="register-link-dark-hovers">
-                                            Account aanmaken
-                                        </NavLink>
-                                    </>
-                                )}
+                                <UserLinks user={user} />
                             </div>
                             <div className="mt-12 flex justify-center">
                                 <DarkModeToggle />
@@ -179,9 +174,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 {/* Header (if provided) */}
                 {header && (
                     <header className="bg-white shadow dark:bg-gray-800">
-                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {header}
-                        </div>
+                        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
                     </header>
                 )}
 

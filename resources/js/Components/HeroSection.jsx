@@ -37,17 +37,17 @@ export default function HeroSection() {
                 </div>
 
                 {/* Avatar (Women Image) */}
-                <div className="absolute left-20 top-24 z-20">
+                <div className="absolute -left-44 top-20 z-20">
                     <div
                         className="
-            w-[434px] h-[543px] bg-cover bg-no-repeat bg-center
+            w-[696px] h-[728px] bg-cover bg-no-repeat bg-center
             bg-[url('/img/landing/women-2.png')]
           "
                     />
                 </div>
 
                 {/* "am" Text */}
-                <div className="absolute left-80 top-40 z-30">
+                <div className="absolute left-80 top-28 z-30">
                     <h1
                         className="
             w-[486px] h-[327px]
@@ -61,18 +61,18 @@ export default function HeroSection() {
                 </div>
 
                 {/* "Come true!" Text */}
-                <div className="absolute left-40 top-[497px] z-40">
+                <div className="absolute left-96 -bottom-10 z-40">
                     <h2
                         className="
-            w-[573px] h-[114px] text-right
-            font-semibold text-[56px] font-[Poppins]
-            bg-clip-text text-transparent
-            bg-[linear-gradient(90deg,#5B1FAD_0%,#FC0_100%)]
-          "
+    text-right
+    font-[Poppins] text-[128px] font-semibold
+    bg-clip-text text-transparent
+    bg-[linear-gradient(90deg,#5B1FAD_0%,#FC0_99.99%)]
+  "
                     >
-                        Come<span>&nbsp;</span>true!
+                        Come&nbsp;true!
                     </h2>
                 </div>
         </section>
-);
+    );
 }

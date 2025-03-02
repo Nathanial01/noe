@@ -69,7 +69,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                     ref={welcomeRef}
                     className="grid grid-flow-col-2 grid-rows-1 gap-4 sm:hidden"
                 >
-                    <div className="gap-4">
+                    <div ref={welcomeRef} className="gap-4">
                         <Header />
                     </div>
                     <div ref={welcomeRef} className="flex justify-center items-center">
@@ -84,18 +84,19 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                 {/* Desktop Full-screen Welcome (Hero) Section */}
                 <section
                     ref={welcomeRef}
-                    className="hidden sm:flex items-center p-4 w-full h-screen"
+                    className="hidden sm:flex items-center p-4 w-full h-screen scale-90"
                 >
                     {/* Left Side: HeroSection */}
-                    <div className="w-5/12 sm:scale-125 sm:mt-44 sm:mr-40">
-                        <HeroSection />
+                    <div className="w-5/12 sm:scale-50 lg:scale-100 lg:mt-44 lg:mr-40 mt-96">
+                        <HeroSection/>
                     </div>
+
 
                     {/* Spacer */}
                     <div className="flex-grow" />
 
                     {/* Right Side: Header */}
-                    <div className="w-5/12">
+                    <div className="w-5/12  sm:scale-50 lg:scale-100 -mt-96">
                         <Header />
                     </div>
                 </section>
