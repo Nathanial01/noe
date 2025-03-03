@@ -16,8 +16,13 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function boot(): void
     {
         parent::boot();
-
-        //
+        Nova::footer(function (Request $request) {
+            return Blade::render('
+            @env(\'prod\')
+                This is production!
+            @endenv
+        ');
+        });
     }
 
     /**
