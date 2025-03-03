@@ -1,14 +1,25 @@
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { MagnifyingGlassIcon } from '@heroicons/react/20/solid';
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
+/*
+ * NavBar.jsx
+ *
+ * This component renders a responsive navigation bar that includes:
+ * - A background image with an overlay effect.
+ * - A fixed navigation menu that adapts for desktop and mobile views.
+ * - A search bar, info buttons (Webinar, Masterclass, Agenda), and user-related links.
+ * - A dark mode toggle and a footer.
+ */
+
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import NavLink from "@/Components/NavLink";
 import { usePage } from "@inertiajs/react";
 import DarkModeToggle from "@/Components/DarkModeToggle";
 import Footer from "@/Components/Footer";
 import Background from "@/Components/Background.jsx";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink.jsx";
+import { FaVideo, FaChalkboardTeacher, FaCalendarAlt } from 'react-icons/fa';
 
-// Navigation links array.
+// Navigation links array
 const navLinks = [
     { href: "/", label: "Home" },
     { href: "/private-equity", label: "Private Equity" },
@@ -17,7 +28,53 @@ const navLinks = [
     { href: "/contact", label: "Contact" },
 ];
 
-// Mobile user menu component.
+/**
+ * Info Component
+ * Renders buttons for Webinar, Masterclass, and Agenda.
+ */
+const Info = () => {
+    return (
+        <div className="flex space-x-4">
+            {/* Webinar Button */}
+            <a href="/webinar" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
+                <FaVideo className="text-lg" />
+                <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 text-white text-sm transition-opacity duration-200 whitespace-nowrap">
+                    Webinar
+                </span>
+            </a>
+
+            {/* Masterclass Button */}
+            <a href="/masterclass" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
+                <FaChalkboardTeacher className="text-lg" />
+                <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 text-white text-sm transition-opacity duration-200 whitespace-nowrap">
+                    Masterclass
+                </span>
+            </a>
+
+            {/* Agenda Button */}
+            <a href="/agenda" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
+                <FaCalendarAlt className="text-lg" />
+                <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 text-white text-sm transition-opacity duration-200 whitespace-nowrap">
+                    Agenda
+                </span>
+            </a>
+        </div>
+    );
+};
+/**
+ * StripedDivider Component
+ * Renders a vertical divider with a gradient effect.
+ */
+const StripedDivider = () => {
+    return <div className="w-px h-6 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>;
+};
+
+/**
+ * MobileUser Component
+ * Renders mobile user actions.
+ * - If a user is logged in, display a logout button.
+ * - Otherwise, display login and register links.
+ */
 const MobileUser = ({ user }) => {
     return user ? (
         <form method="POST" action={route("logout")}>
@@ -27,116 +84,111 @@ const MobileUser = ({ user }) => {
         </form>
     ) : (
         <>
+            <div className="w-px h-6 bg-gradient-to-b from-transparent via-black/50 to-transparent"></div>
             <NavLink
                 href="/login"
                 className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-white/20"
             >
-
                 <span>Inloggen</span>
             </NavLink>
             <NavLink
                 href="/register"
                 className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-white/20"
             >
-
                 <span>Registreren</span>
             </NavLink>
         </>
     );
 };
 
-// Desktop user dropdownmenu component.
-const UserLinks = ({ user }) => {
+/**
+ * SearchBar Component
+ * Renders a search input with a keyboard shortcut indicator.
+ */
+const SearchBar = () => {
     return (
-        <Menu as="div" className="relative ml-4 shrink-0">
-            <div>
-                <MenuButton className="flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                    <span className="sr-only">Open user menu</span>
-                    {user ? (
-                        <img
-                            src={user.avatar || "../../../../../public/img/SVGS/profile.svg"}
-                            alt="User Avatar"
-                            className="h-8 w-8 rounded-full"
-                        />
-                    ) : (
-                        <span className="inline-block h-8 w-8 rounded-full bg-gray-500"></span>
-                    )}
-                </MenuButton>
-            </div>
-            <MenuItems className="absolute left-0 z-50 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-950 py-1 shadow-lg ring-1 ring-yell/5">
-                {user ? (
-                    <>
-                        <MenuItem>
-                            {({ active }) => (
-                                <a
-                                    href="/profile"
-                                    className={`${active ? "bg-gray-100" : ""} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                    Your Profile
-                                </a>
-                            )}
-                        </MenuItem>
-                        <MenuItem>
-                            {({ active }) => (
-                                <a
-                                    href="/settings"
-                                    className={`${active ? "bg-gray-100" : ""} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                    Settings
-                                </a>
-                            )}
-                        </MenuItem>
-                        <MenuItem>
-                            {({ active }) => (
-                                <form method="POST" action={route("logout")}>
-                                    <button
-                                        type="submit"
-                                        className={`${active ? "bg-gray-100" : ""} block w-full text-left px-4 py-2 text-sm text-gray-700`}
-                                    >
-                                        Sign out
-                                    </button>
-                                </form>
-                            )}
-                        </MenuItem>
-                    </>
-                ) : (
-                    <>
-                        <MenuItem>
-                            {({ active }) => (
-                                <NavLink
-                                    href="/login"
-                                    className={`${active ? "bg-gray-100" : "bg-gray-100"} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                    Login
-                                </NavLink>
-                            )}
-                        </MenuItem>
-                        <MenuItem>
-                            {({ active }) => (
-                                <NavLink
-                                    href="/register"
-                                    className={`${active ? "bg-gray-100" : ""} block px-4 py-2 text-sm text-gray-700`}
-                                >
-                                    Register
-                                </NavLink>
-                            )}
-                        </MenuItem>
-                    </>
-                )}
-                <div className="flex justify-center align-middle">
-                    <DarkModeToggle />
-                </div>
-            </MenuItems>
-        </Menu>
+        <div className="relative inline-flex items-center whitespace-nowrap transition-colors focus-within:ring-0 disabled:pointer-events-none disabled:opacity-50
+            border border-gray-50
+            backdrop-blur-sm backdrop-blur-md backdrop-blur-lg
+            text-[#9c9c9c] hover:text-white px-4 py-2 justify-start rounded-[0.5rem] text-sm font-normal shadow-none h-8 w-64">
+
+            {/* Search Input */}
+            <input
+                type="text"
+                placeholder="Search docs..."
+                className="bg-transparent outline-none border-none flex-grow text-white placeholder-[#9c9c9c] focus:outline-none focus:ring-0 focus-visible:ring-0"
+            />
+
+            {/* Keyboard Shortcut Indicator */}
+            <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] flex h-5 select-none items-center gap-1 rounded border border-[#2e2e2e]
+                backdrop-blur-sm backdrop-blur-md backdrop-blur-lg
+                px-1.5 font-mono text-[10px] font-medium opacity-100">
+                <span>⌘</span>K
+            </kbd>
+        </div>
     );
 };
 
+/**
+ * UserLinks Component (Desktop)
+ * Renders user-related links based on authentication status.
+ */
+export const UserLinks = ({ user }) => {
+    return (
+        <div className="flex items-center gap-4 p-4">
+            {user ? (
+                <>
+                    <StripedDivider />
+                    <a
+                        href="/profile"
+                        className="text-blue-500 hover:text-blue-700 font-medium"
+                    >
+                        Profile
+                    </a>
+                    <ResponsiveNavLink
+                        method="post"
+                        href={route('logout')}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                        onClick={() => {
+                            // Add your sign-out logic here.
+                        }}
+                    >
+                        Sign Out
+                    </ResponsiveNavLink>
+                </>
+            ) : (
+                <>
+                    <StripedDivider />
+                    <a
+                        rel="nofollow"
+                        href="/login?referrer=%2F"
+                        className="text-gray-50 hover:text-blue-700 font-medium"
+                    >
+                        Log in
+                    </a><StripedDivider/>
+                    <a
+                        rel="nofollow"
+                        href="/register"
+                        className="text-gray-50 hover:text-blue-700 font-medium"
+                    >
+                        Register
+                    </a>
+                </>
+            )}
+        </div>
+    );
+};
+
+/**
+ * NavBar Component
+ * Main navigation bar component.
+ */
 export default function NavBar({ header, children }) {
     const { auth } = usePage().props;
     const user = auth.user;
 
     return (
-        <div className="relative min-h-screen">
+        <div className="relative min-h-screen ">
             {/* Background Image */}
             <div className="fixed inset-0 -z-50">
                 <Background backgrounds={["/img/landing/global-bg-one.png"]} />
@@ -149,9 +201,9 @@ export default function NavBar({ header, children }) {
             <Disclosure as="nav" className="fixed top-0 inset-x-0 z-50 bg-none backdrop-blur-2xl">
                 {({ open }) => (
                     <>
-                        <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
+                        <div className="mx-auto ml-20 mr-20 px-2 sm:px-4 lg:px-8">
                             <div className="relative flex h-16 items-center justify-between">
-                                {/* Left: Logo & Desktop Nav Links */}
+                                {/* Left Section: Logo & Desktop Navigation Links */}
                                 <div className="flex items-center px-2 lg:px-0">
                                     <NavLink href="/">
                                         <ApplicationLogo className="h-8 w-auto" />
@@ -171,33 +223,31 @@ export default function NavBar({ header, children }) {
                                     </div>
                                 </div>
 
-                                {/* Center: Search Bar */}
-                                <div className="flex flex-1 justify-center px-2 lg:ml-6 lg:justify-end">
-                                    <div className="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">
-                                        <input
-                                            name="search"
-                                            type="search"
-                                            placeholder="Search"
-                                            aria-label="Search"
-                                            className="col-start-1 row-start-1 block w-full rounded-md bg-none backdrop-blur-3xl py-1.5 pr-3 pl-10 text-base text-white placeholder:text-gray-400 focus:bg-white focus:text-gray-900 focus:placeholder:text-gray-400 sm:text-sm"
-                                        />
-                                        <MagnifyingGlassIcon
-                                            aria-hidden="true"
-                                            className="pointer-events-none col-start-1 row-start-1 ml-3 h-5 w-5 self-center text-gray-400"
-                                        />
-                                    </div>
+                                {/* Center Section: Search Bar */}
+                                <div className="flex items-center gap-2">
+                                    <SearchBar />
+                                    <StripedDivider/>
+                                    <Info />
+                                    <StripedDivider/>
                                 </div>
 
-                                {/* Right: Notification Button, Dark Mode Toggle & User Menu (Desktop) */}
+                                {/* Right Section: Desktop User Menu & Dark Mode Toggle */}
                                 <div className="hidden lg:ml-4 lg:flex lg:items-center">
-                                    {/*<button*/}
-                                    {/*    type="button"*/}
-                                    {/*    className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"*/}
-                                    {/*>*/}
-                                    {/*    <span className="sr-only">View notifications</span>*/}
-                                    {/*    <BellIcon className="h-6 w-6" aria-hidden="true" />*/}
-                                    {/*</button>*/}
+                                    {/*
+                                      Uncomment the following block if notifications are needed.
+                                      <button
+                                          type="button"
+                                          className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                                      >
+                                          <span className="sr-only">View notifications</span>
+                                          <BellIcon className="h-6 w-6" aria-hidden="true" />
+                                      </button>
+                                    */}
                                     <UserLinks user={user} />
+                                    <StripedDivider />
+                                    <div className="flex justify-center items-center">
+                                        <DarkModeToggle />
+                                    </div>
                                 </div>
 
                                 {/* Mobile Menu Button */}
@@ -243,27 +293,28 @@ export default function NavBar({ header, children }) {
                                     ))}
                                     <MobileUser user={user} />
                                 </div>
-
                             </div>
-                            <div className="flex justify-center align-middle ">
+                            <div className="flex justify-center items-center">
                                 <DarkModeToggle />
                             </div>
                         </Disclosure.Panel>
-
                     </>
                 )}
-
             </Disclosure>
 
-            {/* Optional Header */}
+            {/* Optional Header Section */}
             {header && (
                 <header className="bg-white shadow dark:bg-gray-800">
-                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">{header}</div>
+                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {header}
+                    </div>
                 </header>
             )}
 
             {/* Main Content */}
-            <main className="container mx-auto z-50">{children}</main>
+            <main className="container mx-auto z-50">
+                {children}
+            </main>
 
             {/* Footer */}
             <Footer />

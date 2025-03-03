@@ -112,6 +112,13 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                     <div className="w-5/12 sm:scale-50 lg:scale-100 mb-20">
                         <Header />
                     </div>
+                    <div className="absolute hidden sm:flex justify-center items-center bottom-0 left-[650px] ">
+                        <img
+                            src="/img/landing/scroll.svg"
+                            alt="Scroll Down"
+                            className="h-10 mt-10 animate-bounce"
+                        />
+                    </div>
                 </section>
 
                 {/* Feature Sections */}

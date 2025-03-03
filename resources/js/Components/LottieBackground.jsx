@@ -14,14 +14,14 @@ const LottieBackground = () => {
 
   if (!animationData) {
     return (
-      <div className="w-full sm:w-1/2 h-64 sm:h-[513px] bg-gray-300 flex items-center justify-center">
+      <div className="w-full sm:w-1/2 h-64 sm:h-[213px] bg-gray-300 flex items-center justify-center">
         Loading GIF...
       </div>
     );
   }
 
   return (
-    <div className="w-full sm:w-1/2 h-64 sm:h-[513px]">
+    <div className="w-full sm:w-1/2 h-64 sm:h-[213px]">
       <Lottie animationData={animationData} loop={true} />
     </div>
   );

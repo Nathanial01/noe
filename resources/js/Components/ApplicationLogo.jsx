@@ -20,7 +20,7 @@ const LottieBackground = () => {
     }
 
     return (
-        <div className="h-12 w-12 sm:h-16 sm:w-16">
+        <div className="h-12 w-12 sm:h-12 sm:w-12">
             <Lottie animationData={animationData} loop={true} />
         </div>
     );

@@ -18,3 +18,7 @@ docker compose build --no-cache
 docker compose up -d
 npm install 
 npm run dev
+
+## Nova 
+
+php artisan migrate:fresh
