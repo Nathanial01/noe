@@ -2,28 +2,36 @@ import React, { Suspense, useEffect, useRef } from "react";
 import { lazy } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import NavBar from "@/Layouts/NavBar";
 import { Head } from "@inertiajs/react";
+
+// Import the updated NavBar component (which uses Headless UI)
+import NavBar from "@/Layouts/NavBar";
 import ChatBot from "../Pages/ChatBot/ChatBot";
 import Header from "../Components/Header";
 import Background from "../Components/Background";
 import HeroSection from "../Components/HeroSection.jsx";
-// Lazy-load components with prefetch magic comments
-const Featuresections = lazy(() => import(/* webpackPrefetch: true */ "@/Components/Featuresections"));
-const FeatureAboutUs = lazy(() => import(/* webpackPrefetch: true */ "@/Components/FeatureAboutUs"));
-const Testimonials = lazy(() => import(/* webpackPrefetch: true */ "@/Components/Testimonials"));
+
+// Lazy-load components with webpack prefetch hints
+const Featuresections = lazy(() =>
+    import(/* webpackPrefetch: true */ "@/Components/Featuresections")
+);
+const FeatureAboutUs = lazy(() =>
+    import(/* webpackPrefetch: true */ "@/Components/FeatureAboutUs")
+);
+const Testimonials = lazy(() =>
+    import(/* webpackPrefetch: true */ "@/Components/Testimonials")
+);
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
-    // Refs for animations
+    // Create refs for animation triggers
     const welcomeRef = useRef(null);
     const featureSectionsRef = useRef(null);
     const aboutUsRef = useRef(null);
     const testimonialsRef = useRef(null);
 
     useEffect(() => {
-        // Simplified animation function without sequential gating
         const animateElement = (ref) => {
             if (ref.current) {
                 gsap.fromTo(
@@ -44,7 +52,6 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
             }
         };
 
-        // Animate all sections
         animateElement(welcomeRef);
         animateElement(featureSectionsRef);
         animateElement(aboutUsRef);
@@ -57,22 +64,31 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                 <title>Dashboard - CyrBot</title>
                 <meta name="description" content="noe captal." />
             </Head>
-            <NavBar>
-                <Background
-                    className="fixed inset-0 w-full h-full opacity-50 -z-10"
-                    backgrounds={["/img/landing/global-bg-one.png"]}
-                />
-                <div className="fixed inset-0 bg-[#6B00FE]/10 dark:bg-black/20 backdrop-blur-sm -z-5"></div>
 
-                {/* Mobile Full-screen Welcome (Hero) Section */}
+            {/* NavBar placed above backgrounds */}
+            <div className="relative z-50">
+                <NavBar>
+
+                    {/* Background layers (placed behind everything) */}
+                    <div className="fixed inset-0 -z-20">
+                        <Background
+                            className="w-full h-full opacity-50"
+                            backgrounds={["/img/landing/global-bg-one.png"]}
+                        />
+                        <div className="fixed inset-0 bg-[#6B00FE]/10 dark:bg-black/20 backdrop-blur-sm" />
+                    </div>
+
+                    {/* Dashboard Content */}
+            <div className="relative">
+                {/* Mobile Hero Section */}
                 <section
                     ref={welcomeRef}
                     className="grid grid-flow-col-2 grid-rows-1 gap-4 sm:hidden"
                 >
-                    <div ref={welcomeRef} className="gap-4">
+                    <div className="gap-4 mt-44">
                         <Header />
                     </div>
-                    <div ref={welcomeRef} className="flex justify-center items-center">
+                    <div className="flex justify-center items-center">
                         <img
                             src="/img/landing/scroll.svg"
                             alt="Scroll Down"
@@ -81,28 +97,24 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                     </div>
                 </section>
 
-                {/* Desktop Full-screen Welcome (Hero) Section */}
+                {/* Desktop Hero Section */}
                 <section
                     ref={welcomeRef}
-                    className="hidden sm:flex items-center p-4 w-full h-screen scale-90"
+                    className="hidden sm:flex items-center w-full h-screen scale-90"
                 >
-                    {/* Left Side: HeroSection */}
-                    <div className="w-5/12 sm:scale-50 lg:scale-100 lg:mt-44 lg:mr-40 mt-96">
-                        <HeroSection/>
+                    {/* Left Side: Hero Section */}
+                    <div className="w-5/12 sm:scale-[30%] sm:lg:mr-40 lg:scale-100 lg:mt-44 lg:mr-40">
+                        <HeroSection />
                     </div>
-
-
                     {/* Spacer */}
                     <div className="flex-grow" />
-
                     {/* Right Side: Header */}
-                    <div className="w-5/12  sm:scale-50 lg:scale-100 -mt-96">
+                    <div className="w-5/12 sm:scale-50 lg:scale-100 mb-20">
                         <Header />
                     </div>
                 </section>
 
-
-                {/* Featuresections */}
+                {/* Feature Sections */}
                 <section
                     ref={featureSectionsRef}
                     className="relative w-full min-h-screen overflow-hidden"
@@ -115,14 +127,14 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                 {/* Main Content */}
                 <div className="relative bg-transparent">
                     <main className="relative container mx-auto z-10 px-4 sm:px-12 lg:px-24">
-                        {/* FeatureAboutUs Component */}
+                        {/* Feature About Us Section */}
                         <div ref={aboutUsRef}>
                             <Suspense fallback={<div>Loading Feature About Us...</div>}>
                                 <FeatureAboutUs />
                             </Suspense>
                         </div>
 
-                        {/* Testimonials Component */}
+                        {/* Testimonials Section */}
                         <div ref={testimonialsRef}>
                             <Suspense fallback={<div>Loading Testimonials...</div>}>
                                 <Testimonials />
@@ -135,7 +147,9 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                         </div>
                     </main>
                 </div>
-            </NavBar>
+            </div>
+                </NavBar>
+            </div>
         </>
     );
 }
