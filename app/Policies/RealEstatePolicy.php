@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Models\RealEstate;
 use App\Models\User;
-use App\Models\web\RealEstate;
 
 class RealEstatePolicy
 {

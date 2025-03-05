@@ -1,4 +1,4 @@
-import React from "react";
+    import React from "react";
 import NavBar from "@/Layouts/NavBar";
 import Footer from "@/Components/Footer";
 
@@ -76,10 +76,10 @@ export default function AboutUs() {
                 {/* ======================================================= */}
                 {/* Company Overview Section */}
                 {/* ======================================================= */}
-                <div className="py-16 card-dark">
+                <div className="py-16 ">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">Our Story</h2>
-                        <p className="mt-6 text-lg text-center text-gray-700 max-w-3xl mx-auto">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">Our Story</h2>
+                        <p className="mt-6 text-lg text-center text-gray-50 max-w-3xl mx-auto">
                             Founded on the principles of integrity and innovation, our company has grown into a leader in the industry.
                             We believe in harnessing expertise and leveraging cutting-edge technology to drive meaningful results.
                         </p>
@@ -117,36 +117,36 @@ export default function AboutUs() {
                 {/* ======================================================= */}
                 {/* Timeline / History Section */}
                 {/* ======================================================= */}
-                <div className="py-16 bg-white">
+                <div className="py-16 ">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">Our Journey</h2>
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">Our Journey</h2>
                         <div className="mt-10">
-                            <ol className="relative border-l border-[#5B1FAD]">
+                            <ol className="relative border-l border-white">
                                 <li className="mb-10 ml-6">
                                     <span className="absolute flex items-center justify-center w-8 h-8 bg-[#5B1FAD] rounded-full -left-4 ring-4 ring-white"></span>
-                                    <h3 className="text-xl font-semibold text-[#5B1FAD]">Inception</h3>
-                                    <p className="mt-2 text-gray-600">
+                                    <h3 className="text-xl font-semibold text-gray-50">Inception</h3>
+                                    <p className="mt-2 text-gray-50">
                                         Our journey began in 2005 when a group of visionaries set out to redefine the industry with innovative solutions.
                                     </p>
                                 </li>
                                 <li className="mb-10 ml-6">
                                     <span className="absolute flex items-center justify-center w-8 h-8 bg-[#5B1FAD] rounded-full -left-4 ring-4 ring-white"></span>
-                                    <h3 className="text-xl font-semibold text-[#5B1FAD]">Expansion</h3>
-                                    <p className="mt-2 text-gray-600">
+                                    <h3 className="text-xl font-semibold text-gray-50">Expansion</h3>
+                                    <p className="mt-2 text-gray-50">
                                         In 2010, we expanded our operations, establishing offices in key markets around the globe to better serve our clients.
                                     </p>
                                 </li>
                                 <li className="mb-10 ml-6">
                                     <span className="absolute flex items-center justify-center w-8 h-8 bg-[#5B1FAD] rounded-full -left-4 ring-4 ring-white"></span>
-                                    <h3 className="text-xl font-semibold text-[#5B1FAD]">Innovation</h3>
-                                    <p className="mt-2 text-gray-600">
+                                    <h3 className="text-xl font-semibold text-gray-50">Innovation</h3>
+                                    <p className="mt-2 text-gray-50">
                                         Embracing technology and innovation, we launched our groundbreaking platform in 2015, revolutionizing our industry.
                                     </p>
                                 </li>
                                 <li className="ml-6">
                                     <span className="absolute flex items-center justify-center w-8 h-8 bg-[#5B1FAD] rounded-full -left-4 ring-4 ring-white"></span>
-                                    <h3 className="text-xl font-semibold text-[#5B1FAD]">Today</h3>
-                                    <p className="mt-2 text-gray-600">
+                                    <h3 className="text-xl font-semibold text-gray-50">Today</h3>
+                                    <p className="mt-2 text-gray-50">
                                         Today, we continue to push boundaries, delivering unparalleled results and setting new standards in our field.
                                     </p>
                                 </li>
@@ -190,42 +190,12 @@ export default function AboutUs() {
                 {/* End Core Values Section */}
                 {/* ======================================================= */}
 
-                {/* ======================================================= */}
-                {/* Team Section */}
-                {/* ======================================================= */}
-                <div className="py-16 bg-white">
-                    <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">Meet Our Team</h2>
-                        <p className="mt-6 text-lg text-center text-gray-700 max-w-3xl mx-auto">
-                            Our dedicated team of professionals is the driving force behind our success.
-                        </p>
-                        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                            <div className="p-6 bg-gray-50 rounded-lg shadow hover:shadow-lg transition duration-300 text-center">
-                                <img src="/images/team1.jpg" alt="Team Member 1" className="w-24 h-24 rounded-full mx-auto" />
-                                <h3 className="mt-4 text-xl font-semibold text-[#5B1FAD]">Alice Johnson</h3>
-                                <p className="text-gray-600">CEO</p>
-                            </div>
-                            <div className="p-6 bg-gray-50 rounded-lg shadow hover:shadow-lg transition duration-300 text-center">
-                                <img src="/images/team2.jpg" alt="Team Member 2" className="w-24 h-24 rounded-full mx-auto" />
-                                <h3 className="mt-4 text-xl font-semibold text-[#5B1FAD]">Robert Smith</h3>
-                                <p className="text-gray-600">COO</p>
-                            </div>
-                            <div className="p-6 bg-gray-50 rounded-lg shadow hover:shadow-lg transition duration-300 text-center">
-                                <img src="/images/team3.jpg" alt="Team Member 3" className="w-24 h-24 rounded-full mx-auto" />
-                                <h3 className="mt-4 text-xl font-semibold text-[#5B1FAD]">Emily Davis</h3>
-                                <p className="text-gray-600">CFO</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* ======================================================= */}
-                {/* End Team Section */}
-                {/* ======================================================= */}
+
 
                 {/* ======================================================= */}
                 {/* Call to Action Section */}
                 {/* ======================================================= */}
-                <div className="py-16 bg-gradient-to-br from-[#5B1FAD] to-[#7F3DFF]">
+                <div className="py-16 ">
                     <div className="max-w-6xl mx-auto px-6 text-center">
                         <h2 className="text-4xl md:text-5xl font-bold text-white">Join Our Journey</h2>
                         <p className="mt-6 text-lg text-white max-w-2xl mx-auto">

@@ -30,22 +30,48 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validate only the required fields for registration
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            // Personal Information
+            'first_name'           => 'required|string|max:255',
+            'last_name'            => 'required|string|max:255',
+            'date_of_birth'        => 'required|date',
+            'nationality'          => 'required|string|max:255',
+            'country_of_residence' => 'required|string|max:255',
+            'gender'               => 'required|string|max:20',
+            'marital_status'       => 'nullable|string|max:50',
+            // Contact Details
+            'email'                => 'required|string|email|max:255|unique:users',
+            'phone'                => 'nullable|string|max:20',
+            'residential_address'  => 'nullable|string|max:500',
+            // Authentication
+            'password'             => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Create the user. Other fields (e.g., KYC, Financial) are left null until updated on the profile page.
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            // Personal Information
+            'first_name'           => $request->first_name,
+            'last_name'            => $request->last_name,
+            'date_of_birth'        => $request->date_of_birth,
+            'nationality'          => $request->nationality,
+            'country_of_residence' => $request->country_of_residence,
+            'gender'               => $request->gender,
+            'marital_status'       => $request->marital_status,
+            // Contact Details
+            'email'                => $request->email,
+            'phone'                => $request->phone,
+            'residential_address'  => $request->residential_address,
+            // Authentication
+            'password'             => Hash::make($request->password),
+            // Optionally set a default user role (e.g., "client")
+            'user_type'            => 'client',
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        return redirect(route('nova/dashboard'));
     }
 }

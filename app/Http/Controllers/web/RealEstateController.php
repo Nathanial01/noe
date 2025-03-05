@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\web;
 
-use App\Http\Controllers\Controller; // ✅ Import this line
+use App\Http\Controllers\Controller;
 use App\Http\Requests\web\StoreRealEstateRequest;
 use App\Http\Requests\web\UpdateRealEstateRequest;
-use App\Models\web\RealEstate;
+use App\Models\RealEstate;
 use Inertia\Inertia;
 use Inertia\Response;
+
+// ✅ Import this line
 
 class RealEstateController extends Controller
 {

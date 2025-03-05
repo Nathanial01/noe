@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Models\web;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class About extends Model
 {
-    /** @use HasFactory<\Database\Factories\ContactFactory> */
+    /** @use HasFactory<\Database\Factories\AboutFactory> */
     use HasFactory;
 }

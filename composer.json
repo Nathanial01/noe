@@ -11,11 +11,15 @@
         "inertiajs/inertia-laravel": "^2.0",
         "jenssegers/mongodb": "*",
         "laravel/framework": "^11.31",
+        "laravel/nova": "^5.2",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "mongodb/laravel-mongodb": "^5.1",
         "mongodb/mongodb": "^1.20",
         "openai-php/client": "^0.10.3",
+        "spatie/laravel-medialibrary": "^11.12",
+        "spatie/laravel-sitemap": "^7.3",
+        "spatie/period": "^2.4",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
@@ -76,5 +80,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "nova": {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    }
 }

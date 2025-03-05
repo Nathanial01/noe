@@ -30,51 +30,87 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the request with only admin and client user types
+        // Validate the incoming request
         $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'phone' => 'nullable|digits_between:10,15|unique:users,phone',
-            'gender' => 'required|in:Male,Female,Other',
-            'user_type' => 'required|in:' . implode(',', [User::ADMIN, User::CLIENT]), // Only admin and client user types
-            'password' => 'required|string|confirmed|min:8',
-            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Profile picture validation
+            'first_name'              => 'required|string|max:255',
+            'last_name'               => 'required|string|max:255',
+            'date_of_birth'           => 'nullable|date',
+            'nationality'             => 'nullable|string|max:255',
+            'country_of_residence'    => 'nullable|string|max:255',
+            'gender'                  => 'nullable|string|max:50',
+            'marital_status'          => 'nullable|string|max:255',
+            'email'                   => 'required|email|max:255|unique:users',
+            'phone'                   => 'nullable|string|max:50|unique:users,phone',
+            'residential_address'     => 'nullable|string',
+            'government_id'           => 'nullable|string|max:255',
+            'tax_id'                  => 'nullable|string|max:255',
+            'social_security_number'  => 'nullable|string|max:255',
+            'proof_of_address'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'employment_status'       => 'nullable|string|max:255',
+            'source_of_income'        => 'nullable|string|max:255',
+            'annual_income_range'     => 'nullable|string|max:255',
+            'net_worth'               => 'nullable|numeric',
+            'investment_experience'   => 'nullable|string|max:255',
+            'risk_tolerance'          => 'nullable|string|max:255',
+            'investment_objectives'   => 'nullable|string',
+            'terms_agreed'            => 'accepted',
+            'privacy_policy_consented'=> 'accepted',
+            'risk_disclosure_agreed'  => 'accepted',
+            'tax_form'                => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'password'                => 'required|string|confirmed|min:8',
         ]);
 
-        // Handle profile picture upload
-        $profilePicturePath = null;
-        if ($request->hasFile('profile_picture')) {
-            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-        }
+        // Handle file uploads
+        $proofOfAddressPath = $request->hasFile('proof_of_address')
+            ? $request->file('proof_of_address')->store('proof_of_address', 'public')
+            : null;
 
-        // Assign role based on user_type
-        $role = Role::where('name', $request->user_type)->first();
+        $taxFormPath = $request->hasFile('tax_form')
+            ? $request->file('tax_form')->store('tax_forms', 'public')
+            : null;
 
-        if (!$role) {
-            return response()->json(['error' => 'Role not found'], 400); // Handle missing role
-        }
-
-        // Create the user and assign the role_id based on user_type
+        // Create the user with the correct attributes
         $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'gender' => $request->gender,
-            'user_type' => $request->user_type,
-            'password' => Hash::make($request->password),
-            'profile_picture' => $profilePicturePath, // Save the profile picture path
-            'role_id' => $role->id, // Automatically assign role_id based on user_type
+            'first_name'              => $request->first_name,
+            'last_name'               => $request->last_name,
+            'date_of_birth'           => $request->date_of_birth,
+            'nationality'             => $request->nationality,
+            'country_of_residence'    => $request->country_of_residence,
+            'gender'                  => $request->gender,
+            'marital_status'          => $request->marital_status,
+            'email'                   => $request->email,
+            'phone'                   => $request->phone,
+            'residential_address'     => $request->residential_address,
+            'government_id'           => $request->government_id,
+            'tax_id'                  => $request->tax_id,
+            'social_security_number'  => $request->social_security_number,
+            'proof_of_address'        => $proofOfAddressPath,
+            'employment_status'       => $request->employment_status,
+            'source_of_income'        => $request->source_of_income,
+            'annual_income_range'     => $request->annual_income_range,
+            'net_worth'               => $request->net_worth,
+            'investment_experience'   => $request->investment_experience,
+            'risk_tolerance'          => $request->risk_tolerance,
+            'investment_objectives'   => $request->investment_objectives,
+            'terms_agreed'            => true,
+            'privacy_policy_consented'=> true,
+            'risk_disclosure_agreed'  => true,
+            'tax_form'                => $taxFormPath,
+            'password'                => Hash::make($request->password),
+            'is_admin'                => false, // Default to non-admin
         ]);
 
-        // Fire the Registered event
         event(new Registered($user));
-
-        // Log the user in
         Auth::login($user);
 
-        // Redirect to the dashboard
-        return redirect('/dashboard');
+        // Log debug info
+        \Log::info('User registered', [
+            'id' => $user->id,
+            'is_admin' => $user->is_admin,
+            'redirect_to' => $user->is_admin ? '/nova' : '/dashboard',
+        ]);
+
+        // Redirect based on user role: admins go to `/nova`, non-admins go to `/dashboard`
+        return redirect($user->is_admin ? '/nova' : '/dashboard');
     }
 }
