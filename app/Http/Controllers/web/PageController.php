@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\web\ContactController;
 use App\Http\Controllers\web\PrivateEquityController;
 use App\Http\Controllers\web\RealEstateController;
+use App\Http\Controllers\web\AboutController;
+use App\Http\Controllers\web\AgendaEvent\AgendaEventController;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
@@ -21,7 +23,8 @@ class PageController extends Controller
             'private-equity' => app(PrivateEquityController::class)->index(),
             'contact' => app(ContactController::class)->index(),
             'real-estate' => app(RealEstateController::class)->index(),
-            'about' => Inertia::render("nav/About/About"),
+            'about' => app(AboutController::class)->index(),
+            'AgendaEvent' => app(\App\Http\Controllers\web\AgendaEvent\AgendaEventController::class)->index(),
             default => abort(404),
         };
     }
