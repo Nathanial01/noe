@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.2.0",
+        "@inertiajs/inertia-react": "^0.8.1",
         "bootstrap-icons": "^1.11.3",
         "gsap": "^3.12.7",
         "lottie-react": "^2.4.1",

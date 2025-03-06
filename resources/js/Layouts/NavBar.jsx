@@ -52,10 +52,10 @@ const Info = () => {
             </a>
 
             {/* Agenda Button */}
-            <a href="/agendaevent" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
+            <a href="/agendaEvent" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
                 <FaCalendarAlt className="text-lg" />
                 <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 text-white text-sm transition-opacity duration-200 whitespace-nowrap">
-                    Agenda
+                   Events
                 </span>
             </a>
         </div>
@@ -107,25 +107,31 @@ const MobileUser = ({ user }) => {
  */
 const SearchBar = () => {
     return (
-        <div className="relative inline-flex items-center whitespace-nowrap transition-colors focus-within:ring-0 disabled:pointer-events-none disabled:opacity-50
-            border border-gray-50
-            backdrop-blur-sm
-            text-[#9c9c9c] hover:text-white px-4 py-2 justify-start rounded-[0.5rem] text-sm font-normal shadow-none h-8 w-64">
-
-            {/* Search Input */}
+        <div
+            className="p-5 opacity-50 hover:none hover:opacity-100 backdrop-blur-3xl  overflow-hidden w-5 h-10 hover:w-[270px] shadow-[2px_2px_20px_rgba(0,0,0,0.08)] rounded-full flex group items-center hover:duration-300 duration-300"
+        >
+            <div className="flex items-center justify-center fill-white mr-8">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    id="Isolation_Mode"
+                    data-name="Isolation Mode"
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                >
+                    <path
+                        d="M18.9,16.776A10.539,10.539,0,1,0,16.776,18.9l5.1,5.1L24,21.88ZM10.5,18A7.5,7.5,0,1,1,18,10.5,7.507,7.507,0,0,1,10.5,18Z"
+                    ></path>
+                </svg>
+            </div>
+            <StripedDivider/>
             <input
                 type="text"
-                placeholder="Search docs..."
-                className="bg-transparent outline-none border-none flex-grow text-white placeholder-[#9c9c9c] focus:outline-none focus:ring-0 focus-visible:ring-0"
+                className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:border-0 focus:ring-0"
             />
-
-            {/* Keyboard Shortcut Indicator */}
-            <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] flex h-5 select-none items-center gap-1 rounded border border-[#2e2e2e]
-                backdrop-blur-sm
-                px-1.5 font-mono text-[10px] font-medium opacity-100">
-                <span>⌘</span>K
-            </kbd>
+          <StripedDivider/>
         </div>
+
     );
 };
 
@@ -133,7 +139,7 @@ const SearchBar = () => {
  * UserLinks Component (Desktop)
  * Renders user-related links based on authentication status.
  */
-export const UserLinks = ({ user }) => {
+export const UserLinks = ({user}) => {
     // Instead of handling dashboard redirection here,
     // we delegate that decision to the backend.
     const dashboardUrl = '/dashboard';
@@ -142,7 +148,7 @@ export const UserLinks = ({ user }) => {
         <div className="flex items-center gap-4 p-4">
             {user ? (
                 <>
-                    <StripedDivider />
+                    <StripedDivider/>
                     <a
                         href={dashboardUrl}
                         className="flex items-center hover:scale-105 font-medium transition"
@@ -258,7 +264,7 @@ export default function NavBar({ header, children }) {
 
                                 {/* Center Section: Search Bar */}
                                 <div className="flex items-center gap-2">
-                                    <StripedDivider/>
+
                                     <SearchBar />
                                     <StripedDivider/>
                                     <div className="hidden lg:flex ">
