@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Livewire\Website\AgendaEvent;
+namespace App\Http\Controllers\web\AgendaEvent;
 
+use App\Http\Controllers\Controller;
 use App\Models\AgendaEvent;
 use Illuminate\Database\Eloquent\Collection;
-use Livewire\Component;
+use Inertia\Inertia;
+use Inertia\Response;
 
-class Index extends Component
+class Index extends Controller
 {
     public ?int $selectedEventIndex = null;
     public ?string $viewMode = null;
@@ -59,9 +61,13 @@ class Index extends Component
         $this->readMeEventIndex = null;
     }
 
-    public function render()
+    public function render(): Response
     {
-        return view('livewire.website.agendaevent.index')
-            ->layout('layouts.website');
+        return Inertia::render('AgendaEvent/Index', [
+            'events' => $this->getEventsProperty(),
+            'selectedEvent' => $this->getSelectedEventProperty(),
+            'viewMode' => $this->viewMode,
+            'readMeEventIndex' => $this->readMeEventIndex,
+        ]);
     }
 }

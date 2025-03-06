@@ -52,7 +52,7 @@ const Info = () => {
             </a>
 
             {/* Agenda Button */}
-            <a href="/agenda" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
+            <a href="../Pages/nav/agendaevent/index.jsx" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
                 <FaCalendarAlt className="text-lg" />
                 <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 text-white text-sm transition-opacity duration-200 whitespace-nowrap">
                     Agenda
