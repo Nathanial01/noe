@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class Index extends Controller
+class AgendaEventController extends Controller
 {
     public ?int $selectedEventIndex = null;
     public ?string $viewMode = null;
@@ -63,7 +63,7 @@ class Index extends Controller
 
     public function render(): Response
     {
-        return Inertia::render('AgendaEvent/Index', [
+        return Inertia::render('AgendaEvent/AgendaEventController', [
             'events' => $this->getEventsProperty(),
             'selectedEvent' => $this->getSelectedEventProperty(),
             'viewMode' => $this->viewMode,
