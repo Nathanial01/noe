@@ -84,7 +84,7 @@ const MobileUser = ({ user }) => {
         </form>
     ) : (
         <>
-            <div className="w-px h-6 bg-gradient-to-b from-transparent via-black/50 to-transparent"></div>
+
             <NavLink
                 href="/login"
                 className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-white/20"
@@ -329,7 +329,7 @@ export default function NavBar({ header, children }) {
                                     <MobileUser user={user} />
                                 </div>
                             </div>
-                            <div className="flex justify-center items-center p-1">
+                           <div className="flex justify-center items-center p-1">
                                 <Info />
                                 <div  className="p-2" > <DarkModeToggle/></div>
 

@@ -48,9 +48,8 @@ class RegisteredUserController extends Controller
             'password'             => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Create the user. Other fields (e.g., KYC, Financial) are left null until updated on the profile page.
+        // Create the user.
         $user = User::create([
-            // Personal Information
             'first_name'           => $request->first_name,
             'last_name'            => $request->last_name,
             'date_of_birth'        => $request->date_of_birth,
@@ -58,20 +57,20 @@ class RegisteredUserController extends Controller
             'country_of_residence' => $request->country_of_residence,
             'gender'               => $request->gender,
             'marital_status'       => $request->marital_status,
-            // Contact Details
             'email'                => $request->email,
             'phone'                => $request->phone,
             'residential_address'  => $request->residential_address,
-            // Authentication
             'password'             => Hash::make($request->password),
-            // Optionally set a default user role (e.g., "client")
             'user_type'            => 'client',
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Determine the dashboard URL based on the user's is_admin flag.
+        $dashboardUrl = $user && $user->is_admin
+            ? '/nova/dashboards/main'
+            : '/nova/dashboards/clients';
 
-        return redirect(route('nova/dashboard'));
+        return redirect()->intended($dashboardUrl);
     }
 }
