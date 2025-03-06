@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Website;
+namespace App\Http\Controllers\web\Masterclass;
 
 use Inertia\Inertia;
 use Inertia\Response;

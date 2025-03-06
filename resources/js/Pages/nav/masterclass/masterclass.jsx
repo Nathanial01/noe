@@ -1,132 +1,160 @@
-<!-- resources/views/livewire/calendar.blade.php -->
+import React, { useState } from "react";
+import { Head, usePage } from "@inertiajs/react";
+import NavBar from "@/Layouts/NavBar.jsx";
 
-@push('title')
-    Masterclass – Grip op de Nieuwe Huurwetten
-@endpush
+export default function AgendaEvent() {
+    const { events: serverEvents } = usePage().props;
+    const [selectedEventIndex, setSelectedEventIndex] = useState(null);
+    const [readMeEventIndex, setReadMeEventIndex] = useState(null);
 
-@push('description')
-    Masterclass over de Wet Betaalbare Huur, Wet Goed Verhuurderschap &amp; Wet Vaste Huurcontracten. Ontdek hoe jij als verhuurder, ontwikkelaar of verhuurmakelaar voorbereid bent op de nieuwe huurwetgeving.
-@endpush
+    const selectedEvent =
+        typeof selectedEventIndex === "number" && serverEvents[selectedEventIndex]
+            ? serverEvents[selectedEventIndex]
+            : null;
 
-<main class="min-h-screen flex flex-col">
+    const formatDate = (dateStr) => {
+        const d = new Date(dateStr);
+        return `${d.getDate().toString().padStart(2, "0")}-${(d.getMonth() + 1)
+            .toString()
+            .padStart(2, "0")}-${d.getFullYear()}`;
+    };
 
-    <header class="relative pt-6 pb-6 z-50">
-        <x-website-header />
-    </header>
+    const eventDates = (event) => {
+        const start = formatDate(event.start_date);
+        const end = formatDate(event.end_date);
+        return start !== end ? `van ${start} tot ${end}` : `van ${start}`;
+    };
 
-    <!-- Dots in the background -->
-    <x-website.dots class="-z-10" />
+    const getStatusClass = (status) => {
+        switch (status) {
+            case "geannuleerd":
+                return "text-red-500";
+            case "gepland":
+                return "text-green-600";
+            case "afgelopen":
+                return "text-blue-500";
+            default:
+                return "text-gray-500";
+        }
+    };
 
-    <!-- Centered Content Container -->
-    <div class="flex-grow flex items-center justify-center">
-        <div class="w-full max-w-4xl p-8 sm:p-12 rounded-lg z-0">
-            <!-- Page Header -->
-            <header class="text-center mb-10 mt-20">
-                <h1 class="text-4xl font-bold text-gray-900 leading-tight">
-                    Masterclass: Grip op de Nieuwe Huurwetten<br>
-                    <span class="block text-base font-normal text-gray-600 mt-2">
-                        Wet Betaalbare Huur, Wet Goed Verhuurderschap &amp; Wet Vaste Huurcontracten
-                    </span>
-                </h1>
-                <h2 class="text-2xl font-semibold text-gray-700 mt-4">
-                    Schrijf je in en zorg dat je klaar bent voor de toekomst!
-                </h2>
-            </header>
+    const selectEvent = (index) => setSelectedEventIndex(index);
+    const closeSelectEvent = () => setSelectedEventIndex(null);
+    const openReadMeModal = (index) => setReadMeEventIndex(index);
+    const closeReadMeModal = () => setReadMeEventIndex(null);
 
-            <!-- Main Article Content -->
-            <article class="prose prose-indigo mx-auto text-gray-700">
-                <section>
-                    <p>
-                        Ben jij verhuurder, vastgoedontwikkelaar of verhuurmakelaar en wil je <em>volledig op de hoogte zijn</em> van de nieuwste huurwetgeving? Schrijf je in voor onze Masterclass en zorg dat je klaar bent voor de toekomst!
-                    </p>
-                    <p>
-                        De huurmarkt is in beweging. Met de invoering van de Wet Betaalbare Huur (per 1 juli 2024), de Wet Goed Verhuurderschap en de Wet Vaste Huurcontracten krijgen verhuurders en makelaars te maken met nieuwe regels en verplichtingen. Maar hoe vertaal je deze complexe wetgeving naar de praktijk? Hoe voorkom je risico’s en blijf je efficiënt én compliant?
-                    </p>
-                </section>
+    const extraLinks = [
+        { title: "Webinar", subtitle: "Live Session", link: "/website/webinar/index" },
+        { title: "Agenda", subtitle: "Upcoming Events", link: "/website/eventagenda/index" },
+        { title: "Masterclass", subtitle: "In-Depth Class", link: "/website/masterclass/index" },
+    ];
 
-                <section>
-                    <h3>Wat kun je verwachten?</h3>
-                    <p>
-                        In deze interactieve Masterclass nemen we je, aan de hand van praktijkvoorbeelden, mee in de laatste ontwikkelingen. We behandelen:
-                    </p>
-                    <ul>
-                        <li>
-                            <strong>Wet Betaalbare Huur</strong> – Hoe werkt het nieuwe huurpuntenstelsel? Wat betekent dit voor de huurprijs en het rendement van jouw vastgoed en hoe kun je door creativiteit je rendement optimaliseren?
-                        </li>
-                        <li>
-                            <strong>Wet Goed Verhuurderschap</strong> – Wat mag wel en niet in het contact met huurders? Hoe voorkom je problemen bij handhaving en boetes?
-                        </li>
-                        <li>
-                            <strong>Wet Vaste Huurcontracten</strong> – Wat verandert er in tijdelijke verhuur en hoe kun je flexibel blijven binnen de nieuwe regels?
-                        </li>
-                        <li>
-                            <strong>Praktische strategieën</strong> – Hoe voldoe je efficiënt aan alle regels zonder in te leveren op rendement en service?
-                        </li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h3>Voor wie is deze Masterclass?</h3>
-                    <p>
-                        Deze Masterclass is speciaal ontwikkeld voor verhuurders, ontwikkelaars, beleggers, asset-managers en verhuurmakelaars die proactief willen inspelen op de nieuwe realiteit van de huurmarkt.
+    return (
+        <NavBar>
+            <Head title="Agenda Evenementen" />
+            <main className="min-h-screen py-8 px-4 text-white">
+                {/* Intro Sectie */}
+                <section className="max-w-lg mx-auto text-center px-4 mt-24 mb-8">
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4">Agenda</h1>
+                    <p className="leading-relaxed">
+                        Bekijk de agenda en meld je aan voor een event bij jou in de buurt of online!
                     </p>
                 </section>
 
-                <!-- Video Section -->
-                <section class="my-8">
-                    <div class="aspect-w-16 aspect-h-9">
-{{--                        <iframe--}}
-{{--                            class="w-full h-full rounded-lg"--}}
-{{--                            src="https://www.youtube.com/embed/aFYx5QlEEXk"--}}
-{{--                            title="Masterclass Video"--}}
-{{--                            frameborder="0"--}}
-{{--                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"--}}
-{{--                            allowfullscreen>--}}
-{{--                        </iframe>--}}
-                        <img
-                            src="{{ Vite::asset('resources/images/masterclass.jpg') }}"
-                            class="w-full h-full rounded-lg"
-                            alt="Masterclass image"
-                            title="Masterclass image" />
+                {/* Hoofdcontainer */}
+                <div className={`max-w-7xl mx-auto ${selectedEvent ? "flex flex-col md:flex-row gap-6" : "max-w-2xl"}`}>
+                    {/* Linker kolom: Evenementenlijst */}
+                    {serverEvents.length > 0 ? (
+                        <section className={selectedEvent ? "w-full md:w-1/2 space-y-4" : "w-full space-y-4"}>
+                            <h1 className="text-3xl font-bold mb-8">Evenementen</h1>
+                            {serverEvents.map((event, index) => (
+                                <article
+                                    key={index}
+                                    className={`bg-gray-800 p-4 rounded-lg cursor-pointer ${
+                                        selectedEventIndex === index ? "ring-4 ring-yellow-300" : ""
+                                    }`}
+                                    onClick={() => selectEvent(index)}
+                                >
+                                    <h2 className="font-bold text-lg">{event.title}</h2>
+                                    <p className="text-sm">
+                                        {eventDates(event)} | {event.start_time} - {event.end_time} | {event.place}
+                                    </p>
+                                    <p className="text-xs mt-2 opacity-70">{event.description.slice(0, 60)}...</p>
+                                    {event.event_link && (
+                                        <p className="text-xs mt-2">
+                                            <a href={event.event_link} target="_blank" className="text-blue-500 underline">
+                                                Bekijk evenement
+                                            </a>
+                                        </p>
+                                    )}
+                                    <div className="mt-4 flex justify-between">
+                                        <p className={`text-xs ${getStatusClass(event.status)}`}>{event.status}</p>
+                                        <button
+                                            className="text-xs md:text-sm text-gray-400 hover:underline"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openReadMeModal(index);
+                                            }}
+                                        >
+                                            Lees verder...
+                                        </button>
+                                    </div>
+                                </article>
+                            ))}
+                        </section>
+                    ) : (
+                        // Geen evenementen beschikbaar, toon extra links
+                        <div className="flex flex-wrap gap-6 justify-center items-center">
+                            {extraLinks.map((link, index) => (
+                                <a key={index} href={link.link} className="cursor-pointer">
+                                    <div className="group flex flex-col gap-4 w-32 h-40 bg-gray-800 rounded-2xl p-4 shadow-xl transition-all hover:border-indigo-500 hover:shadow-indigo-500/20">
+                                        <div className="text-center">
+                                            <p className="font-medium text-sm group-hover:text-indigo-400">{link.title}</p>
+                                            <p className="text-xs mt-1 opacity-60 group-hover:opacity-100">{link.subtitle}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Rechter kolom: Evenementdetails */}
+                    {selectedEvent && (
+                        <section className="hidden md:block w-full md:w-1/2 bg-gray-800 rounded-lg p-6 mt-16">
+                            <h2 className="font-bold text-xl">{selectedEvent.title}</h2>
+                            {selectedEvent.event_link && (
+                                <p className="text-sm text-blue-400 mb-2">
+                                    <a href={selectedEvent.event_link} target="_blank" className="underline">
+                                        Bekijk evenement
+                                    </a>
+                                </p>
+                            )}
+                            <p className="text-sm opacity-80">
+                                {eventDates(selectedEvent)} | {selectedEvent.start_time} - {selectedEvent.end_time} | {selectedEvent.place}
+                            </p>
+                            <p className="text-sm leading-relaxed mt-4">{selectedEvent.description}</p>
+                        </section>
+                    )}
+                </div>
+
+                {/* Lees verder pop-up */}
+                {readMeEventIndex !== null && serverEvents[readMeEventIndex] && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                        <div className="fixed inset-0 bg-black opacity-50" onClick={closeReadMeModal}></div>
+                        <div className="bg-gray-800 p-6 rounded-lg max-w-md z-50">
+                            <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl" onClick={closeReadMeModal}>
+                                &times;
+                            </button>
+                            <h2 className="font-bold text-xl">{serverEvents[readMeEventIndex].title}</h2>
+                            <p className="text-sm opacity-80">
+                                {eventDates(serverEvents[readMeEventIndex])} | {serverEvents[readMeEventIndex].start_time} - {serverEvents[readMeEventIndex].end_time} |{" "}
+                                {serverEvents[readMeEventIndex].place}
+                            </p>
+                            <p className="text-sm leading-relaxed mt-4">{serverEvents[readMeEventIndex].description}</p>
+                        </div>
                     </div>
-                </section>
-
-                <section>
-                    <h3>Waarom deelnemen?</h3>
-                    <p>
-                        - <strong>Actuele en praktijkgerichte kennis:</strong> We vertalen de wet naar concrete stappen voor jouw situatie.<br>
-                        - <strong>Interactieve sessie met praktijkvoorbeelden:</strong> Geen droge theorie, maar direct toepasbare inzichten.<br>
-                        - <strong>Voorkom risico’s en verhoog efficiëntie:</strong> Leer hoe je juridische valkuilen omzeilt en processen optimaliseert.<br>
-                        - <strong>Vergroot je dienstverlening:</strong> Bied je klanten (huurders en investeerders) betere ondersteuning met up-to-date kennis.
-                    </p>
-                </section>
-
-                <section>
-                    <h3>Door heel Nederland!</h3>
-                    <p>
-                        De Masterclasses worden op verschillende locaties in het land gegeven. Bekijk onze agenda en meld je aan voor een sessie bij jou in de buurt!
-                    </p>
-                    <p>
-                        Schrijf je nu in en blijf de markt een stap voor!
-                    </p>
-                </section>
-            </article>
-
-            <!-- Call-to-Action Button -->
-            <div class="flex justify-center mt-12 mb-8">
-                <a
-                    href="agendaevent"
-                    class="bg-yellow-400 hover:bg-yellow-500 transition-colors text-black px-8 py-3 font-semibold rounded-lg inline-flex items-center"
-                >
-                    Naar Agenda
-                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                    </svg>
-                </a>
-            </div>
-
-        </div>
-    </div>
-
-</main>
+                )}
+            </main>
+        </NavBar>
+    );
+}
