@@ -1,14 +1,14 @@
 <?php
+namespace App\Http\Controllers\Website;
 
-namespace App\\Website\Masterclass\;
+use Inertia\Inertia;
+use Inertia\Response;
+use App\Http\Controllers\Controller;
 
-
-
-
-class MasterclassController extends Component
+class MasterclassController extends Controller
 {
-    public function render()
+    public function index(): Response
     {
-        return view('.website.masterclass.index')->layout('layouts.website');
+        return Inertia::render('Masterclass/Index'); // Dit wijst naar resources/js/Pages/Masterclass/Index.jsx
     }
 }
