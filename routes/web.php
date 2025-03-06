@@ -53,7 +53,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Public Pages
 Route::get('{page}', [PageController::class, 'renderPage'])
-    ->where('page', 'about|contact|real-estate|private-equity')
+    ->where('page', 'about|contact|real-estate|private-equity|agendaEvent|masterclass|webinar')
     ->name('dynamic.page');
 
 Route::prefix('{page}')
