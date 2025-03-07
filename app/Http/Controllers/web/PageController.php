@@ -8,6 +8,8 @@ use App\Http\Controllers\web\PrivateEquityController;
 use App\Http\Controllers\web\RealEstateController;
 use App\Http\Controllers\web\AboutController;
 use App\Http\Controllers\web\AgendaEvent\AgendaEventController;
+use App\Http\Controllers\web\Webinar\WebinarController;
+use App\Http\Controllers\web\Masterclass\MasterclassController;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
@@ -26,6 +28,8 @@ class PageController extends Controller
             'real-estate'     => app(RealEstateController::class)->index(),
             'about'           => app(AboutController::class)->index(),
             'agendaevent'     => app(AgendaEventController::class)->index(),
+            'webinar'         => app(WebinarController::class)->index(),
+            'masterclass'     => app(MasterclassController::class)->index(),
             default           => abort(404),
         };
     }
@@ -41,6 +45,8 @@ class PageController extends Controller
             'contact'         => app(ContactController::class)->store($request),
             'real-estate'     => app(RealEstateController::class)->store($request),
             'agendaevent'     => app(AgendaEventController::class)->store($request),
+            'webinar'         => app(WebinarController::class)->store($request),
+            'masterclass'     => app(MasterclassController::class)->store($request),
             default           => abort(404),
         };
     }
@@ -56,6 +62,8 @@ class PageController extends Controller
             'contact'         => app(ContactController::class)->show($id),
             'real-estate'     => app(RealEstateController::class)->show($id),
             'agendaevent'     => app(AgendaEventController::class)->show($id),
+            'webinar'         => app(WebinarController::class)->show($id),
+            'masterclass'     => app(MasterclassController::class)->show($id),
             default           => abort(404),
         };
     }
@@ -71,6 +79,8 @@ class PageController extends Controller
             'contact'         => app(ContactController::class)->edit($id),
             'real-estate'     => app(RealEstateController::class)->edit($id),
             'agendaevent'     => app(AgendaEventController::class)->edit($id),
+            'webinar'         => app(WebinarController::class)->edit($id),
+            'masterclass'     => app(MasterclassController::class)->edit($id),
             default           => abort(404),
         };
     }
@@ -86,6 +96,8 @@ class PageController extends Controller
             'contact'         => app(ContactController::class)->update($request, $id),
             'real-estate'     => app(RealEstateController::class)->update($request, $id),
             'agendaevent'     => app(AgendaEventController::class)->update($request, $id),
+            'webinar'         => app(WebinarController::class)->update($request, $id),
+            'masterclass'     => app(MasterclassController::class)->update($request, $id),
             default           => abort(404),
         };
     }
@@ -101,6 +113,8 @@ class PageController extends Controller
             'contact'         => app(ContactController::class)->destroy($id),
             'real-estate'     => app(RealEstateController::class)->destroy($id),
             'agendaevent'     => app(AgendaEventController::class)->destroy($id),
+            'webinar'         => app(WebinarController::class)->destroy($id),
+            'masterclass'     => app(MasterclassController::class)->destroy($id),
             default           => abort(404),
         };
     }
