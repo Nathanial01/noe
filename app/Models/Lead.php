@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Auth\User as Authenticatable; // Using the MongoDB auth base
+use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
@@ -10,7 +10,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Lead extends Authenticatable implements HasMedia
+class Lead extends Model implements HasMedia
 {
     use HasFactory, HasUuids, InteractsWithMedia;
 

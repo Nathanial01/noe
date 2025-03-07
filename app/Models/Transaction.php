@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Auth\User as Authenticatable;
+use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 
-class Transaction extends Authenticatable
+class Transaction extends Model
 {
     use HasFactory;
 

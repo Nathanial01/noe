@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Auth\User as Authenticatable; // Using MongoDB auth base
+use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Feedback extends Authenticatable
+class Feedback extends Model
 {
     use HasFactory;
 
