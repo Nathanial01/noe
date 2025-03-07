@@ -2,28 +2,34 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Auth\User as Authenticatable; // Using Mango's auth base
 use Spatie\Sitemap\Tags\Url;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Faq extends Model implements Sitemapable
+class Faq extends Authenticatable implements Sitemapable
 {
     use HasFactory;
+
+    // Use the MongoDB connection
+    protected $connection = 'mongodb';
+
+    // Specify the MongoDB collection name
+    protected string $collection = 'faqs';
 
     public function getIntroAttribute()
     {
         $content = explode('<pre>', $this->content);
-        
-        return $this->content = $content[0];  
+        return $content[0];
     }
 
-    public function toSitemapTag(): Url | string | array
+    public function toSitemapTag(): Url|string|array
     {
         return route('website.knowledge.show', $this);
     }
 
-    public function getRouteKeyName() {
+    public function getRouteKeyName()
+    {
         return 'slug';
     }
 }
