@@ -182,6 +182,6 @@ class Company extends Resource
 
     public static function availableForNavigation(Request $request): bool
     {
-        return $request->user()->is_admin;
+        return $request->user()?->is_admin ?? false;
     }
 }
