@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class AgendaEvent extends Model
+class AgendaEvent extends Authenticatable
 {
+
     use HasFactory;
 
-    protected $table = 'agendas_event';
+    // Set the connection and collection name for MongoDB.
+    protected $connection = 'mongodb';
+    protected string $collection = 'agendas_event';
 
-    // Include the new 'event_url' attribute:
     protected $fillable = [
         'title',
         'start_daytime',
@@ -31,10 +33,8 @@ class AgendaEvent extends Model
         'cancelled'     => 'boolean',
     ];
 
-
     /**
      * Accessor: Return the start date as a Carbon instance.
-     * (Nova’s Date field requires a Carbon/DateTime instance.)
      */
     public function getStartDateAttribute(): ?Carbon
     {
@@ -65,7 +65,6 @@ class AgendaEvent extends Model
         return $this->end_daytime ? Carbon::parse($this->end_daytime)->format('H:i') : null;
     }
 
-
     public function setStartDateAttribute($value): void
     {
         $time = $this->start_time ?? '00:00';
@@ -90,7 +89,6 @@ class AgendaEvent extends Model
         $this->attributes['end_daytime'] = Carbon::parse($date . ' ' . $value);
     }
 
-
     /**
      * Accessor: Return the event status.
      */
@@ -102,10 +100,7 @@ class AgendaEvent extends Model
     }
 
     /**
-     * Accessor: Dynamically generate the Google Maps embed URL based on the location.
-     * It removes commas, replaces spaces with '+', and appends your API key.
-     *
-     * @return string|null
+     * Accessor: Dynamically generate the Google Maps embed URL.
      */
     public function getMapEmbedAttribute(): ?string
     {
@@ -118,12 +113,7 @@ class AgendaEvent extends Model
     }
 
     /**
-     * Accessor: Return the event link (registration URL) dynamically.
-     *
-     * This simply returns the stored event_url. You can add further logic here
-     * if you need to process or validate the URL.
-     *
-     * @return string|null
+     * Accessor: Return the event link (registration URL).
      */
     public function getEventLinkAttribute(): ?string
     {
