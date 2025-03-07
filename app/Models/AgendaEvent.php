@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Auth\User as Authenticatable;
+use Jenssegers\Mongodb\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
-class AgendaEvent extends Authenticatable
+class AgendaEvent extends Model
 {
-
     use HasFactory;
 
-    // Set the connection and collection name for MongoDB.
+    // Use the MongoDB connection and collection.
     protected $connection = 'mongodb';
-    protected string $collection = 'agendas_event';
+    protected $collection = 'agendas_event';
 
     protected $fillable = [
         'title',
@@ -33,8 +32,13 @@ class AgendaEvent extends Authenticatable
         'cancelled'     => 'boolean',
     ];
 
+    // Append computed attributes so they appear in JSON responses.
+    protected $appends = [
+        'start_date', 'start_time', 'end_date', 'end_time', 'status', 'map_embed', 'event_link'
+    ];
+
     /**
-     * Accessor: Return the start date as a Carbon instance.
+     * Return the start date as a Carbon instance.
      */
     public function getStartDateAttribute(): ?Carbon
     {
@@ -42,7 +46,7 @@ class AgendaEvent extends Authenticatable
     }
 
     /**
-     * Accessor: Return the start time as a formatted string (HH:MM).
+     * Return the start time as a formatted string (HH:MM).
      */
     public function getStartTimeAttribute(): ?string
     {
@@ -50,7 +54,7 @@ class AgendaEvent extends Authenticatable
     }
 
     /**
-     * Accessor: Return the end date as a Carbon instance.
+     * Return the end date as a Carbon instance.
      */
     public function getEndDateAttribute(): ?Carbon
     {
@@ -58,7 +62,7 @@ class AgendaEvent extends Authenticatable
     }
 
     /**
-     * Accessor: Return the end time as a formatted string (HH:MM).
+     * Return the end time as a formatted string (HH:MM).
      */
     public function getEndTimeAttribute(): ?string
     {
@@ -90,22 +94,27 @@ class AgendaEvent extends Authenticatable
     }
 
     /**
-     * Accessor: Return the event status.
+     * Return the event status.
      */
     public function getStatusAttribute(): string
     {
-        return $this->cancelled
-            ? 'geannuleerd'
-            : ($this->start_date->gte(now()) ? 'gepland' : 'afgelopen');
+        if ($this->cancelled) {
+            return 'geannuleerd';
+        }
+        if ($this->start_date && $this->start_date->gte(now())) {
+            return 'gepland';
+        }
+        return 'afgelopen';
     }
 
     /**
-     * Accessor: Dynamically generate the Google Maps embed URL.
+     * Dynamically generate the Google Maps embed URL.
      */
     public function getMapEmbedAttribute(): ?string
     {
         if (!empty($this->location)) {
-            $formattedLocation = Str::replace([',', ' '], ['', '+'], $this->location);
+            // Use urlencode for more robust formatting.
+            $formattedLocation = urlencode($this->location);
             $apiKey = config('services.google.javascript_maps');
             return "https://www.google.com/maps/embed/v1/place?q={$formattedLocation}&key={$apiKey}";
         }
@@ -113,7 +122,7 @@ class AgendaEvent extends Authenticatable
     }
 
     /**
-     * Accessor: Return the event link (registration URL).
+     * Return the event link (registration URL).
      */
     public function getEventLinkAttribute(): ?string
     {
