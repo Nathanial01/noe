@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-use function PHPSTORM_META\map;
-
-class Invite extends Model
+class Invite extends Authenticatable
 {
     use HasFactory;
+
+    // Use the MongoDB connection
+    protected $connection = 'mongodb';
+
+    // Define the collection name (defaults to "invites" if not set)
+    protected string $collection = 'invites';
 
     protected $fillable = [
         'name',
