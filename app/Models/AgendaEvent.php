@@ -5,6 +5,7 @@ namespace App\Models;
 use MongoDB\Laravel\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AgendaEvent extends Model
 {
@@ -83,13 +84,14 @@ class AgendaEvent extends Model
 
     public function setStartDateAttribute($value): void
     {
+        // Combine with the current start_time if available or default.
         $time = $this->start_time ?? '00:00';
         $this->attributes['start_daytime'] = Carbon::parse($value . ' ' . $time);
     }
 
     public function setStartTimeAttribute($value): void
     {
-        $date = $this->start_date ? $this->start_date : now()->format('Y-m-d');
+        $date = $this->start_date ?? now()->format('Y-m-d');
         $this->attributes['start_daytime'] = Carbon::parse($date . ' ' . $value);
     }
 
@@ -101,7 +103,7 @@ class AgendaEvent extends Model
 
     public function setEndTimeAttribute($value): void
     {
-        $date = $this->end_date ? $this->end_date : now()->format('Y-m-d');
+        $date = $this->end_date ?? now()->format('Y-m-d');
         $this->attributes['end_daytime'] = Carbon::parse($date . ' ' . $value);
     }
 
