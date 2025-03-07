@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Check extends Model
 {
-    use HasFactory, MongoSoftDeletes, PeriodTrait;
+    use HasFactory, PeriodTrait;
 
     protected $connection = 'mongodb'; // Verplicht voor MongoDB
 
