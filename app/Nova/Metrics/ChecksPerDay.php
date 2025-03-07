@@ -3,7 +3,6 @@
 namespace App\Nova\Metrics;
 
 use App\Models\Check;
-use App\Models\Transaction;
 use Laravel\Nova\Metrics\Trend;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -12,15 +11,19 @@ class ChecksPerDay extends Trend
     /**
      * Calculate the value of the metric.
      *
+     * In this Mango (MongoDB) setup, we assume the Check model is configured for MongoDB.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->countByDays($request, Check::class)->format([
-          'thousandSeparated' => true,
-          'mantissa' => 0,
-        ])->showLatestValue();
+        return $this->countByDays($request, Check::class)
+            ->format([
+                'thousandSeparated' => true,
+                'mantissa' => 0,
+            ])
+            ->showLatestValue();
     }
 
     /**
@@ -31,19 +34,19 @@ class ChecksPerDay extends Trend
     public function ranges()
     {
         return [
-            30 => __('30 Days'),
-            60 => __('60 Days'),
-            90 => __('90 Days'),
-            183 => __('6 maanden'),
-            365 => __('1 Jaar')
+            30   => __('30 Days'),
+            60   => __('60 Days'),
+            90   => __('90 Days'),
+            183  => __('6 maanden'),
+            365  => __('1 Jaar')
         ];
     }
 
     /**
-    * Get the displayable name of the metric
-    *
-    * @return string
-    */
+     * Get the displayable name of the metric.
+     *
+     * @return string
+     */
     public function name()
     {
         return 'Checks vandaag';
