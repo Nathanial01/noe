@@ -15,6 +15,11 @@ class AgendaEvent extends Model
     protected $connection = 'mongodb';
     protected $collection = 'agendas_event';
 
+    // Configure MongoDB primary key settings.
+    protected $primaryKey = '_id';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'title',
         'start_daytime',
