@@ -76,23 +76,22 @@ const navigation = {
 
 export default function Footer() {
     return (
-        <footer className="bg-none dark:bg-[#5B1FAD] bg-opacity-50 dark:bg-opacity-10 backdrop-blur-3xl">
+        <footer className="bg-none dark:bg-black bg-opacity-50 dark:bg-opacity-10 backdrop-blur-3xl">
             <div className="mx-auto max-w-7xl px-6 pb-8 pt-16 sm:pt-24 lg:px-8 lg:pt-32">
                 <div className="xl:grid xl:grid-cols-3 xl:gap-8">
                     <ApplicationLogo />
                     <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
                         <div className="md:grid md:grid-cols-2 md:gap-8">
                             <div>
-                                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-gray-100">
+                                <h3 className="text-sm/6 font-semibold text-gray-50">
                                     Solutions
                                 </h3>
                                 <ul role="list" className="mt-6 space-y-4">
-                                    {/* Replace with the correct key from your navigation object */}
                                     {navigation.ABOUT.map((item) => (
                                         <li key={item.name}>
                                             <a
                                                 href={item.href}
-                                                className="text-sm/6 text-gray-900 dark:text-gray-600 hover:text-white hover:dark:text-gray-100"
+                                                className="text-sm/6 text-gray-200 hover:text-gray-200"
                                             >
                                                 {item.name}
                                             </a>
@@ -101,16 +100,15 @@ export default function Footer() {
                                 </ul>
                             </div>
                             <div className="mt-10 md:mt-0">
-                                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-gray-100">
+                                <h3 className="text-sm/6 font-semibold text-gray-50">
                                     Support
                                 </h3>
                                 <ul role="list" className="mt-6 space-y-4">
-                                    {/* Replace with the correct key from your navigation object */}
                                     {navigation.APPROACH.map((item) => (
                                         <li key={item.name}>
                                             <a
                                                 href={item.href}
-                                                className="text-sm/6 text-gray-900 dark:text-gray-600 hover:text-white hover:dark:text-gray-100"
+                                                className="text-sm/6 text-gray-200 hover:text-gray-200"
                                             >
                                                 {item.name}
                                             </a>
@@ -121,7 +119,7 @@ export default function Footer() {
                         </div>
                         <div className="md:grid md:grid-cols-2 md:gap-8">
                             <div>
-                                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-gray-100">
+                                <h3 className="text-sm/6 font-semibold text-gray-50">
                                     Company
                                 </h3>
                                 <ul role="list" className="mt-6 space-y-4">
@@ -129,7 +127,7 @@ export default function Footer() {
                                         <li key={item.name}>
                                             <a
                                                 href={item.href}
-                                                className="text-sm/6 text-gray-900 dark:text-gray-600 hover:text-white hover:dark:text-gray-100"
+                                                className="text-sm/6 text-gray-200 hover:text-gray-200"
                                             >
                                                 {item.name}
                                             </a>
@@ -138,16 +136,15 @@ export default function Footer() {
                                 </ul>
                             </div>
                             <div className="mt-10 md:mt-0">
-                                <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-gray-100">
+                                <h3 className="text-sm/6 font-semibold text-gray-50">
                                     Legal
                                 </h3>
                                 <ul role="list" className="mt-6 space-y-4">
-                                    {/* Replace with the correct key from your navigation object */}
                                     {navigation.Privacy.map((item) => (
                                         <li key={item.name}>
                                             <a
                                                 href={item.href}
-                                                className="text-sm/6 text-gray-900 dark:text-gray-600 hover:text-white hover:dark:text-gray-100"
+                                                className="text-sm/6 text-gray-200 hover:text-gray-200"
                                             >
                                                 {item.name}
                                             </a>
@@ -160,10 +157,10 @@ export default function Footer() {
                 </div>
                 <div className="mt-16 border-t dark:border-white/20 border-black/20 pt-8 sm:mt-20 lg:mt-24 lg:flex lg:items-center lg:justify-between">
                     <div>
-                        <h3 className="text-sm/6 font-semibold text-gray-900 dark:text-gray-100">
+                        <h3 className="text-sm/6 font-semibold text-gray-50">
                             Subscribe to our newsletter
                         </h3>
-                        <p className="mt-2 text-sm/6 text-gray-900 dark:text-gray-700">
+                        <p className="mt-2 text-sm/6 text-gray-200">
                             The latest news, articles, and resources, sent to your inbox weekly.
                         </p>
                     </div>
@@ -192,19 +189,18 @@ export default function Footer() {
                 </div>
                 <div className="mt-8 border-t dark:border-white/20 border-black/20 pt-8 md:flex md:items-center md:justify-between">
                     <div className="flex gap-x-6 md:order-2">
-                        {/* Replace with the correct key from your navigation object */}
                         {navigation.INSIGHTS.map((item) => (
                             <a
                                 key={item.name}
                                 href={item.href}
-                                className="text-gray-50 dark:text-gray-300 hover:text-gray-300"
+                                className="text-gray-200 hover:text-gray-200"
                             >
                                 <span className="sr-only">{item.name}</span>
                                 <item.icon aria-hidden="true" className="size-6" />
                             </a>
                         ))}
                     </div>
-                    <p className="mt-8 text-sm/6 text-gray-50 dark:text-gray-100 md:order-1 md:mt-0">
+                    <p className="mt-8 text-sm/6 text-gray-200 md:order-1 md:mt-0">
                         &copy; 2024 ImmoScan.app, Inc. All rights reserved.
                     </p>
                 </div>
