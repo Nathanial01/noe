@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
@@ -18,12 +19,13 @@ class PageController extends Controller
      */
     public function renderPage(string $page): Response
     {
+        $page = strtolower($page);
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->index(),
             'contact'         => app(ContactController::class)->index(),
             'real-estate'     => app(RealEstateController::class)->index(),
             'about'           => app(AboutController::class)->index(),
-            'agendaEvent'     => app(AgendaEventController::class)->index(),
+            'agendaevent'     => app(AgendaEventController::class)->index(),
             default           => abort(404),
         };
     }
@@ -33,11 +35,12 @@ class PageController extends Controller
      */
     public function store(Request $request, string $page)
     {
+        $page = strtolower($page);
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->store($request),
             'contact'         => app(ContactController::class)->store($request),
             'real-estate'     => app(RealEstateController::class)->store($request),
-            'agendaEvent'     => app(AgendaEventController::class)->store($request),
+            'agendaevent'     => app(AgendaEventController::class)->store($request),
             default           => abort(404),
         };
     }
@@ -47,11 +50,12 @@ class PageController extends Controller
      */
     public function show(string $page, int $id): Response
     {
+        $page = strtolower($page);
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->show($id),
             'contact'         => app(ContactController::class)->show($id),
             'real-estate'     => app(RealEstateController::class)->show($id),
-            'agendaEvent'     => app(AgendaEventController::class)->show($id),
+            'agendaevent'     => app(AgendaEventController::class)->show($id),
             default           => abort(404),
         };
     }
@@ -61,11 +65,12 @@ class PageController extends Controller
      */
     public function edit(string $page, int $id): Response
     {
+        $page = strtolower($page);
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->edit($id),
             'contact'         => app(ContactController::class)->edit($id),
             'real-estate'     => app(RealEstateController::class)->edit($id),
-            'AgendaEvent'     => app(AgendaEventController::class)->edit($id),
+            'agendaevent'     => app(AgendaEventController::class)->edit($id),
             default           => abort(404),
         };
     }
@@ -75,11 +80,12 @@ class PageController extends Controller
      */
     public function update(Request $request, string $page, int $id)
     {
+        $page = strtolower($page);
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->update($request, $id),
             'contact'         => app(ContactController::class)->update($request, $id),
             'real-estate'     => app(RealEstateController::class)->update($request, $id),
-            'agendaEvent'     => app(AgendaEventController::class)->update($request, $id),
+            'agendaevent'     => app(AgendaEventController::class)->update($request, $id),
             default           => abort(404),
         };
     }
@@ -89,11 +95,12 @@ class PageController extends Controller
      */
     public function destroy(string $page, int $id)
     {
+        $page = strtolower($page);
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->destroy($id),
             'contact'         => app(ContactController::class)->destroy($id),
             'real-estate'     => app(RealEstateController::class)->destroy($id),
-            'agendaEvent'     => app(AgendaEventController::class)->destroy($id),
+            'agendaevent'     => app(AgendaEventController::class)->destroy($id),
             default           => abort(404),
         };
     }
