@@ -83,6 +83,8 @@ export default function AboutUs() {
                             Founded on the principles of integrity and innovation, our company has grown into a leader in the industry.
                             We believe in harnessing expertise and leveraging cutting-edge technology to drive meaningful results.
                         </p>
+                        <img src="/img/team/IMG_1855 1.png" alt="Team Image 4" className="w-full object-cover" />
+
                     </div>
                 </div>
                 {/* ======================================================= */}

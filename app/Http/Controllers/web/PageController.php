@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\web\ContactController;
-use App\Http\Controllers\web\PrivateEquityController;
-use App\Http\Controllers\web\RealEstateController;
 use App\Http\Controllers\web\AboutController;
 use App\Http\Controllers\web\AgendaEvent\AgendaEventController;
-use App\Http\Controllers\web\Webinar\WebinarController;
+use App\Http\Controllers\web\ContactController;
 use App\Http\Controllers\web\Masterclass\MasterclassController;
+use App\Http\Controllers\web\PrivateEquityController;
+use App\Http\Controllers\web\RealEstateController;
+use App\Http\Controllers\web\Webinar\WebinarController;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class PageController extends Controller
 {
@@ -21,7 +22,12 @@ class PageController extends Controller
      */
     public function renderPage(string $page): Response
     {
+        // Normalize page parameter to lowercase for consistency
         $page = strtolower($page);
+
+        // Log the requested page for debugging
+        Log::debug("Rendering page: " . $page);
+
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->index(),
             'contact'         => app(ContactController::class)->index(),
@@ -30,7 +36,7 @@ class PageController extends Controller
             'agendaevent'     => app(AgendaEventController::class)->index(),
             'webinar'         => app(WebinarController::class)->index(),
             'masterclass'     => app(MasterclassController::class)->index(),
-            default           => abort(404),
+            default           => abort(404, "Page not found: " . $page),
         };
     }
 
@@ -40,6 +46,8 @@ class PageController extends Controller
     public function store(Request $request, string $page)
     {
         $page = strtolower($page);
+        Log::debug("Storing data for page: " . $page);
+
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->store($request),
             'contact'         => app(ContactController::class)->store($request),
@@ -57,6 +65,8 @@ class PageController extends Controller
     public function show(string $page, int $id): Response
     {
         $page = strtolower($page);
+        Log::debug("Showing item from page: " . $page . ", id: " . $id);
+
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->show($id),
             'contact'         => app(ContactController::class)->show($id),
@@ -74,6 +84,8 @@ class PageController extends Controller
     public function edit(string $page, int $id): Response
     {
         $page = strtolower($page);
+        Log::debug("Editing item from page: " . $page . ", id: " . $id);
+
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->edit($id),
             'contact'         => app(ContactController::class)->edit($id),
@@ -91,6 +103,8 @@ class PageController extends Controller
     public function update(Request $request, string $page, int $id)
     {
         $page = strtolower($page);
+        Log::debug("Updating item from page: " . $page . ", id: " . $id);
+
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->update($request, $id),
             'contact'         => app(ContactController::class)->update($request, $id),
@@ -108,6 +122,8 @@ class PageController extends Controller
     public function destroy(string $page, int $id)
     {
         $page = strtolower($page);
+        Log::debug("Deleting item from page: " . $page . ", id: " . $id);
+
         return match ($page) {
             'private-equity' => app(PrivateEquityController::class)->destroy($id),
             'contact'         => app(ContactController::class)->destroy($id),
