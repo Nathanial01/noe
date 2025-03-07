@@ -10,15 +10,13 @@ use Inertia\Response;
 
 class AgendaEventController extends Controller
 {
-    // UI state properties (if needed to be persisted, consider moving these to client-side).
+    // UI state properties...
     public ?int $selectedEventIndex = null;
     public ?string $viewMode = null;
     public ?int $readMeEventIndex = null;
 
     /**
      * Retrieve all events.
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getEventsProperty()
     {
@@ -27,12 +25,9 @@ class AgendaEventController extends Controller
 
     /**
      * Get the currently selected event.
-     *
-     * @return \App\Models\AgendaEvent|null
      */
     public function getSelectedEventProperty()
     {
-        // If using array index as selection, ensure that it matches the collection order.
         return is_int($this->selectedEventIndex)
             ? AgendaEvent::find($this->selectedEventIndex)
             : null;
@@ -77,7 +72,6 @@ class AgendaEventController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the incoming request.
         $validated = $request->validate([
             'title'         => 'required|string|max:255',
             'start_daytime' => 'required|date',
@@ -89,15 +83,13 @@ class AgendaEventController extends Controller
             'cancelled'     => 'nullable|boolean',
         ]);
 
-        // Create the event record in MongoDB.
         $event = AgendaEvent::create($validated);
 
-        // Return a JSON response with the newly created event.
         return response()->json([
             'data'    => $event,
             'message' => 'Agenda event created successfully.'
         ]);
     }
 
-    // You would also add corresponding methods for show, edit, update, and destroy as needed.
+    // Additional methods for show, edit, update, destroy...
 }
