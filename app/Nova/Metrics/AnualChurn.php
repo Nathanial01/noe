@@ -17,23 +17,32 @@ class AnualChurn extends Progress
      */
     public function calculate(NovaRequest $request)
     {
-
         $oneYearAgo = Carbon::today()->subYear();
 
         $target = Company::where(function ($query) {
-          $query->where('status', 'premium')
+            $query->where('status', 'premium')
                 ->orWhere('status', 'standard')
                 ->orWhere('status', 'professional')
                 ->orWhere('status', 'professional-xl')
                 ->orWhere('status', 'unlimited')
                 ->orWhere('status', 'whitelabel');
-            })->whereDate('billing_expiration_date', '<=', Carbon::today())->whereDate('billing_expiration_date', '>', $oneYearAgo)->count();
+        })
+            ->where('billing_expiration_date', '<=', Carbon::today())
+            ->where('billing_expiration_date', '>', $oneYearAgo)
+            ->count();
 
-        return $this->count($request, Company::whereHas('transactions', function($query) {
-                    $query->where('status', 'paid');
-                }, '=', 1)->whereDate('billing_expiration_date', '<=', Carbon::today())->whereDate('billing_expiration_date', '>', $oneYearAgo), function ($query) {
-                  return $query;
-              }, target: $target);
+        return $this->count(
+            $request,
+            Company::whereHas('transactions', function ($query) {
+                $query->where('status', 'paid');
+            }, '=', 1)
+                ->where('billing_expiration_date', '<=', Carbon::today())
+                ->where('billing_expiration_date', '>', $oneYearAgo),
+            function ($query) {
+                return $query;
+            },
+            target: $target
+        );
     }
 
     /**
@@ -47,10 +56,10 @@ class AnualChurn extends Progress
     }
 
     /**
-    * Get the displayable name of the metric
-    *
-    * @return string
-    */
+     * Get the displayable name of the metric.
+     *
+     * @return string
+     */
     public function name()
     {
         return 'Jaarlijkse Churn rate';
