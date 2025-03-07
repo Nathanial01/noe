@@ -22,3 +22,11 @@ npm run dev
 ## Nova 
 
 php artisan migrate:fresh
+ 
+
+## we're using mangodb so 
+error db side forget not to add 
+
+use MongoDB\Laravel\Auth\User as Authenticatable;
+protected $connection = 'mongodb';
+protected string $collection = '.....;

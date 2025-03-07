@@ -2,44 +2,49 @@
 
 namespace App\Nova;
 
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Http\Request as HttpRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Laravel\Nova\Resource as NovaResource;
-use Laravel\Scout\Builder as ScoutBuilder;
+use MongoDB\Laravel\Auth\User as Authenticatable;
 
 abstract class Resource extends NovaResource
 {
-    /**
-     * Build an "index" query for the given resource.
-     */
-    public static function indexQuery(NovaRequest $request, Builder $query): Builder
+    // Force MongoDB connection for all resources.
+    protected $connection = 'mongodb';
+
+    // Each resource must define its collection name.
+    protected string $collection = '';
+
+    public static function indexQuery(NovaRequest $request, $query)
     {
         return $query;
     }
 
-    /**
-     * Build a Scout search query for the given resource.
-     */
-    public static function scoutQuery(NovaRequest $request, ScoutBuilder $query): ScoutBuilder
+    public static function scoutQuery(NovaRequest $request, $query)
     {
         return $query;
     }
 
-    /**
-     * Build a "detail" query for the given resource.
-     */
-    public static function detailQuery(NovaRequest $request, Builder $query): Builder
+    public static function detailQuery(NovaRequest $request, $query)
     {
         return parent::detailQuery($request, $query);
     }
 
-    /**
-     * Build a "relatable" query for the given resource.
-     *
-     * This query determines which instances of the model may be attached to other resources.
-     */
-    public static function relatableQuery(NovaRequest $request, Builder $query): Builder
+    public static function relatableQuery(NovaRequest $request, $query): Builder
     {
         return parent::relatableQuery($request, $query);
+    }
+
+    /**
+     * Control whether this resource appears in the Nova sidebar.
+     * (Adjust logic as needed: here, it shows only for non-admins.)
+     */
+    public static function availableForNavigation(HttpRequest $request): bool
+    {
+        // Example: show only when user is not admin.
+        return !$request->user() || !$request->user()->is_admin;
+        // Alternatively, to show only to admin:
+        // return $request->user() && $request->user()->is_admin;
     }
 }

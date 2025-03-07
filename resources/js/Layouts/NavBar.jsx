@@ -52,10 +52,10 @@ const Info = () => {
             </a>
 
             {/* Agenda Button */}
-            <a href="/agenda" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
+            <a href="/agendaEvent" className="group relative flex items-center text-[#9c9c9c] hover:text-white transition">
                 <FaCalendarAlt className="text-lg" />
                 <span className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 text-white text-sm transition-opacity duration-200 whitespace-nowrap">
-                    Agenda
+                   Events
                 </span>
             </a>
         </div>
@@ -66,7 +66,7 @@ const Info = () => {
  * Renders a vertical divider with a gradient effect.
  */
 const StripedDivider = () => {
-    return <div className="w-px h-6 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>;
+    return <div className="w-px h-6 m-2 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>;
 };
 
 /**
@@ -84,7 +84,7 @@ const MobileUser = ({ user }) => {
         </form>
     ) : (
         <>
-            <div className="w-px h-6 bg-gradient-to-b from-transparent via-black/50 to-transparent"></div>
+
             <NavLink
                 href="/login"
                 className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-white/20"
@@ -107,25 +107,31 @@ const MobileUser = ({ user }) => {
  */
 const SearchBar = () => {
     return (
-        <div className="relative inline-flex items-center whitespace-nowrap transition-colors focus-within:ring-0 disabled:pointer-events-none disabled:opacity-50
-            border border-gray-50
-            backdrop-blur-sm backdrop-blur-md backdrop-blur-lg
-            text-[#9c9c9c] hover:text-white px-4 py-2 justify-start rounded-[0.5rem] text-sm font-normal shadow-none h-8 w-64">
-
-            {/* Search Input */}
+        <div
+            className="p-5 opacity-50 hover:none hover:opacity-100 backdrop-blur-3xl  overflow-hidden w-5 h-10 hover:w-[270px] shadow-[2px_2px_20px_rgba(0,0,0,0.08)] rounded-full flex group items-center hover:duration-300 duration-300"
+        >
+            <div className="flex items-center justify-center fill-white mr-8">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    id="Isolation_Mode"
+                    data-name="Isolation Mode"
+                    viewBox="0 0 24 24"
+                    width="16"
+                    height="16"
+                >
+                    <path
+                        d="M18.9,16.776A10.539,10.539,0,1,0,16.776,18.9l5.1,5.1L24,21.88ZM10.5,18A7.5,7.5,0,1,1,18,10.5,7.507,7.507,0,0,1,10.5,18Z"
+                    ></path>
+                </svg>
+            </div>
+            <StripedDivider/>
             <input
                 type="text"
-                placeholder="Search docs..."
-                className="bg-transparent outline-none border-none flex-grow text-white placeholder-[#9c9c9c] focus:outline-none focus:ring-0 focus-visible:ring-0"
+                className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:border-0 focus:ring-0"
             />
-
-            {/* Keyboard Shortcut Indicator */}
-            <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] flex h-5 select-none items-center gap-1 rounded border border-[#2e2e2e]
-                backdrop-blur-sm backdrop-blur-md backdrop-blur-lg
-                px-1.5 font-mono text-[10px] font-medium opacity-100">
-                <span>⌘</span>K
-            </kbd>
+          <StripedDivider/>
         </div>
+
     );
 };
 
@@ -133,46 +139,79 @@ const SearchBar = () => {
  * UserLinks Component (Desktop)
  * Renders user-related links based on authentication status.
  */
-export const UserLinks = ({ user }) => {
+export const UserLinks = ({user}) => {
+    // Instead of handling dashboard redirection here,
+    // we delegate that decision to the backend.
+    const dashboardUrl = '/dashboard';
+
     return (
         <div className="flex items-center gap-4 p-4">
             {user ? (
                 <>
-                    <StripedDivider />
+                    <StripedDivider/>
                     <a
-                        href="/profile"
-                        className="text-blue-500 hover:text-blue-700 font-medium"
+                        href={dashboardUrl}
+                        className="flex items-center hover:scale-105 font-medium transition"
                     >
-                        Profile
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 0.6 0.6"
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="icon flat-color mr-2"
+                        >
+                            <defs>
+                                <linearGradient
+                                    id="paint0_linear_90_214"
+                                    x1="0.3"
+                                    y1="0"
+                                    x2="0.3"
+                                    y2="0.6"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop stopColor="#F2BE0E" />
+                                    <stop offset="1" stopColor="#581CAF" />
+                                </linearGradient>
+                            </defs>
+                            <path
+                                d="M.55.1v.075a.05.05 0 0 1-.05.05H.375a.05.05 0 0 1-.05-.05V.1a.05.05 0 0 1 .05-.05H.5A.05.05 0 0 1 .55.1M.225.375H.1a.05.05 0 0 0-.05.05V.5A.05.05 0 0 0 .1.55h.125A.05.05 0 0 0 .275.5V.425a.05.05 0 0 0-.05-.05"
+                                fill="url(#paint0_linear_90_214)"
+                            />
+                            <path
+                                d="M.275.1v.175a.05.05 0 0 1-.05.05H.1a.05.05 0 0 1-.05-.05V.1A.05.05 0 0 1 .1.05h.125a.05.05 0 0 1 .05.05M.5.275H.375a.05.05 0 0 0-.05.05V.5a.05.05 0 0 0 .05.05H.5A.05.05 0 0 0 .55.5V.325A.05.05 0 0 0 .5.275"
+                                fill="url(#paint0_linear_90_214)"
+                            />
+                        </svg>
                     </a>
-                    <ResponsiveNavLink
+                    <NavLink
                         method="post"
                         href={route('logout')}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                        className="text-gray-50 hover:text-gray-700 font-medium"
                         onClick={() => {
                             // Add your sign-out logic here.
                         }}
                     >
                         Sign Out
-                    </ResponsiveNavLink>
+                    </NavLink>
                 </>
             ) : (
                 <>
                     <StripedDivider />
-                    <a
+                    <NavLink
                         rel="nofollow"
                         href="/login?referrer=%2F"
-                        className="text-gray-50 hover:text-blue-700 font-medium"
+                        className="text-gray-50 hover:text-gray-700 font-medium"
                     >
-                        Log in
-                    </a><StripedDivider/>
-                    <a
+                        Login
+                    </NavLink>
+                    <StripedDivider />
+                    <NavLink
                         rel="nofollow"
                         href="/register"
-                        className="text-gray-50 hover:text-blue-700 font-medium"
+                        className="text-gray-50 hover:text-gray-700 font-medium"
                     >
                         Register
-                    </a>
+                    </NavLink>
                 </>
             )}
         </div>
@@ -201,7 +240,7 @@ export default function NavBar({ header, children }) {
             <Disclosure as="nav" className="fixed top-0 inset-x-0 z-50 bg-none backdrop-blur-2xl">
                 {({ open }) => (
                     <>
-                        <div className="mx-auto ml-20 mr-20 px-2 sm:px-4 lg:px-8">
+                        <div className="mx-auto  px-2 sm:px-4 lg:px-8">
                             <div className="relative flex h-16 items-center justify-between">
                                 {/* Left Section: Logo & Desktop Navigation Links */}
                                 <div className="flex items-center px-2 lg:px-0">
@@ -209,12 +248,12 @@ export default function NavBar({ header, children }) {
                                         <ApplicationLogo className="h-8 w-auto" />
                                     </NavLink>
                                     <div className="hidden lg:ml-6 lg:block">
-                                        <div className="flex space-x-4">
+                                        <div className="flex space-x-4 flex-nowrap overflow-hidden">
                                             {navLinks.map((link) => (
                                                 <NavLink
                                                     key={link.href}
                                                     href={link.href}
-                                                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                                                    className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white whitespace-nowrap block"
                                                 >
                                                     {link.label}
                                                 </NavLink>
@@ -225,28 +264,30 @@ export default function NavBar({ header, children }) {
 
                                 {/* Center Section: Search Bar */}
                                 <div className="flex items-center gap-2">
+
                                     <SearchBar />
                                     <StripedDivider/>
+                                    <div className="hidden lg:flex ">
                                     <Info />
                                     <StripedDivider/>
+                                    </div>
                                 </div>
-
                                 {/* Right Section: Desktop User Menu & Dark Mode Toggle */}
-                                <div className="hidden lg:ml-4 lg:flex lg:items-center">
+                                <div className="hidden lg:ml-4 lg:flex lg:items-center lg:space-x-4 lg:overflow-hidden lg:flex-nowrap">
                                     {/*
-                                      Uncomment the following block if notifications are needed.
-                                      <button
-                                          type="button"
-                                          className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                                      >
-                                          <span className="sr-only">View notifications</span>
-                                          <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                      </button>
-                                    */}
-                                    <UserLinks user={user} />
-                                    <StripedDivider />
-                                    <div className="flex justify-center items-center">
-                                        <DarkModeToggle />
+      Uncomment the following block if notifications are needed.
+      <button
+          type="button"
+          className="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+      >
+          <span className="sr-only">View notifications</span>
+          <BellIcon className="h-6 w-6" aria-hidden="true" />
+      </button>
+    */}
+                                    <UserLinks user={user} className="whitespace-nowrap flex-shrink-0" />
+                                    <StripedDivider className="whitespace-nowrap flex-shrink-0" />
+                                    <div className="flex justify-center items-center flex-nowrap">
+                                        <DarkModeToggle className="whitespace-nowrap flex-shrink-0" />
                                     </div>
                                 </div>
 
@@ -294,8 +335,10 @@ export default function NavBar({ header, children }) {
                                     <MobileUser user={user} />
                                 </div>
                             </div>
-                            <div className="flex justify-center items-center">
-                                <DarkModeToggle />
+                           <div className="flex justify-center items-center p-1">
+                                <Info />
+                                <div  className="p-2" > <DarkModeToggle/></div>
+
                             </div>
                         </Disclosure.Panel>
                     </>
@@ -312,7 +355,7 @@ export default function NavBar({ header, children }) {
             )}
 
             {/* Main Content */}
-            <main className="container mx-auto z-50">
+            <main className=" mx-auto z-50">
                 {children}
             </main>
 

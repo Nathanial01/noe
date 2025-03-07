@@ -79,7 +79,7 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                     </div>
 
                     {/* Dashboard Content */}
-            <div className="relative">
+                    <div className="relative container mx-auto z-10 px-4 sm:px-12 lg:px-24">
                 {/* Mobile Hero Section */}
                 <section
                     ref={welcomeRef}

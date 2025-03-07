@@ -7,12 +7,14 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/js/app.jsx', // Main React entry point
-                'resources/css/custom.css' // Additional CSS file
+                'resources/css/custom.css', // Additional CSS file
+                'resources/js/Pages/Welcome.jsx',// LOAD WELCOME FILE  file
             ],
             refresh: true,
         }),
         react(),
     ],
-
-
+build: {
+    outDir: 'public/build',
+},
 });

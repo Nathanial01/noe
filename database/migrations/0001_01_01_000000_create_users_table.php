@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,27 +12,34 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->date('date_of_birth')->nullable();
+            $table->string('nationality')->nullable();
+            $table->string('country_of_residence')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('marital_status')->nullable();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('phone')->nullable()->unique();
+            $table->text('residential_address')->nullable();
+            $table->string('government_id')->nullable();
+            $table->string('tax_id')->nullable();
+            $table->string('social_security_number')->nullable();
+            $table->string('proof_of_address')->nullable();
+            $table->string('employment_status')->nullable();
+            $table->string('source_of_income')->nullable();
+            $table->string('annual_income_range')->nullable();
+            $table->decimal('net_worth', 15, 2)->nullable();
+            $table->string('investment_experience')->nullable();
+            $table->string('risk_tolerance')->nullable();
+            $table->text('investment_objectives')->nullable();
+            $table->boolean('terms_agreed')->default(false);
+            $table->boolean('privacy_policy_consented')->default(false);
+            $table->boolean('risk_disclosure_agreed')->default(false);
+            $table->string('tax_form')->nullable();
             $table->string('password');
-            $table->rememberToken();
+            $table->boolean('is_admin')->default(false);
             $table->timestamps();
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
-
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
         });
     }
 
@@ -43,7 +49,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
-        Schema::dropIfExists('sessions');
     }
 };

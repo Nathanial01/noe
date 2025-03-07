@@ -5,7 +5,7 @@ namespace App\Http\Controllers\web;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\web\StoreContactRequest;
 use App\Http\Requests\web\UpdateContactRequest;
-use App\Models\web\Contact;
+use App\Models\Contact;
 use Inertia\Inertia;
 use Inertia\Response;
 

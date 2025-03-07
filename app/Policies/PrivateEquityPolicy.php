@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Models\PrivateEquity;
 use App\Models\User;
-use App\Models\web\PrivateEquity;
 
 class PrivateEquityPolicy
 {

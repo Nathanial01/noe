@@ -4,11 +4,11 @@ import NavBar from "@/Layouts/NavBar";
 export default function PrivateEquityHome() {
     return (
         <NavBar>
-            <section>
+            <section className="mt-44">
                 {/* ======================================================= */}
                 {/* Hero Section */}
                 {/* ======================================================= */}
-                <div className="relative isolate overflow-hidden bg-gray-900">
+                <div className="relative isolate overflow-hidden bg-none ">
                     <div className="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
                         <div className="mx-auto max-w-2xl text-center">
                             <h2 className="text-4xl font-semibold tracking-tight text-balance text-white sm:text-5xl">
@@ -53,9 +53,9 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 {/* Investment Highlights Section */}
                 {/* ======================================================= */}
-                <div className="py-16 card-dark">
+                <div className="py-16">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">
                             How We Create Value
                         </h2>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -144,37 +144,37 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 {/* Process Section */}
                 {/* ======================================================= */}
-                <div className="py-16 card-dark">
-                    <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">
+                <div className="py-16 ">
+                    <div className="max-w-6xl mx-auto px-6 ">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">
                             Our Process
                         </h2>
-                        <div className="mt-10">
-                            <ol className="relative border-l border-[#5B1FAD]">
+                        <div className="mt-10 ">
+                            <ol className="relative border-l border-white">
                                 <li className="mb-10 ml-6">
-                                    <span className="absolute flex items-center justify-center w-6 h-6 bg-[#5B1FAD] rounded-full -left-3 ring-8 ring-white"></span>
-                                    <h3 className="mb-1 text-xl font-semibold text-[#5B1FAD]">
+                                    <span className="absolute flex items-center justify-center w-6 h-6 bg-none   rounded-full -left-3 ring-8 ring-white bg-indigo-700"></span>
+                                    <h3 className="mb-1 text-xl font-semibold text-gray-50">
                                         Discovery &amp; Analysis
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-gray-50">
                                         In-depth research to identify the best opportunities in the market.
                                     </p>
                                 </li>
-                                <li className="mb-10 ml-6">
-                                    <span className="absolute flex items-center justify-center w-6 h-6 bg-[#5B1FAD] rounded-full -left-3 ring-8 ring-white"></span>
-                                    <h3 className="mb-1 text-xl font-semibold text-[#5B1FAD]">
+                                <li className="mb-10 ml-6 ">
+                                    <span className="absolute flex items-center justify-center w-6 h-6 bg-none rounded-full -left-3 ring-8 ring-white bg-indigo-700"></span>
+                                    <h3 className="mb-1 text-xl font-semibold text-gray-50">
                                         Strategy Development
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-gray-50">
                                         Crafting a comprehensive strategy that aligns with your investment goals.
                                     </p>
                                 </li>
                                 <li className="mb-10 ml-6">
-                                    <span className="absolute flex items-center justify-center w-6 h-6 bg-[#5B1FAD] rounded-full -left-3 ring-8 ring-white"></span>
-                                    <h3 className="mb-1 text-xl font-semibold text-[#5B1FAD]">
+                                    <span className="absolute flex items-center justify-center w-6 h-6 bg-none rounded-full -left-3 ring-8 ring-white bg-indigo-700"></span>
+                                    <h3 className="mb-1 text-xl font-semibold text-gray-50">
                                         Execution &amp; Monitoring
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-gray-50">
                                         Implementing the strategy with ongoing performance reviews.
                                     </p>
                                 </li>
@@ -191,7 +191,7 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 <div className="py-16 card-dark">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">
                             What Our Clients Say
                         </h2>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -223,9 +223,9 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 {/* Partners Section */}
                 {/* ======================================================= */}
-                <div className="py-16 card-dark">
+                <div className="py-16">
                     <div className="max-w-6xl mx-auto px-6 text-center">
-                        <h2 className="text-3xl md:text-4xl font-bold text-[#5B1FAD]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-50">
                             Our Partners
                         </h2>
                         <div className="mt-10 flex flex-wrap justify-center gap-8">
@@ -246,10 +246,10 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 <div className="py-16 card-dark">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">
                             Latest Insights
                         </h2>
-                        <p className="mt-6 text-lg text-center text-gray-700 max-w-3xl mx-auto">
+                        <p className="mt-6 text-lg text-center text-gray-50 max-w-3xl mx-auto">
                             Stay informed with the latest trends and insights in the private equity landscape.
                         </p>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -311,47 +311,266 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 {/* Team Section */}
                 {/* ======================================================= */}
-                <div className="py-16 card-dark">
+                <div className="py-16">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">
                             Meet Our Team
                         </h2>
-                        <p className="mt-6 text-lg text-center text-gray-700 max-w-3xl mx-auto">
+                        <p className="mt-6 text-lg text-center text-gray-50 max-w-3xl mx-auto">
                             Our team of experts is dedicated to driving success and delivering outstanding results.
                         </p>
                         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-                            <div className="p-6 bg-gray-50 rounded-lg shadow hover:shadow-lg transition duration-300 text-center">
+                            {/* Team Member 1 */}
+                            <div className="p-6 backdrop-blur-3xl rounded-lg shadow hover:shadow-xl transition duration-300 text-center">
                                 <img
-                                    src="/images/team1.jpg"
+                                    src="/img/team/IMG_2103 Small Background Removed.png"
                                     alt="Team Member 1"
-                                    className="w-24 h-24 rounded-full mx-auto"
+                                    className="w-24 h-24 rounded-full mx-auto object-cover"
                                 />
-                                <h3 className="mt-4 text-xl font-semibold text-[#5B1FAD]">
-                                    Alice Johnson
-                                </h3>
-                                <p className="text-gray-600">Chief Investment Officer</p>
+                                <h3 className="mt-4 text-xl font-bold text-white">B. Konadu</h3>
+                                <p className="text-sm text-white uppercase tracking-wider">CEO</p>
+                                <div className="mt-4 border-t border-white pt-4 space-y-1">
+                                    <a
+                                        href="mailto:b.konadu@example.com"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12l-4 4-4-4m8-4l-4 4-4-4" />
+                                        </svg>
+                                        b.konadu@example.com
+                                    </a>
+                                    <a
+                                        href="tel:+1234567890"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l3 7-3 7H3L1 12l2-7z" />
+                                        </svg>
+                                        +123 456 7890
+                                    </a>
+                                </div>
                             </div>
-                            <div className="p-6 bg-gray-50 rounded-lg shadow hover:shadow-lg transition duration-300 text-center">
+                            {/* Team Member 2 */}
+                            <div className="p-6 backdrop-blur-3xl rounded-lg shadow hover:shadow-xl transition duration-300 text-center">
                                 <img
-                                    src="/images/team2.jpg"
+                                    src="/img/team/IMG_1474 Small Background Removed.png"
                                     alt="Team Member 2"
-                                    className="w-24 h-24 rounded-full mx-auto"
+                                    className="w-24 h-24 rounded-full mx-auto object-cover"
                                 />
-                                <h3 className="mt-4 text-xl font-semibold text-[#5B1FAD]">
-                                    Robert Smith
-                                </h3>
-                                <p className="text-gray-600">Head of Research</p>
+                                <h3 className="mt-4 text-xl font-bold text-white">Robert Smith</h3>
+                                <p className="text-sm text-white uppercase tracking-wider">Head of Research</p>
+                                <div className="mt-4 border-t border-white pt-4 space-y-1">
+                                    <a
+                                        href="mailto:robert.smith@example.com"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12l-4 4-4-4m8-4l-4 4-4-4" />
+                                        </svg>
+                                        robert.smith@example.com
+                                    </a>
+                                    <a
+                                        href="tel:+1235551234"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l3 7-3 7H3L1 12l2-7z" />
+                                        </svg>
+                                        +1235551234
+                                    </a>
+                                </div>
                             </div>
-                            <div className="p-6 bg-gray-50 rounded-lg shadow hover:shadow-lg transition duration-300 text-center">
+                            {/* Team Member 3 */}
+                            <div className="p-6 backdrop-blur-3xl rounded-lg shadow hover:shadow-xl transition duration-300 text-center">
                                 <img
-                                    src="/images/team3.jpg"
+                                    src="/img/team/IMG_1384 Medium Small Background Removed.png"
                                     alt="Team Member 3"
-                                    className="w-24 h-24 rounded-full mx-auto"
+                                    className="w-24 h-24 rounded-full mx-auto object-cover"
                                 />
-                                <h3 className="mt-4 text-xl font-semibold text-[#5B1FAD]">
-                                    Emily Davis
-                                </h3>
-                                <p className="text-gray-600">Portfolio Manager</p>
+                                <h3 className="mt-4 text-xl font-bold text-white">Emily Davis</h3>
+                                <p className="text-sm text-white uppercase tracking-wider">Portfolio Manager</p>
+                                <div className="mt-4 border-t border-white pt-4 space-y-1">
+                                    <a
+                                        href="mailto:emily.davis@example.com"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12l-4 4-4-4m8-4l-4 4-4-4" />
+                                        </svg>
+                                        emily.davis@example.com
+                                    </a>
+                                    <a
+                                        href="tel:+1235555678"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l3 7-3 7H3L1 12l2-7z" />
+                                        </svg>
+                                        +1235555678
+                                    </a>
+                                </div>
+                            </div>
+                            {/* Team Member 4 */}
+                            <div className="p-6 backdrop-blur-3xl rounded-lg shadow hover:shadow-xl transition duration-300 text-center">
+                                <img
+                                    src="/img/team/IMG_1375 Small Background Removed.png"
+                                    alt="Team Member 4"
+                                    className="w-24 h-24 rounded-full mx-auto object-cover"
+                                />
+                                <h3 className="mt-4 text-xl font-bold text-white">Mark Williams</h3>
+                                <p className="text-sm text-white uppercase tracking-wider">Chief Technology Officer</p>
+                                <div className="mt-4 border-t border-white pt-4 space-y-1">
+                                    <a
+                                        href="mailto:mark.williams@example.com"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12l-4 4-4-4m8-4l-4 4-4-4" />
+                                        </svg>
+                                        mark.williams@example.com
+                                    </a>
+                                    <a
+                                        href="tel:+1235559012"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l3 7-3 7H3L1 12l2-7z" />
+                                        </svg>
+                                        +1235559012
+                                    </a>
+                                </div>
+                            </div>
+                            {/* Team Member 5 */}
+                            <div className="p-6 backdrop-blur-3xl rounded-lg shadow hover:shadow-xl transition duration-300 text-center">
+                                <img
+                                    src="/img/team/IMG_1321 Small Background Removed.png"
+                                    alt="Team Member 5"
+                                    className="w-24 h-24 rounded-full mx-auto object-cover"
+                                />
+                                <h3 className="mt-4 text-xl font-bold text-white">John Doe</h3>
+                                <p className="text-sm text-white uppercase tracking-wider">Marketing Manager</p>
+                                <div className="mt-4 border-t border-white pt-4 space-y-1">
+                                    <a
+                                        href="mailto:john.doe@example.com"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12l-4 4-4-4m8-4l-4 4-4-4" />
+                                        </svg>
+                                        john.doe@example.com
+                                    </a>
+                                    <a
+                                        href="tel:+1235553456"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l3 7-3 7H3L1 12l2-7z" />
+                                        </svg>
+                                        +1235553456
+                                    </a>
+                                </div>
+                            </div>
+                            {/* Team Member 6 */}
+                            <div className="p-6 backdrop-blur-3xl rounded-lg shadow hover:shadow-xl transition duration-300 text-center">
+                                <img
+                                    src="/img/team/IMG_1338 Small Background Removed.png"
+                                    alt="Team Member 6"
+                                    className="w-24 h-24 rounded-full mx-auto object-cover"
+                                />
+                                <h3 className="mt-4 text-xl font-bold text-white">Jane Smith</h3>
+                                <p className="text-sm text-white uppercase tracking-wider">Operations Manager</p>
+                                <div className="mt-4 border-t border-white pt-4 space-y-1">
+                                    <a
+                                        href="mailto:jane.smith@example.com"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12l-4 4-4-4m8-4l-4 4-4-4" />
+                                        </svg>
+                                        jane.smith@example.com
+                                    </a>
+                                    <a
+                                        href="tel:+1235557890"
+                                        className="text-sm text-white inline-flex items-center hover:text-white"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-4 w-4 mr-1"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h2l3 7-3 7H3L1 12l2-7z" />
+                                        </svg>
+                                        +1235557890
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -365,7 +584,7 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 <div className="py-16 card-dark">
                     <div className="max-w-6xl mx-auto px-6">
-                        <h2 className="text-3xl md:text-4xl font-bold text-center text-[#5B1FAD]">
+                        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-50">
                             Frequently Asked Questions
                         </h2>
                         <div className="mt-10 space-y-6">
@@ -411,7 +630,7 @@ export default function PrivateEquityHome() {
                 {/* ======================================================= */}
                 {/* Call to Action Section */}
                 {/* ======================================================= */}
-                <div id="contact" className="py-16 card-dark">
+                <div id="contact" className="py-16 ">
                     <div className="max-w-6xl mx-auto px-6 text-center">
                         <h2 className="text-4xl md:text-5xl font-bold text-white">
                             Elevate Your Portfolio

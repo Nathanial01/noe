@@ -2,11 +2,14 @@
 
 namespace App\Providers;
 
-use App\Models\User;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Fortify\Features;
+use Laravel\Nova\Dashboard;
 use Laravel\Nova\Nova;
 use Laravel\Nova\NovaApplicationServiceProvider;
+use Illuminate\Http\Request;
+use Laravel\Nova\Tool;
 
 class NovaServiceProvider extends NovaApplicationServiceProvider
 {
@@ -17,7 +20,14 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     {
         parent::boot();
 
-        //
+        // Example custom footer
+        Nova::footer(function (Request $request) {
+            return Blade::render('
+                @env("production")
+                    This is production!
+                @endenv
+            ');
+        });
     }
 
     /**
@@ -29,7 +39,7 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
             ->features([
                 Features::updatePasswords(),
                 // Features::emailVerification(),
-                // Features::twoFactorAuthentication(['confirm' => true, 'confirmPassword' => true]),
+                // Features::twoFactorAuthentication(["confirm" => true, "confirmPassword" => true]),
             ])
             ->register();
     }
@@ -47,36 +57,44 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     }
 
     /**
-     * Register the Nova gate.
-     *
-     * This gate determines who can access Nova in non-local environments.
+     * Global Nova Gate: Allow any authenticated user to access Nova.
      */
     protected function gate(): void
     {
         Gate::define('viewNova', function ($user) {
-            return in_array($user->email, [
-                'nathanial@noecapital.nl',
-                'Bkonadu@noecapital.nl',
-            ]);
+            return $user !== null;
         });
     }
 
     /**
-     * Get the dashboards that should be listed in the Nova sidebar.
+     * Determine which dashboards are displayed in the Nova sidebar.
      *
-     * @return array<int, \Laravel\Nova\Dashboard>
+     * If user is admin => show [Main, Clients].
+     * Otherwise => show [Clients].
+     *
+     * @return array<int, Dashboard>
      */
     protected function dashboards(): array
     {
+        $user = request()->user();
+
+        if ($user && $user->is_admin) {
+            return [
+                new \App\Nova\Dashboards\Main,
+                new \App\Nova\Dashboards\Clients,
+            ];
+        }
+
+        // Non-admin users only see the Clients dashboard
         return [
-            new \App\Nova\Dashboards\Main,
+            new \App\Nova\Dashboards\Clients,
         ];
     }
 
     /**
      * Get the tools that should be listed in the Nova sidebar.
      *
-     * @return array<int, \Laravel\Nova\Tool>
+     * @return array<int, Tool>
      */
     public function tools(): array
     {
@@ -89,13 +107,5 @@ class NovaServiceProvider extends NovaApplicationServiceProvider
     public function register(): void
     {
         parent::register();
-
-        //
     }
-    /**
-     * Register the Nova gate.
-     *
-     * This gate determines who can access Nova in non-local environments.
-     */
-
 }
