@@ -11,15 +11,11 @@ use App\Jobs\PropertyImportJob;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use App\Nova\Actions\AddCredits;
-use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\Password;
 use App\Nova\Metrics\NewCompanies;
 use App\Nova\Actions\RemoveCredits;
-use Filament\Tables\Filters\Filter;
 use App\Nova\Metrics\CompaniesPerDay;
 use Laravel\Nova\Actions\ExportAsCsv;
 use App\Enums\CompanyEnums\StatusEnum;
@@ -30,173 +26,109 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class Company extends Resource
 {
+    // MongoDB collection name for companies.
+    protected string $collection = 'companies';
 
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var class-string<\App\Models\User>
-     */
     public static $model = \App\Models\Company::class;
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'name';
 
-
-    /**
-     * Get the displayable label of the resource.
-     *
-     * @return string
-     */
     public static function label()
     {
         return __('Bedrijven');
     }
 
-    /**
-     * Get the displayable singular label of the resource.
-     *
-     * @return string
-     */
     public static function singularLabel()
     {
         return __('Bedrijf');
     }
 
-
-    /**
-     * Indicates whether to show the polling toggle button inside Nova.
-     *
-     * @var bool
-     */
     public static $showPollingToggle = true;
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'id',
-        'name',
-    ];
+    public static $search = ['id', 'name'];
 
     public static function authorizable()
     {
         return false;
     }
 
-    /**
-     * Get the menu that should represent the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Laravel\Nova\Menu\MenuItem
-     */
     public function menu(Request $request)
     {
         return parent::menu($request)->withBadge(function () {
-            return static::$model::count();
+            try {
+                return static::$model::count();
+            } catch (\Throwable $e) {
+                return 0;
+            }
         });
     }
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return array
-     */
     public function fields(NovaRequest $request)
     {
         return [
             ID::make()->sortable(),
-
             Text::make('Bedrijfsnaam', 'name')
                 ->sortable()
                 ->rules('required', 'max:255'),
-
-            Text::make('Plaats', 'city')
-                ->sortable(),
-
+            Text::make('Plaats', 'city')->sortable(),
             Text::make('Straatnaam', 'street')
                 ->hideFromIndex()
                 ->rules('required', 'max:255'),
-
-            Number::make('Huisnummer', 'house_number')
-                ->hideFromIndex(),
-
+            Number::make('Huisnummer', 'house_number')->hideFromIndex(),
             Text::make('Huisnummer toevoeging', 'house_number_addition')
                 ->hideFromIndex()
                 ->rules('max:255'),
-
             Text::make('Postcode toevoeging', 'postal_code')
                 ->hideFromIndex()
                 ->rules('max:255'),
-
             Text::make('KVK', 'kvk_number')
                 ->hideFromIndex()
                 ->rules('max:255'),
-
             Text::make('BTW', 'vat_number')
                 ->hideFromIndex()
                 ->rules('max:255'),
-
             Number::make('Beschikbare credits', 'credit_amount')
                 ->sortable()
                 ->readonly(),
-
             Text::make('Telefoonnummer', 'phone_number')
                 ->sortable()
                 ->readonly(),
-
             Number::make('Omzet', 'total_revenue')
                 ->sortable()
                 ->readonly(),
-
             Text::make('Promo', 'promotional_code')
                 ->sortable()
                 ->rules('max:255'),
-
             Select::make('Abonnement', 'status')->options(
                 StatusEnum::doubleArray()
             ),
-
-            Date::make('Abonnement vervaldatum', 'billing_expiration_date')->rules('nullable', 'date'),
-
+            Date::make('Abonnement vervaldatum', 'billing_expiration_date')
+                ->rules('nullable', 'date'),
             HasMany::make('Properties'),
-
             HasMany::make('Transactions'),
-
             HasMany::make('Users'),
-
-
-            DateTime::make('Aangemaakt op', 'created_at')->sortable()->readonly(),
-
+            DateTime::make('Aangemaakt op', 'created_at')
+                ->sortable()
+                ->readonly(),
             Boolean::make('API actief', 'api_active'),
-
-            File::make('Attachment')->acceptedTypes('.csv')->store(
-                function (Request $request, $model) {
-                    $model->addMediaFromRequest('attachment')->toMediaCollection('property-imports');
+            File::make('Attachment')
+                ->acceptedTypes('.csv')
+                ->store(function (Request $request, $model) {
+                    $model->addMediaFromRequest('attachment')
+                        ->toMediaCollection('property-imports');
                     PropertyImportJob::dispatch($model);
                     return true;
-                }
-            ),
+                }),
         ];
     }
 
     public static function indexQuery(NovaRequest $request, $query)
     {
         $query = parent::indexQuery($request, $query);
-
         return self::totalRevenueSubSelect($query);
     }
 
     public static function detailQuery(NovaRequest $request, $query)
     {
         parent::detailQuery($request, $query);
-
         return self::totalRevenueSubSelect($query);
     }
 
@@ -211,12 +143,6 @@ class Company extends Resource
         }]);
     }
 
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return array
-     */
     public function cards(NovaRequest $request)
     {
         return [
@@ -225,12 +151,6 @@ class Company extends Resource
         ];
     }
 
-    /**
-     * Get the filters available for the resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return array
-     */
     public function filters(NovaRequest $request)
     {
         return [
@@ -240,35 +160,28 @@ class Company extends Resource
         ];
     }
 
-    /**
-     * Get the lenses available for the resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return array
-     */
     public function lenses(NovaRequest $request)
     {
         return [];
     }
 
-    /**
-     * Get the actions available for the resource.
-     *
-     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
-     * @return array
-     */
     public function actions(NovaRequest $request)
     {
         return [
-          ExportAsCsv::make(),
-          AddCredits::make(),
-          CreateManualInvoice::make()->onlyOnDetail(),
-          RemoveCredits::make()
+            ExportAsCsv::make(),
+            AddCredits::make(),
+            CreateManualInvoice::make()->onlyOnDetail(),
+            RemoveCredits::make()
         ];
     }
 
     public static function authorizedToCreate(Request $request)
     {
         return false;
+    }
+
+    public static function availableForNavigation(Request $request): bool
+    {
+        return $request->user()->is_admin;
     }
 }
