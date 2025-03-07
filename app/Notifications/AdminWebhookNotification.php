@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AdminWebhookNotification extends Notification
+class AdminWebhookNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,6 +16,7 @@ class AdminWebhookNotification extends Notification
     /**
      * Create a new notification instance.
      *
+     * @param \Throwable $th
      * @return void
      */
     public function __construct(\Throwable $th)
@@ -29,7 +30,7 @@ class AdminWebhookNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['mail'];
     }
@@ -40,15 +41,16 @@ class AdminWebhookNotification extends Notification
      * @param  mixed  $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
-        $app_name = config('app.name');
+        $appName = config('app.name');
+
         return (new MailMessage)
-            ->subject("{$app_name}: Mollie webhook failed")
+            ->subject("{$appName}: Mollie webhook failed")
             ->line('The Mollie webhook failed with the following message:')
             ->line('Message: ' . $this->th->getMessage())
-            ->line('File:    ' . $this->th->getFile())
-            ->line('Line:    ' . $this->th->getLine())
+            ->line('File: ' . $this->th->getFile())
+            ->line('Line: ' . $this->th->getLine())
             ->line('Trace:')
             ->line($this->th->getTraceAsString());
     }
@@ -59,10 +61,13 @@ class AdminWebhookNotification extends Notification
      * @param  mixed  $notifiable
      * @return array
      */
-    public function toArray($notifiable)
+    public function toArray($notifiable): array
     {
         return [
-            //
+            'message' => $this->th->getMessage(),
+            'file'    => $this->th->getFile(),
+            'line'    => $this->th->getLine(),
+            'trace'   => $this->th->getTraceAsString(),
         ];
     }
 }
