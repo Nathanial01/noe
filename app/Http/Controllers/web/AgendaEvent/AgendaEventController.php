@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web\AgendaEvent;
 
 use App\Http\Controllers\Controller;
 use App\Models\AgendaEvent;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -64,10 +65,39 @@ class AgendaEventController extends Controller
     public function index(): Response
     {
         return Inertia::render('nav/agendaevent/AgendaEvent', [
-            'events'            => $this->getEventsProperty(),
-            'selectedEvent'     => $this->getSelectedEventProperty(),
-            'viewMode'          => $this->viewMode,
-            'readMeEventIndex'  => $this->readMeEventIndex,
+            'events'           => $this->getEventsProperty(),
+            'selectedEvent'    => $this->getSelectedEventProperty(),
+            'viewMode'         => $this->viewMode,
+            'readMeEventIndex' => $this->readMeEventIndex,
         ]);
     }
+
+    /**
+     * Store a newly created AgendaEvent.
+     */
+    public function store(Request $request)
+    {
+        // Validate the incoming request.
+        $validated = $request->validate([
+            'title'         => 'required|string|max:255',
+            'start_daytime' => 'required|date',
+            'end_daytime'   => 'required|date',
+            'place'         => 'nullable|string',
+            'location'      => 'nullable|string',
+            'description'   => 'nullable|string',
+            'event_url'     => 'nullable|url',
+            'cancelled'     => 'nullable|boolean',
+        ]);
+
+        // Create the event record in MongoDB.
+        $event = AgendaEvent::create($validated);
+
+        // Return a JSON response with the newly created event.
+        return response()->json([
+            'data'    => $event,
+            'message' => 'Agenda event created successfully.'
+        ]);
+    }
+
+    // You would also add corresponding methods for show, edit, update, and destroy as needed.
 }
