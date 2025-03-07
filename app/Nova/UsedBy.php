@@ -69,8 +69,8 @@ class UsedBy extends Resource
         return [];
     }
 
-    public static function authorizedToCreate(Request $request)
+    public static function availableForNavigation(Request $request): bool
     {
-        return true;
+        return $request->user()?->is_admin ?? false;
     }
 }
