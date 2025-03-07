@@ -3,18 +3,23 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Jenssegers\Mongodb\Eloquent\Model;
 use App\Traits\PeriodTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes as MongoSoftDeletes;
+use Jenssegers\Mongodb\Relations\HasOne;
+use Jenssegers\Mongodb\Relations\HasMany;
+use Jenssegers\Mongodb\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Check extends Model
 {
-    use HasFactory, SoftDeletes, PeriodTrait;
+    use HasFactory, MongoSoftDeletes, PeriodTrait;
+
+    protected $connection = 'mongodb'; // Verplicht voor MongoDB
+
+    protected $collection = 'checks'; // Optioneel, als de collection een andere naam heeft dan de model naam
 
     protected $fillable = [
         'version',
@@ -35,28 +40,13 @@ class Check extends Model
         'path'
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
-        'id'          => 'integer',
-        'points'      => 'integer',
-        'price'       => 'decimal:2',
-        'property_id' => 'integer',
-        /**
-         * TODO::Think about how to cast JSON field:
-         * @see https://laravel.com/docs/9.x/eloquent-mutators#array-object-and-collection-casting
-         */
         'questions'   => 'array',
+        'start_date'  => 'datetime',
+        'end_date'    => 'datetime',
+        'finished_at' => 'datetime',
     ];
 
-    /**
-     * The models that should have an updated updated_at value when this model changes.
-     * 
-     * @var array
-     */
     protected $touches = ['property'];
 
     public function user(): BelongsTo
@@ -96,7 +86,7 @@ class Check extends Model
 
     public function hasPermission($property): bool
     {
-        return $this->property_id === $property->id;
+        return $this->property_id === $property->_id; // MongoDB gebruikt `_id` in plaats van `id`
     }
 
     public function propertyType(): string
@@ -123,8 +113,8 @@ class Check extends Model
 
     public function getFormattedPriceAttribute(): string
     {
-        $price = $this->getAttribute('price');
-        $points = $this->getAttribute('points');
+        $price = $this->price;
+        $points = $this->points;
         if ($this->periodString($this) === 'test-period') {
             return 'Proef berekening';
         }
@@ -135,7 +125,7 @@ class Check extends Model
         }
         if (is_null($price)) {
             return 'Nog niet afgerond';
-        } else if ($price == '0.00') {
+        } else if ($price == 0.00) {
             return 'Vrije sector';
         }
 
@@ -154,8 +144,12 @@ class Check extends Model
 
     public function getFormattedFinalPriceAttribute(): string
     {
-        $point = Points::where('points', round($this->points))->whereDate('end_date', '=', $this->end_date)->whereDate('start_date', '=', $this->start_date)->first();
+        $point = Points::where('points', round($this->points))
+            ->where('end_date', '=', $this->end_date)
+            ->where('start_date', '=', $this->start_date)
+            ->first();
         $price = floatval($this->price);
+
         if ($this->periodString($this) == 'test-period') {
             return 'Proefberekening middenhuur';
         }
@@ -169,13 +163,13 @@ class Check extends Model
         }
 
         if ($point != null) {
-            if (!$point->advice && $price == '0.00') {
+            if (!$point->advice && $price == 0.00) {
                 return 'n.v.t.';
             }
-            return $point->advice && $price != '0.00' ? "Vrije sector (advies: € " . number_format($price, '2', ',', '.') . ")" : ($price == '0.00' ? 'Vrije sector' : '€ ' . number_format($price, '2', ',', '.'));
+            return $point->advice && $price != 0.00 ? "Vrije sector (advies: € " . number_format($price, 2, ',', '.') . ")" : ($price == 0.00 ? 'Vrije sector' : '€ ' . number_format($price, 2, ',', '.'));
         }
 
-        if($this->points === 0) {
+        if ($this->points === 0) {
             return 'n.v.t.';
         }
         return 'Proef berekening';
@@ -192,7 +186,7 @@ class Check extends Model
 
     public function hasArea(Area $area): bool
     {
-        return $this->areas()->where('id', $area->id)->exists();
+        return $this->areas()->where('_id', $area->_id)->exists();
     }
 
     public function hasDependentProperty(): bool
@@ -208,13 +202,13 @@ class Check extends Model
     public function hasDependentPropertyVTwo(): bool
     {
         return $this->dependentPropertyVTwo()->exists();
-
     }
+
     public function getApiOverviewUrl(): string|null
     {
         return route('app.property.show.overview', [
-            'company' => $this->property->company->id,
-            'property' => $this->property->id
+            'company' => $this->property->company->_id,
+            'property' => $this->property->_id
         ]);
     }
 }
