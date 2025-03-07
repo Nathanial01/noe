@@ -2,17 +2,23 @@
 
 namespace App\Models;
 
+use MongoDB\Laravel\Auth\User as Authenticatable; // Using the MongoDB auth base
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Lead extends Model implements HasMedia
+class Lead extends Authenticatable implements HasMedia
 {
     use HasFactory, HasUuids, InteractsWithMedia;
+
+    // Use the MongoDB connection
+    protected $connection = 'mongodb';
+
+    // Specify the MongoDB collection name (defaults to 'leads' if not set)
+    protected string $collection = 'leads';
 
     protected $fillable = [
         'email',
@@ -43,14 +49,18 @@ class Lead extends Model implements HasMedia
 
     public function getAddressAttribute()
     {
-        return $this->street.' '.$this->house_number.($this->house_letter ? ''.$this->house_letter: '').($this->house_number_addition ? '-'.$this->house_number_addition : '');
+        return $this->street.' '.$this->house_number.
+            ($this->house_letter ? ' '.$this->house_letter : '').
+            ($this->house_number_addition ? '-'.$this->house_number_addition : '');
     }
 
     public function getFullAddressAttribute()
     {
-        return "$this->street $this->house_number$this->house_letter".($this->house_number_addition ? '-'.$this->house_number_addition : '').", $this->postal_code $this->city";    
+        return "$this->street $this->house_number$this->house_letter".
+            ($this->house_number_addition ? '-'.$this->house_number_addition : '').
+            ", $this->postal_code $this->city";
     }
-    
+
     public function getMediaPath(): string
     {
         return "lead/{$this->id}";
@@ -59,7 +69,7 @@ class Lead extends Model implements HasMedia
     public function getAvatarAttribute(?string $value)
     {
         $media = $this->getMedia('lead-avatar');
-        if($media->count() > 0) {
+        if ($media->count() > 0) {
             return $media[0]->getUrl('avatar');
         } else {
             return Storage::disk('gcs')->url($value ?? '/default/property-avatar.png');
@@ -68,7 +78,8 @@ class Lead extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('lead-avatar')->acceptsMimeTypes(['image/jpeg', 'image/png']);
+        $this->addMediaCollection('lead-avatar')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png']);
     }
 
     public function registerMediaConversions(Media $media = null): void
