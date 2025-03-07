@@ -221,8 +221,8 @@ export default function AgendaEvent() {
                                         )}
                                         | van <span itemProp="startTime">{selectedEvent.start_time}</span> tot <span>{selectedEvent.end_time}</span> |{' '}
                                         <span itemProp="location" itemScope itemType="http://schema.org/Place">
-                                            <span itemProp="name">{selectedEvent.place}</span>
-                                        </span>
+                      <span itemProp="name">{selectedEvent.place}</span>
+                    </span>
                                     </p>
                                     <div className="text-sm text-white leading-relaxed mb-6" itemProp="description">
                                         {selectedEvent.description}
@@ -347,8 +347,8 @@ export default function AgendaEvent() {
                                     )}
                                     | van <span itemProp="startTime">{events[readMeEventIndex].start_time}</span> tot <span>{events[readMeEventIndex].end_time}</span> |{' '}
                                     <span itemProp="location" itemScope itemType="http://schema.org/Place">
-                                        <span itemProp="name">{events[readMeEventIndex].place}</span>
-                                    </span>
+                    <span itemProp="name">{events[readMeEventIndex].place}</span>
+                  </span>
                                 </p>
                                 <div className="text-sm text-white leading-relaxed mb-6" itemProp="description">
                                     {events[readMeEventIndex].description}

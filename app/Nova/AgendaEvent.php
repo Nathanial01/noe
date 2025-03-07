@@ -31,69 +31,119 @@ class AgendaEvent extends Resource
      * @var array
      */
     public static $search = [
-        'id', 'title', 'description'
+        '_id', 'title', 'description'
     ];
 
+    /**
+     * Get the displayable label of the resource.
+     *
+     * @return string
+     */
     public static function label()
     {
         return __('Agenda Events');
     }
 
+    /**
+     * Get the displayable singular label of the resource.
+     *
+     * @return string
+     */
     public static function singularLabel()
     {
         return __('Agenda Event');
     }
 
     /**
-     * Appear only to admin users.
+     * Make this resource appear only to admin users in the sidebar.
+     *
+     * @param Request $request
+     * @return bool
      */
     public static function availableForNavigation(Request $request): bool
     {
+        // Use the nullsafe operator to ensure a boolean is returned.
         return $request->user()?->is_admin ?? false;
     }
 
     /**
      * Get the fields displayed by the resource.
+     *
+     * @param NovaRequest $request
+     * @return array
      */
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make()->sortable(),
+            // Use _id for the primary key field.
+            ID::make('ID', '_id')->sortable(),
+
             Text::make('Title')
                 ->sortable()
                 ->rules('required', 'max:255'),
+
             Text::make('Description')
                 ->hideFromIndex(),
+
             DateTime::make('Start Daytime', 'start_daytime')
                 ->sortable(),
+
             DateTime::make('End Daytime', 'end_daytime')
                 ->sortable(),
+
             Text::make('Place')
                 ->sortable(),
+
             Text::make('Location')
                 ->sortable(),
+
             Text::make('Event URL', 'event_url')
                 ->hideFromIndex(),
+
             Boolean::make('Cancelled')
                 ->sortable(),
         ];
     }
 
+    /**
+     * Get the cards available for the request.
+     *
+     * @param NovaRequest $request
+     * @return array
+     */
     public function cards(NovaRequest $request)
     {
         return [];
     }
 
+    /**
+     * Get the filters available for the resource.
+     *
+     * @param NovaRequest $request
+     * @return array
+     */
     public function filters(NovaRequest $request)
     {
         return [];
     }
 
+    /**
+     * Get the lenses available for the resource.
+     *
+     * @param NovaRequest $request
+     * @return array
+     */
     public function lenses(NovaRequest $request)
     {
         return [];
     }
 
+    /**
+     * Get the actions available for the resource.
+     *
+     * @param NovaRequest $request
+     * @return array
+     */
     public function actions(NovaRequest $request)
     {
         return [];
