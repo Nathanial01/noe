@@ -43,11 +43,13 @@ class AgendaEvent extends Model
     ];
 
     /**
-     * Return the start date as a Carbon instance.
+     * Return the start date as a string.
      */
-    public function getStartDateAttribute(): ?Carbon
+    public function getStartDateAttribute(): ?string
     {
-        return $this->start_daytime ? Carbon::parse($this->start_daytime)->startOfDay() : null;
+        return $this->start_daytime
+            ? Carbon::parse($this->start_daytime)->startOfDay()->toDateString()
+            : null;
     }
 
     /**
@@ -55,15 +57,19 @@ class AgendaEvent extends Model
      */
     public function getStartTimeAttribute(): ?string
     {
-        return $this->start_daytime ? Carbon::parse($this->start_daytime)->format('H:i') : null;
+        return $this->start_daytime
+            ? Carbon::parse($this->start_daytime)->format('H:i')
+            : null;
     }
 
     /**
-     * Return the end date as a Carbon instance.
+     * Return the end date as a string.
      */
-    public function getEndDateAttribute(): ?Carbon
+    public function getEndDateAttribute(): ?string
     {
-        return $this->end_daytime ? Carbon::parse($this->end_daytime)->startOfDay() : null;
+        return $this->end_daytime
+            ? Carbon::parse($this->end_daytime)->startOfDay()->toDateString()
+            : null;
     }
 
     /**
@@ -71,7 +77,9 @@ class AgendaEvent extends Model
      */
     public function getEndTimeAttribute(): ?string
     {
-        return $this->end_daytime ? Carbon::parse($this->end_daytime)->format('H:i') : null;
+        return $this->end_daytime
+            ? Carbon::parse($this->end_daytime)->format('H:i')
+            : null;
     }
 
     public function setStartDateAttribute($value): void
@@ -82,7 +90,7 @@ class AgendaEvent extends Model
 
     public function setStartTimeAttribute($value): void
     {
-        $date = $this->start_date ? $this->start_date->format('Y-m-d') : now()->format('Y-m-d');
+        $date = $this->start_date ? $this->start_date : now()->format('Y-m-d');
         $this->attributes['start_daytime'] = Carbon::parse($date . ' ' . $value);
     }
 
@@ -94,7 +102,7 @@ class AgendaEvent extends Model
 
     public function setEndTimeAttribute($value): void
     {
-        $date = $this->end_date ? $this->end_date->format('Y-m-d') : now()->format('Y-m-d');
+        $date = $this->end_date ? $this->end_date : now()->format('Y-m-d');
         $this->attributes['end_daytime'] = Carbon::parse($date . ' ' . $value);
     }
 
@@ -106,7 +114,7 @@ class AgendaEvent extends Model
         if ($this->cancelled) {
             return 'geannuleerd';
         }
-        if ($this->start_date && $this->start_date->gte(now())) {
+        if ($this->start_date && Carbon::parse($this->start_date)->gte(now())) {
             return 'gepland';
         }
         return 'afgelopen';
@@ -118,7 +126,6 @@ class AgendaEvent extends Model
     public function getMapEmbedAttribute(): ?string
     {
         if (!empty($this->location)) {
-            // Use urlencode for more robust formatting.
             $formattedLocation = urlencode($this->location);
             $apiKey = config('services.google.javascript_maps');
             return "https://www.google.com/maps/embed/v1/place?q={$formattedLocation}&key={$apiKey}";
