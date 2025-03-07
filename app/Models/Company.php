@@ -3,28 +3,26 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use MongoDB\Laravel\Eloquent\Model;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
 use App\Enums\UserRolesEnum;
 use OpenApi\Annotations\Webhook;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Http;
 use App\Enums\CompanyEnums\StatusEnum;
 use App\Enums\Webhook\WebhookTypeEnum;
+use MongoDB\Laravel\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Jenssegers\Mongodb\Relations\HasMany;
-use Jenssegers\Mongodb\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
 
 class Company extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory, InteractsWithMedia;
 
     protected $connection = 'mongodb';
     protected $collection = 'companies';
-
     protected $fillable = [
         'name',
         'city',
@@ -54,11 +52,17 @@ class Company extends Model implements HasMedia
         'api_active'
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
+        'id' => 'integer',
         'house_number' => 'integer',
         'kvk_number' => 'integer',
         'credit_amount' => 'integer',
-        'billing_expiration_date' => 'datetime',
+        'billing_expiration_date' => 'date',
     ];
 
     public function users(): BelongsToMany
@@ -103,38 +107,35 @@ class Company extends Model implements HasMedia
 
     public function hasPermission(User $user): bool
     {
-        return $this->users()->where('user_id', $user->_id)->exists();
+        return $this->users()
+            ->where('user_id', $user->id)
+            ->exists();
     }
 
     public function expiredSubscription(): bool
     {
-        return is_null($this->billing_expiration_date) ? false : ($this->billing_expiration_date < now());
+        return is_null($this->billing_expiration_date) ? false : (Carbon::parse($this->billing_expiration_date) < Carbon::now());
     }
 
     public function getAddressAttribute()
     {
         if (isset($this->house_number_addition)) {
-            return "{$this->street} {$this->house_number}{$this->house_number_addition}";
+            return $this->street . ' ' . $this->house_number . $this->house_number_addition;
         }
-        return "{$this->street} {$this->house_number}";
+        return $this->street . ' ' . $this->house_number;
     }
 
     public function getBrandingAdressAttribute()
     {
         if (isset($this->branding_house_number_addition)) {
-            return "{$this->branding_street} {$this->branding_house_number}{$this->branding_house_number_addition}";
+            return $this->branding_street . ' ' . $this->branding_house_number . $this->branding_house_number_addition;
         }
-        return "{$this->branding_street} {$this->branding_house_number}";
+        return $this->branding_street . ' ' . $this->branding_house_number;
     }
 
     public function hasNecessarySubscription(): bool
     {
-        return in_array($this->status, [
-            StatusEnum::Professional,
-            StatusEnum::ProfessionalXL,
-            StatusEnum::Unlimited,
-            StatusEnum::Whitelabel
-        ]);
+        return $this->getAttribute('status') === StatusEnum::Professional || $this->getAttribute('status') === StatusEnum::ProfessionalXL || $this->getAttribute('status') === StatusEnum::Unlimited || $this->getAttribute('status') === StatusEnum::Whitelabel;
     }
 
     public function registerMediaCollections(): void
@@ -145,18 +146,25 @@ class Company extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('400')->width(400);
+        $this->addMediaConversion('400')
+            ->width(400);
     }
 
     public function addCredits($credit_amount): bool
     {
-        $this->increment('credit_amount', $credit_amount);
+        $this->credit_amount = $this->credit_amount + $credit_amount;
+
+        $this->save();
+
         return true;
     }
 
     public function removeCredits($credit_amount): bool
     {
-        $this->decrement('credit_amount', $credit_amount);
+        $this->credit_amount = $this->credit_amount - $credit_amount;
+
+        $this->save();
+
         return true;
     }
 
@@ -167,28 +175,17 @@ class Company extends Model implements HasMedia
 
     public function isMinPremium(): bool
     {
-        return in_array($this->status, [
-            StatusEnum::Premium,
-            StatusEnum::Professional,
-            StatusEnum::ProfessionalXL,
-            StatusEnum::Unlimited,
-            StatusEnum::Whitelabel
-        ]);
+        return  $this->status == StatusEnum::Premium || $this->status == StatusEnum::Professional || $this->status == StatusEnum::ProfessionalXL || $this->status == StatusEnum::Unlimited || $this->status == StatusEnum::Whitelabel;
     }
 
     public function isMinProfessional(): bool
     {
-        return in_array($this->status, [
-            StatusEnum::Professional,
-            StatusEnum::ProfessionalXL,
-            StatusEnum::Unlimited,
-            StatusEnum::Whitelabel
-        ]);
+        return $this->status == StatusEnum::Professional || $this->status == StatusEnum::ProfessionalXL || $this->status == StatusEnum::Unlimited || $this->status == StatusEnum::Whitelabel;
     }
 
     public function isWhiteLabel(): bool
     {
-        return $this->status === StatusEnum::Whitelabel;
+        return $this->status == StatusEnum::Whitelabel;
     }
 
     public function getPropertyWithReference(string $reference): Property|null
@@ -226,21 +223,21 @@ class Company extends Model implements HasMedia
 
     public function hasUser(User $user): bool
     {
-        return $this->users()->where('user_id', $user->_id)->exists();
+        return $this->users()->where('user_id', $user->id)->exists();
     }
 
     public function hasProperty(Property $property): bool
     {
-        return $this->properties()->where('_id', $property->_id)->exists();
+        return $this->properties()->where('id', $property->id)->exists();
     }
 
     public function hasPortfolio(Portfolio $portfolio): bool
     {
-        return $this->portfolios()->where('_id', $portfolio->_id)->exists();
+        return $this->portfolios()->where('id', $portfolio->id)->exists();
     }
 
     public function hasComplex(Complex $complex): bool
     {
-        return $this->complexes()->where('_id', $complex->_id)->exists();
+        return $this->complexes()->where('id', $complex->id)->exists();
     }
 }
