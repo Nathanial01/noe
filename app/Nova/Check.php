@@ -87,6 +87,6 @@ class Check extends Resource
     public static function availableForNavigation(Request $request): bool
     {
         // Show this resource only to admin users.
-        return $request->user()->is_admin;
+        return $request->user()->is_admin?? false;
     }
 }
