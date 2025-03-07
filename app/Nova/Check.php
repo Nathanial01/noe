@@ -5,34 +5,29 @@ namespace App\Nova;
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\DateTime;
-use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\BelongsTo;
+use App\Nova\Metrics\NewProperties;
+use Laravel\Nova\Actions\ExportAsCsv;
+use App\Nova\Metrics\PropertiesPerDay;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class AgendaEvent extends Resource
+class Check extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\AgendaEvent>
+     * @var class-string<\App\Models\User>
      */
-    public static $model = \App\Models\AgendaEvent::class;
+    public static $model = \App\Models\Check::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'title';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
-    public static $search = [
-        'id', 'title', 'description'
-    ];
+    public static $title = 'id';
 
     /**
      * Get the displayable label of the resource.
@@ -41,7 +36,7 @@ class AgendaEvent extends Resource
      */
     public static function label()
     {
-        return __('Agenda Events');
+        return __('Checks');
     }
 
     /**
@@ -51,24 +46,48 @@ class AgendaEvent extends Resource
      */
     public static function singularLabel()
     {
-        return __('Agenda Event');
+        return __('Check');
+    }
+
+
+    /**
+     * Indicates whether to show the polling toggle button inside Nova.
+     *
+     * @var bool
+     */
+    public static $showPollingToggle = true;
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'id',
+    ];
+
+    public static function authorizable()
+    {
+        return false;
     }
 
     /**
-     * Make this resource appear only to admin users in the sidebar.
+     * Get the menu that should represent the resource.
      *
-     * Must match parent's signature: availableForNavigation(Request $request): bool
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Laravel\Nova\Menu\MenuItem
      */
-    public static function availableForNavigation(Request $request): bool
+    public function menu(Request $request)
     {
-        // Use the nullsafe operator to ensure a boolean is returned.
-        return $request->user()?->is_admin ?? false;
+        return parent::menu($request)->withBadge(function () {
+            return static::$model::count();
+        });
     }
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  NovaRequest  $request
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function fields(NovaRequest $request)
@@ -76,48 +95,26 @@ class AgendaEvent extends Resource
         return [
             ID::make()->sortable(),
 
-            Text::make('Title')
-                ->sortable()
-                ->rules('required', 'max:255'),
+            BelongsTo::make('property'),
 
-            Text::make('Description')
-                ->hideFromIndex(),
+            BelongsTo::make('user'),
 
-            DateTime::make('Start Daytime', 'start_daytime')
+            Number::make('Punten', 'points')
                 ->sortable(),
 
-            DateTime::make('End Daytime', 'end_daytime')
+            Text::make('Huurprijs', 'price')
                 ->sortable(),
 
-            Text::make('Place')
+            Text::make('Status')
                 ->sortable(),
 
-            Text::make('Location')
-                ->sortable(),
-
-            Text::make('Event URL', 'event_url')
-                ->hideFromIndex(),
-
-            Boolean::make('Cancelled')
-                ->sortable(),
         ];
-    }
-
-    /**
-     * Get the cards available for the request.
-     *
-     * @param  NovaRequest  $request
-     * @return array
-     */
-    public function cards(NovaRequest $request)
-    {
-        return [];
     }
 
     /**
      * Get the filters available for the resource.
      *
-     * @param  NovaRequest  $request
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function filters(NovaRequest $request)
@@ -128,7 +125,7 @@ class AgendaEvent extends Resource
     /**
      * Get the lenses available for the resource.
      *
-     * @param  NovaRequest  $request
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function lenses(NovaRequest $request)
@@ -139,11 +136,28 @@ class AgendaEvent extends Resource
     /**
      * Get the actions available for the resource.
      *
-     * @param  NovaRequest  $request
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            ExportAsCsv::make(),
+        ];
+    }
+
+    public static function authorizedToCreate(Request $request)
+    {
+        return false;
+    }
+    /**
+     * Make this resource appear only to non-admin users in the sidebar.
+     *
+     * Must match parent's signature: availableForNavigation(\Illuminate\Http\Request $request).
+     */
+    public static function availableForNavigation(Request $request): bool
+    {
+        // TRUE if user *is* admin => admin only
+        return $request->user()->is_admin;
     }
 }
