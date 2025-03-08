@@ -257,7 +257,6 @@ class WebSearchController extends Controller
         }
 
         try {
-            // Updated summarization prompt: explicitly exclude technical details.
             $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
