@@ -21,7 +21,8 @@
         "spatie/laravel-sitemap": "^7.3",
         "spatie/period": "^2.4",
         "tightenco/ziggy": "^2.0",
-        "fakerphp/faker": "^1.24"
+        "fakerphp/faker": "^1.24",
+        "ext-libxml": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",

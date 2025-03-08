@@ -54,7 +54,7 @@ class WebSearchController extends Controller
                         $rawContent = json_encode($response);
                     }
 
-                    // Filter out technical-related content in a less destructive way.
+                    // Filter out technical-related content.
                     $filteredRawContent = $this->filterTechnicalInfo($rawContent);
 
                     // Convert the filtered content to plain text.
@@ -111,7 +111,7 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Filter out technical-related content from the raw response by replacing keywords instead of removing full lines.
+     * Filter out technical-related content from the raw response by replacing keywords and removing JSON-like route definitions.
      */
     private function filterTechnicalInfo(string $content): string
     {
@@ -157,9 +157,9 @@ class WebSearchController extends Controller
             'parameters',
             'Https',
             'Http',
-             'SSH',
+            'SSH',
             'User',
-        'Admin'
+            'Admin'
         ];
 
         // Remove each technical keyword or phrase (case-insensitive).
@@ -167,8 +167,15 @@ class WebSearchController extends Controller
             $content = str_ireplace($keyword, '', $content);
         }
 
-        // Remove JSON-like route definitions that might not be covered by simple keyword replacement.
-        $content = preg_replace('/\{.*"uri":.*\}/U', '', $content);
+        // Remove JSON-like route definitions containing specific keys.
+        // This will remove any block like: "profile.edit": { ... },
+        $content = preg_replace('/"profile\.[^"]+":\s*\{[^}]+\},?/i', '', $content);
+        $content = preg_replace('/"admin\.[^"]+":\s*\{[^}]+\},?/i', '', $content);
+        $content = preg_replace('/"password\.[^"]+":\s*\{[^}]+\},?/i', '', $content);
+        $content = preg_replace('/"dynamic\.page":\s*\{[^}]+\},?/i', '', $content);
+
+        // Remove any remaining JSON blocks containing "uri" definitions.
+        $content = preg_replace('/\{[^}]*"uri":\s*".*?"[^}]*\},?/s', '', $content);
 
         // Collapse multiple newlines into a single newline.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
@@ -223,7 +230,7 @@ class WebSearchController extends Controller
 
         try {
             // Updated summarization prompt: explicitly exclude technical details.
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on the visitor-facing content such as key messages or investment, real estate, and similar topics:\n\n" . $trimmedSnippet;
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on the visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
             $response = $openAi->chat()->create([
@@ -246,3 +253,4 @@ class WebSearchController extends Controller
         }
     }
 }
+
