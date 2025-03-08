@@ -131,15 +131,30 @@ class WebSearchController extends Controller
             '/storage/',
             '/images/',
             '<!--',
-            '-->'
+            '-->',
+            // Additional technical keywords to filter out common routes, HTTP methods, and coding references.
+            'GET ',
+            'POST ',
+            'PUT ',
+            'DELETE ',
+            'PATCH ',
+            'OPTIONS ',
+            'HTTP/',
+            'ssh',
+            'vite',
+            'react',
+            'vue',
+            'laravel',
+            'dynamic',       // caution: generic word, but added as requested.
+            'HTTP methods'
         ];
 
-        // Replace each technical keyword with an empty string
+        // Replace each technical keyword with an empty string (case-insensitive).
         foreach ($technicalKeywords as $keyword) {
             $content = str_ireplace($keyword, '', $content);
         }
 
-        // Optionally, collapse multiple newlines to a single newline
+        // Collapse multiple newlines to a single newline.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
         return trim($content);
@@ -186,7 +201,7 @@ class WebSearchController extends Controller
         }
 
         // Check for common code markers or IT-related patterns.
-        if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+/', $trimmedSnippet)) {
+        if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+|GET\s+\/|POST\s+\/|PUT\s+\/|DELETE\s+\/|HTTP\//i', $trimmedSnippet)) {
             // Return the original snippet if it seems to be code or technical content.
             return $trimmedSnippet;
         }
