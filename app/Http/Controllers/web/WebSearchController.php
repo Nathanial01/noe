@@ -52,17 +52,19 @@ class WebSearchController extends Controller
                         $rawContent = json_encode($response);
                     }
 
-                    // Filter out debug and technical-related content.
-                    $filteredRawContent = $this->filterTechnicalInfo($rawContent);
+                    // First, remove script tags and known technical JS fragments.
+                    $cleanedContent = $this->removeScriptsAndJs($rawContent);
+                    // Then filter out debug and technical-related content.
+                    $filteredContent = $this->filterTechnicalInfo($cleanedContent);
 
                     // Convert the filtered content to plain text.
-                    $plainContent = $this->htmlToPlainText($filteredRawContent);
+                    $plainContent = $this->htmlToPlainText($filteredContent);
                 } catch (\Exception $e) {
                     Log::error("Failed to load page: {$page} - " . $e->getMessage());
                     continue;
                 }
 
-                // If the filtered content contains the search query, process the result.
+                // If the plain text contains the search query, process the result.
                 if (stripos($plainContent, $query) !== false) {
                     // Determine URL for the dynamic page.
                     $url = route('dynamic.page', ['page' => $page]);
@@ -114,6 +116,24 @@ class WebSearchController extends Controller
     }
 
     /**
+     * Remove script tags and known JavaScript fragments.
+     */
+    private function removeScriptsAndJs(string $content): string
+    {
+        // Remove entire <script> blocks
+        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
+        // Remove common JS fragments
+        $jsPatterns = [
+            '/document\.head\.append\(.*?\);?/s',
+            '/loadNext\(JSON\.parse\(.*?\)\);?/s'
+        ];
+        foreach ($jsPatterns as $pattern) {
+            $content = preg_replace($pattern, '', $content);
+        }
+        return $content;
+    }
+
+    /**
      * Filter out debug and technical-related content from the raw response.
      */
     private function filterTechnicalInfo(string $content): string
@@ -135,7 +155,9 @@ class WebSearchController extends Controller
             '/storage/',
             '/images/',
             '<!--',
-            '-->'
+            '-->',
+            'document.head.append',
+            'loadNext(JSON.parse'
         ];
 
         foreach ($technicalKeywords as $keyword) {
