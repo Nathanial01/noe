@@ -9,6 +9,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\web\WebSearchController;
+
+Route::prefix('api')->group(function () {
+    Route::post('/search', [WebSearchController::class, 'search']);
+});
 
 /*
 |--------------------------------------------------------------------------

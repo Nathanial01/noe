@@ -22,79 +22,125 @@ class PageController extends Controller
      */
     public function renderPage(string $page): Response
     {
-        // Normalize page parameter to lowercase for consistency
         $page = strtolower($page);
-
-        // Log the requested page for debugging
         Log::debug("Rendering page: " . $page);
 
-        return match ($page) {
-            'private-equity' => app(PrivateEquityController::class)->index(),
-            'contact'         => app(ContactController::class)->index(),
-            'real-estate'     => app(RealEstateController::class)->index(),
-            'about'           => app(AboutController::class)->index(),
-            'agendaevent'     => app(AgendaEventController::class)->index(),
-            'webinar'         => app(WebinarController::class)->index(),
-            'masterclass'     => app(MasterclassController::class)->index(),
-            default           => abort(404, "Page not found: " . $page),
-        };
+        // List of valid controllers mapped to page names
+        $controllers = [
+            'private-equity' => PrivateEquityController::class,
+            'contact' => ContactController::class,
+            'real-estate' => RealEstateController::class,
+            'about' => AboutController::class,
+            'agendaevent' => AgendaEventController::class,
+            'webinar' => WebinarController::class,
+            'masterclass' => MasterclassController::class,
+        ];
+
+        // Validate if page exists in the array
+        if (!isset($controllers[$page])) {
+            Log::error("Page not found: " . $page);
+            abort(404, "Page not found: " . $page);
+        }
+
+        $controller = app($controllers[$page]);
+
+        // Ensure the controller has an `index()` method
+        if (!method_exists($controller, 'index')) {
+            Log::error("Method `index()` missing in " . get_class($controller));
+            abort(500, "Method `index()` missing in " . get_class($controller));
+        }
+
+        return $controller->index();
     }
 
     /**
-     * Handle form store dynamically.
+     * Store form data dynamically.
      */
     public function store(Request $request, string $page)
     {
         $page = strtolower($page);
         Log::debug("Storing data for page: " . $page);
 
-        return match ($page) {
-            'private-equity' => app(PrivateEquityController::class)->store($request),
-            'contact'         => app(ContactController::class)->store($request),
-            'real-estate'     => app(RealEstateController::class)->store($request),
-            'agendaevent'     => app(AgendaEventController::class)->store($request),
-            'webinar'         => app(WebinarController::class)->store($request),
-            'masterclass'     => app(MasterclassController::class)->store($request),
-            default           => abort(404),
-        };
+        $controllers = [
+            'private-equity' => PrivateEquityController::class,
+            'contact' => ContactController::class,
+            'real-estate' => RealEstateController::class,
+            'agendaevent' => AgendaEventController::class,
+            'webinar' => WebinarController::class,
+            'masterclass' => MasterclassController::class,
+        ];
+
+        if (!isset($controllers[$page])) {
+            abort(404);
+        }
+
+        $controller = app($controllers[$page]);
+
+        if (!method_exists($controller, 'store')) {
+            abort(500, "Method `store()` missing in " . get_class($controller));
+        }
+
+        return $controller->store($request);
     }
 
     /**
-     * Show specific item.
+     * Show specific item dynamically.
      */
     public function show(string $page, int $id): Response
     {
         $page = strtolower($page);
         Log::debug("Showing item from page: " . $page . ", id: " . $id);
 
-        return match ($page) {
-            'private-equity' => app(PrivateEquityController::class)->show($id),
-            'contact'         => app(ContactController::class)->show($id),
-            'real-estate'     => app(RealEstateController::class)->show($id),
-            'agendaevent'     => app(AgendaEventController::class)->show($id),
-            'webinar'         => app(WebinarController::class)->show($id),
-            'masterclass'     => app(MasterclassController::class)->show($id),
-            default           => abort(404),
-        };
+        $controllers = [
+            'private-equity' => PrivateEquityController::class,
+            'contact' => ContactController::class,
+            'real-estate' => RealEstateController::class,
+            'agendaevent' => AgendaEventController::class,
+            'webinar' => WebinarController::class,
+            'masterclass' => MasterclassController::class,
+        ];
+
+        if (!isset($controllers[$page])) {
+            abort(404);
+        }
+
+        $controller = app($controllers[$page]);
+
+        if (!method_exists($controller, 'show')) {
+            abort(500, "Method `show()` missing in " . get_class($controller));
+        }
+
+        return $controller->show($id);
     }
 
     /**
-     * Edit item dynamically.
+     * Edit an item dynamically.
      */
     public function edit(string $page, int $id): Response
     {
         $page = strtolower($page);
         Log::debug("Editing item from page: " . $page . ", id: " . $id);
 
-        return match ($page) {
-            'private-equity' => app(PrivateEquityController::class)->edit($id),
-            'contact'         => app(ContactController::class)->edit($id),
-            'real-estate'     => app(RealEstateController::class)->edit($id),
-            'agendaevent'     => app(AgendaEventController::class)->edit($id),
-            'webinar'         => app(WebinarController::class)->edit($id),
-            'masterclass'     => app(MasterclassController::class)->edit($id),
-            default           => abort(404),
-        };
+        $controllers = [
+            'private-equity' => PrivateEquityController::class,
+            'contact' => ContactController::class,
+            'real-estate' => RealEstateController::class,
+            'agendaevent' => AgendaEventController::class,
+            'webinar' => WebinarController::class,
+            'masterclass' => MasterclassController::class,
+        ];
+
+        if (!isset($controllers[$page])) {
+            abort(404);
+        }
+
+        $controller = app($controllers[$page]);
+
+        if (!method_exists($controller, 'edit')) {
+            abort(500, "Method `edit()` missing in " . get_class($controller));
+        }
+
+        return $controller->edit($id);
     }
 
     /**
@@ -105,15 +151,26 @@ class PageController extends Controller
         $page = strtolower($page);
         Log::debug("Updating item from page: " . $page . ", id: " . $id);
 
-        return match ($page) {
-            'private-equity' => app(PrivateEquityController::class)->update($request, $id),
-            'contact'         => app(ContactController::class)->update($request, $id),
-            'real-estate'     => app(RealEstateController::class)->update($request, $id),
-            'agendaevent'     => app(AgendaEventController::class)->update($request, $id),
-            'webinar'         => app(WebinarController::class)->update($request, $id),
-            'masterclass'     => app(MasterclassController::class)->update($request, $id),
-            default           => abort(404),
-        };
+        $controllers = [
+            'private-equity' => PrivateEquityController::class,
+            'contact' => ContactController::class,
+            'real-estate' => RealEstateController::class,
+            'agendaevent' => AgendaEventController::class,
+            'webinar' => WebinarController::class,
+            'masterclass' => MasterclassController::class,
+        ];
+
+        if (!isset($controllers[$page])) {
+            abort(404);
+        }
+
+        $controller = app($controllers[$page]);
+
+        if (!method_exists($controller, 'update')) {
+            abort(500, "Method `update()` missing in " . get_class($controller));
+        }
+
+        return $controller->update($request, $id);
     }
 
     /**
@@ -124,14 +181,25 @@ class PageController extends Controller
         $page = strtolower($page);
         Log::debug("Deleting item from page: " . $page . ", id: " . $id);
 
-        return match ($page) {
-            'private-equity' => app(PrivateEquityController::class)->destroy($id),
-            'contact'         => app(ContactController::class)->destroy($id),
-            'real-estate'     => app(RealEstateController::class)->destroy($id),
-            'agendaevent'     => app(AgendaEventController::class)->destroy($id),
-            'webinar'         => app(WebinarController::class)->destroy($id),
-            'masterclass'     => app(MasterclassController::class)->destroy($id),
-            default           => abort(404),
-        };
+        $controllers = [
+            'private-equity' => PrivateEquityController::class,
+            'contact' => ContactController::class,
+            'real-estate' => RealEstateController::class,
+            'agendaevent' => AgendaEventController::class,
+            'webinar' => WebinarController::class,
+            'masterclass' => MasterclassController::class,
+        ];
+
+        if (!isset($controllers[$page])) {
+            abort(404);
+        }
+
+        $controller = app($controllers[$page]);
+
+        if (!method_exists($controller, 'destroy')) {
+            abort(500, "Method `destroy()` missing in " . get_class($controller));
+        }
+
+        return $controller->destroy($id);
     }
 }

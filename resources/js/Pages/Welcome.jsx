@@ -142,11 +142,11 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                         </div>
 
                         {/* Testimonials Section */}
-                        <div ref={testimonialsRef}>
-                            <Suspense fallback={<div>Loading Testimonials...</div>}>
-                                <Testimonials />
-                            </Suspense>
-                        </div>
+                        {/*<div ref={testimonialsRef}>*/}
+                        {/*    <Suspense fallback={<div>Loading Testimonials...</div>}>*/}
+                        {/*        <Testimonials />*/}
+                        {/*    </Suspense>*/}
+                        {/*</div>*/}
 
                         {/* ChatBot Section */}
                         <div className="mt-0">

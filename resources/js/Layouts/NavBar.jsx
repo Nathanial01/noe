@@ -16,8 +16,9 @@ import { usePage } from "@inertiajs/react";
 import DarkModeToggle from "@/Components/DarkModeToggle";
 import Footer from "@/Components/Footer";
 import Background from "@/Components/Background.jsx";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.jsx";
+import SearchBar from "@/Components/SearchBar.jsx";
 import { FaVideo, FaChalkboardTeacher, FaCalendarAlt } from 'react-icons/fa';
+import {useState} from "react";
 
 // Navigation links array
 const navLinks = [
@@ -105,35 +106,8 @@ const MobileUser = ({ user }) => {
  * SearchBar Component
  * Renders a search input with a keyboard shortcut indicator.
  */
-const SearchBar = () => {
-    return (
-        <div
-            className="p-5 opacity-50 hover:none hover:opacity-100 backdrop-blur-3xl  overflow-hidden w-5 h-10 hover:w-[270px] shadow-[2px_2px_20px_rgba(0,0,0,0.08)] rounded-full flex group items-center hover:duration-300 duration-300"
-        >
-            <div className="flex items-center justify-center fill-white mr-8">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    id="Isolation_Mode"
-                    data-name="Isolation Mode"
-                    viewBox="0 0 24 24"
-                    width="16"
-                    height="16"
-                >
-                    <path
-                        d="M18.9,16.776A10.539,10.539,0,1,0,16.776,18.9l5.1,5.1L24,21.88ZM10.5,18A7.5,7.5,0,1,1,18,10.5,7.507,7.507,0,0,1,10.5,18Z"
-                    ></path>
-                </svg>
-            </div>
-            <StripedDivider/>
-            <input
-                type="text"
-                className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:border-0 focus:ring-0"
-            />
-          <StripedDivider/>
-        </div>
 
-    );
-};
+
 
 /**
  * UserLinks Component (Desktop)
@@ -266,7 +240,8 @@ export default function NavBar({ header, children }) {
                                 <div className="flex items-center gap-2">
 
                                     <SearchBar />
-                                    <StripedDivider/>
+                                    <div className="hidden max-sm:hidden lg:block">   <StripedDivider  /></div>
+
                                     <div className="hidden lg:flex ">
                                     <Info />
                                     <StripedDivider/>

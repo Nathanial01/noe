@@ -14,7 +14,9 @@ use App\Http\Controllers\BotSettingController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |--------------------------------------------------------------------------
 */
+use App\Http\Controllers\web\WebSearchController;
 
+Route::post('/search', [WebSearchController::class, 'search']);
 // Route to get the authenticated user's information (requires Sanctum for authentication)
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
