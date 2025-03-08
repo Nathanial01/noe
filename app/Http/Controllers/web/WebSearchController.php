@@ -242,7 +242,7 @@ class WebSearchController extends Controller
 
     /**
      * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
-     * If the snippet contains code or technical content, skip summarization.
+     * If the snippet contains code or technical content, skip summarization.dsfdfsfsdfs
      */
     private function summarizeSnippet(string $snippet): string
     {
