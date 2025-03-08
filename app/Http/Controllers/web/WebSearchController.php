@@ -111,11 +111,12 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Filter out technical-related content from the raw response by replacing keywords and removing JSON-like route definitions.
+     * Filter out technical-related content from the raw response by removing keywords, JSON blocks, and arrays
+     * related to internal keys (e.g., "dashboard", "profile", "relatedResource", etc.).
      */
     private function filterTechnicalInfo(string $content): string
     {
-        // Keywords and patterns to remove.
+        // List of keywords and internal keys to remove.
         $technicalKeywords = [
             'Ziggy',
             'debugbar',
@@ -133,7 +134,7 @@ class WebSearchController extends Controller
             '/images/',
             '<!--',
             '-->',
-            // Additional keywords for route definitions and HTTP methods.
+            // Additional technical keywords.
             'GET ',
             'POST ',
             'PUT ',
@@ -167,15 +168,34 @@ class WebSearchController extends Controller
             $content = str_ireplace($keyword, '', $content);
         }
 
-        // Remove JSON-like route definitions containing specific keys.
-        // This will remove any block like: "profile.edit": { ... },
-        $content = preg_replace('/"profile\.[^"]+":\s*\{[^}]+\},?/i', '', $content);
-        $content = preg_replace('/"admin\.[^"]+":\s*\{[^}]+\},?/i', '', $content);
-        $content = preg_replace('/"password\.[^"]+":\s*\{[^}]+\},?/i', '', $content);
-        $content = preg_replace('/"dynamic\.page":\s*\{[^}]+\},?/i', '', $content);
+        // Define a list of internal keys whose JSON blocks/arrays should be removed entirely.
+        $keysToRemove = [
+            'profile.edit',
+            'dashboard',
+            'relatedResource',
+            'relatedResourceId',
+            'profile',
+            'forgot-password',
+            'token',
+            'verification.noti',
+            // You can add more keys as needed.
+        ];
 
-        // Remove any remaining JSON blocks containing "uri" definitions.
+        foreach ($keysToRemove as $key) {
+            // Remove JSON object blocks for the key.
+            $patternObject = '/"' . preg_quote($key, '/') . '"\s*:\s*\{[^}]+\},?/i';
+            $content = preg_replace($patternObject, '', $content);
+
+            // Remove JSON array blocks for the key.
+            $patternArray = '/"' . preg_quote($key, '/') . '"\s*:\s*\[[^\]]+\],?/i';
+            $content = preg_replace($patternArray, '', $content);
+        }
+
+        // Remove any remaining JSON blocks that contain "uri" definitions.
         $content = preg_replace('/\{[^}]*"uri":\s*".*?"[^}]*\},?/s', '', $content);
+
+        // Remove any JSON objects that contain HTTP method arrays (e.g., ["POST"], ["GET","HEAD"], etc.).
+        $content = preg_replace('/\{[^}]*\[[\sA-Z",]+\][^}]*\},?/i', '', $content);
 
         // Collapse multiple newlines into a single newline.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
@@ -230,7 +250,7 @@ class WebSearchController extends Controller
 
         try {
             // Updated summarization prompt: explicitly exclude technical details.
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on the visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
             $response = $openAi->chat()->create([
@@ -253,4 +273,3 @@ class WebSearchController extends Controller
         }
     }
 }
-
