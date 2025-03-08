@@ -115,6 +115,7 @@ class WebSearchController extends Controller
      */
     private function filterTechnicalInfo(string $content): string
     {
+        // Keywords and patterns to remove.
         $technicalKeywords = [
             'Ziggy',
             'debugbar',
@@ -132,7 +133,7 @@ class WebSearchController extends Controller
             '/images/',
             '<!--',
             '-->',
-            // Additional technical keywords to filter out common routes, HTTP methods, and coding references.
+            // Additional keywords for route definitions and HTTP methods.
             'GET ',
             'POST ',
             'PUT ',
@@ -145,16 +146,31 @@ class WebSearchController extends Controller
             'react',
             'vue',
             'laravel',
-            'dynamic',       // caution: generic word, but added as requested.
-            'HTTP methods'
+            'dynamic.page',
+            'profile.destroy',
+            'admin.index',
+            'password.request',
+            'register',
+            'uri',
+            'methods',
+            'wheres',
+            'parameters',
+            'Https',
+            'Http',
+             'SSH',
+            'User',
+        'Admin'
         ];
 
-        // Replace each technical keyword with an empty string (case-insensitive).
+        // Remove each technical keyword or phrase (case-insensitive).
         foreach ($technicalKeywords as $keyword) {
             $content = str_ireplace($keyword, '', $content);
         }
 
-        // Collapse multiple newlines to a single newline.
+        // Remove JSON-like route definitions that might not be covered by simple keyword replacement.
+        $content = preg_replace('/\{.*"uri":.*\}/U', '', $content);
+
+        // Collapse multiple newlines into a single newline.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
         return trim($content);
@@ -191,7 +207,7 @@ class WebSearchController extends Controller
 
     /**
      * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
-     * If the snippet contains code or IT-related content, skip summarization.
+     * If the snippet contains code or technical content, skip summarization.
      */
     private function summarizeSnippet(string $snippet): string
     {
@@ -202,13 +218,14 @@ class WebSearchController extends Controller
 
         // Check for common code markers or IT-related patterns.
         if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+|GET\s+\/|POST\s+\/|PUT\s+\/|DELETE\s+\/|HTTP\//i', $trimmedSnippet)) {
-            // Return the original snippet if it seems to be code or technical content.
             return $trimmedSnippet;
         }
 
         try {
+            // Updated summarization prompt: explicitly exclude technical details.
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on the visitor-facing content such as key messages or investment, real estate, and similar topics:\n\n" . $trimmedSnippet;
+
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Ignore any technical or debug information and focus only on describing the content that a visitor would see on the page:\n\n" . $trimmedSnippet;
             $response = $openAi->chat()->create([
                 'model'       => 'gpt-3.5-turbo',
                 'messages'    => [
