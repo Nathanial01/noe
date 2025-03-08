@@ -163,7 +163,6 @@ class WebSearchController extends Controller
             'Admin'
         ];
 
-        // Remove each technical keyword (case-insensitive).
         foreach ($technicalKeywords as $keyword) {
             $content = str_ireplace($keyword, '', $content);
         }
@@ -242,17 +241,21 @@ class WebSearchController extends Controller
 
     /**
      * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
-     * If the snippet contains code or technical content, skip summarization.dsfdfsfsdfs
+     * If the snippet contains code or technical content, or if an error occurs, return the original snippet.
      */
     private function summarizeSnippet(string $snippet): string
     {
         $trimmedSnippet = trim($snippet);
         if (empty($trimmedSnippet)) {
+            Log::warning('Empty snippet provided for summarization.');
             return "";
         }
 
         // If the snippet contains obvious technical markers, return it unchanged.
         if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+|GET\s+\/|POST\s+\/|PUT\s+\/|DELETE\s+\/|HTTP\//i', $trimmedSnippet)) {
+            Log::info('Snippet contains technical content; skipping summarization.', [
+                'snippet' => $trimmedSnippet,
+            ]);
             return $trimmedSnippet;
         }
 
