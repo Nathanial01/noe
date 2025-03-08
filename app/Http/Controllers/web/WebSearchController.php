@@ -251,7 +251,7 @@ class WebSearchController extends Controller
             return "";
         }
 
-        // Check for common code markers or IT-related patterns.
+        // If the snippet contains obvious technical markers, return it unchanged.
         if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+|GET\s+\/|POST\s+\/|PUT\s+\/|DELETE\s+\/|HTTP\//i', $trimmedSnippet)) {
             return $trimmedSnippet;
         }
@@ -268,14 +268,23 @@ class WebSearchController extends Controller
                 'max_tokens'  => 60,
                 'temperature' => 0.5,
             ]);
+
             $summary = $response['choices'][0]['message']['content'] ?? '';
             $summary = trim($summary);
+
             if (empty($summary) || stripos($summary, "i'm sorry") !== false) {
+                Log::warning('Summarization returned empty or fallback response.', [
+                    'prompt' => $prompt,
+                    'original_snippet' => $trimmedSnippet,
+                    'response' => $summary,
+                ]);
                 return $trimmedSnippet;
             }
             return $summary;
         } catch (\Exception $e) {
-            Log::error("OpenAI Summarization Error: " . $e->getMessage());
+            Log::error("OpenAI Summarization Error: " . $e->getMessage(), [
+                'snippet' => $trimmedSnippet,
+            ]);
             return $trimmedSnippet;
         }
     }
