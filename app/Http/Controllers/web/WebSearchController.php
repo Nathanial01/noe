@@ -1,117 +1,211 @@
-import React, { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+<?php
+namespace App\Http\Controllers\web;
 
-const API_BASE_URL = "https://noecapital-24a1e658d2d0.herokuapp.com";
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
+use Inertia\Response as InertiaResponse;
 
-const SearchBar = () => {
-const [expanded, setExpanded] = useState(false);
-const [query, setQuery] = useState("");
-const [results, setResults] = useState([]);
-const [loading, setLoading] = useState(false);
-const [error, setError] = useState("");
+class WebSearchController extends Controller
+{
+    /**
+     * Search public pages and return advanced AI-generated results.
+     */
+    public function search(Request $request): JsonResponse
+    {
+        try {
+            $query = strtolower(trim($request->input('query')));
+            if (!$query) {
+                return response()->json(['error' => 'Search query is required'], 400);
+            }
+            Log::info('Search Query:', ['query' => $query]);
 
-// Fetch CSRF Token
-const fetchCsrfToken = async () => {
-await axios.get(`${API_BASE_URL}/sanctum/csrf-cookie`);
-};
+            // Define public pages to search – keys must match your PageController mapping.
+            $pages = [
+                'about',
+                'our-story',
+                'contact',
+                'real-estate',
+                'private-equity',
+                'agendaevent',
+                'masterclass',
+                'webinar'
+            ];
+            $results = [];
 
-// Function to fetch search results dynamically
-const fetchResults = useCallback(async () => {
-if (!query.trim()) return;
+            // Load your searchable configuration file from config/searchable.php
+            $searchableConfig = config('searchable');
 
-setLoading(true);
-setError("");
-setResults([]);
+            foreach ($pages as $page) {
+                try {
+                    // Render the page via PageController.
+                    $response = app(PageController::class)->renderPage($page);
 
-try {
-await fetchCsrfToken();  // ✅ Ensure CSRF token is set
+                    // Convert Inertia responses to HTTP responses if needed.
+                    if ($response instanceof InertiaResponse) {
+                        $httpResponse = $response->toResponse($request);
+                        $rawContent = $httpResponse->getContent();
+                    } elseif (method_exists($response, 'getContent')) {
+                        $rawContent = $response->getContent();
+                    } else {
+                        $rawContent = json_encode($response);
+                    }
 
-const response = await axios.post(
-`${API_BASE_URL}/api/search`,
-{ query },
-{ withCredentials: true }  // ✅ Send cookies
-);
+                    // Filter out debug and technical-related content.
+                    $filteredRawContent = $this->filterTechnicalInfo($rawContent);
 
-setResults(response.data.results || []);
-} catch (err) {
-setError(err.response?.data?.error || "Search failed. Please try again.");
-} finally {
-setLoading(false);
+                    // Convert the filtered content to plain text.
+                    $plainContent = $this->htmlToPlainText($filteredRawContent);
+                } catch (\Exception $e) {
+                    Log::error("Failed to load page: {$page} - " . $e->getMessage());
+                    continue;
+                }
+
+                // If the filtered content contains the search query, process the result.
+                if (stripos($plainContent, $query) !== false) {
+                    // Determine URL for the dynamic page.
+                    $url = route('dynamic.page', ['page' => $page]);
+
+                    // Determine a snippet and summary.
+                    $snippet = $this->extractSnippet($plainContent, $query);
+                    $summary = $this->summarizeSnippet($snippet);
+
+                    // Determine the page title from the searchable config if available.
+                    $pageTitle = ucfirst($page);
+                    $locale = app()->getLocale(); // e.g., 'en' or 'nl'
+                    if (isset($searchableConfig[$page])) {
+                        // For pages that store title under a locale key.
+                        if (isset($searchableConfig[$page][$locale]['hero_title'])) {
+                            $pageTitle = $searchableConfig[$page][$locale]['hero_title'];
+                        } elseif (isset($searchableConfig[$page]['heroTitle'])) {
+                            // For pages that use a different structure.
+                            $pageTitle = $searchableConfig[$page]['heroTitle'];
+                        }
+                    }
+
+                    $results[] = [
+                        'page'        => $pageTitle,
+                        'description' => $summary,
+                        'url'         => $url,
+                    ];
+                }
+            }
+
+            if (empty($results)) {
+                return response()->json([
+                    'query'   => $query,
+                    'results' => [],
+                    'message' => 'No results found. Please try a different search term.',
+                ]);
+            }
+
+            return response()->json([
+                'query'   => $query,
+                'results' => $results,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Search Error: ' . $e->getMessage());
+            return response()->json([
+                'error'   => 'Internal Server Error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Filter out debug and technical-related content from the raw response.
+     */
+    private function filterTechnicalInfo(string $content): string
+    {
+        // Keywords and patterns to remove
+        $technicalKeywords = [
+            'Ziggy',
+            'debugbar',
+            'clockwork',
+            'asset(',
+            'route(',
+            'DEBUG',
+            'debug',
+            'Debug information:',
+            'Route listing:',
+            'Generated by',
+            '/css/',
+            '/js/',
+            '/storage/',
+            '/images/',
+            '<!--',
+            '-->'
+        ];
+
+        foreach ($technicalKeywords as $keyword) {
+            // Remove lines or tags that contain technical keywords
+            $content = preg_replace('/^.*' . preg_quote($keyword, '/') . '.*$/mi', '', $content);
+        }
+
+        // Collapse multiple newlines to simplify content
+        $content = preg_replace("/[\r\n]+/", "\n", $content);
+
+        return trim($content);
+    }
+
+    /**
+     * Convert HTML to plain text using DOMDocument.
+     */
+    private function htmlToPlainText(string $html): string
+    {
+        libxml_use_internal_errors(true);
+        $doc = new \DOMDocument();
+        $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        if ($doc->loadHTML($html)) {
+            $text = $doc->textContent;
+            return trim($text);
+        }
+        return trim(strip_tags($html));
+    }
+
+    /**
+     * Extracts a snippet of text around the search query.
+     */
+    private function extractSnippet(string $content, string $query, int $window = 200): string
+    {
+        $position = mb_stripos($content, $query);
+        if ($position === false) {
+            return "";
+        }
+        $start = max(0, $position - $window);
+        $end = min(mb_strlen($content), $position + mb_strlen($query) + $window);
+        return mb_substr($content, $start, $end - $start);
+    }
+
+    /**
+     * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
+     */
+    private function summarizeSnippet(string $snippet): string
+    {
+        if (empty(trim($snippet))) {
+            return "";
+        }
+        try {
+            $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Ignore any technical or debug information and focus only on describing the content that a visitor would see on the page:\n\n" . $snippet;
+            $response = $openAi->chat()->create([
+                'model'       => 'gpt-3.5-turbo',
+                'messages'    => [
+                    ['role' => 'system', 'content' => $prompt],
+                ],
+                'max_tokens'  => 60,
+                'temperature' => 0.5,
+            ]);
+            $summary = $response['choices'][0]['message']['content'] ?? '';
+            $summary = trim($summary);
+            if (empty($summary) || stripos($summary, "i'm sorry") !== false) {
+                return $snippet;
+            }
+            return $summary;
+        } catch (\Exception $e) {
+            Log::error("OpenAI Summarization Error: " . $e->getMessage());
+            return $snippet;
+        }
+    }
 }
-}, [query]);
-
-// Debounce the search function (waits 500ms before making API call)
-useEffect(() => {
-if (query.length > 2) {
-const delayDebounce = setTimeout(() => {
-fetchResults();
-}, 500);
-
-return () => clearTimeout(delayDebounce);
-}
-}, [query, fetchResults]);
-
-return (
-<div className="relative">
-    {/* Search Bar */}
-    <div
-        onClick={() => setExpanded(true)}
-    className={`p-5 overflow-hidden h-10 rounded-full flex group items-center duration-300
-    ${expanded ? "w-[270px] opacity-100 bg-gray-600/80 backdrop-blur-3xl" : "w-5 opacity-100 "}
-    md:w-[270px] md:opacity-100 md:bg-gray-400 dark:md:bg-gray-800 md:backdrop-blur-3xl
-    `}
-    >
-    {/* Search Icon */}
-    <div className="flex items-center justify-center fill-white mr-8">
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="16"
-            height="16"
-        >
-            <path d="M18.9,16.776A10.539,10.539,0,1,0,16.776,18.9l5.1,5.1L24,21.88ZM10.5,18A7.5,7.5,0,1,1,18,10.5,7.507,7.507,0,0,1,10.5,18Z"></path>
-        </svg>
-    </div>
-
-    {/* Input Field */}
-    <input
-        type="text"
-        name="q"
-        autoCapitalize="off"
-        autoComplete="off"
-        title="Search"
-        role="combobox"
-        placeholder="Search Now"
-        className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:border-0 focus:ring-0"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-    />
-
-    <span className="hidden sm:block">⌘</span>K
-</div>
-
-{/* Loading State */}
-{loading && <p className="text-sm text-gray-400 mt-2">Searching...</p>}
-
-{/* Error Message */}
-{error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-
-{/* Search Results */}
-{results.length > 0 && (
-<div className="absolute top-12 left-0 w-[270px] bg-white shadow-lg rounded-lg p-3">
-    <h3 className="text-gray-700 font-semibold mb-2">Results:</h3>
-    <ul className="space-y-2">
-        {results.map((result, index) => (
-        <li key={index} className="text-gray-800 text-sm p-2 bg-gray-100 rounded-md">
-            <strong>{result.page}</strong>
-            <p>{result.content}</p>
-        </li>
-        ))}
-    </ul>
-</div>
-)}
-</div>
-);
-};
-
-export default SearchBar;
