@@ -111,12 +111,12 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Filter out technical-related content from the raw response by removing keywords, JSON blocks, and arrays
-     * related to internal keys (e.g., "dashboard", "profile", "relatedResource", etc.).
+     * Filter out technical-related content from the raw response by removing keywords,
+     * JSON blocks, and route tokens.
      */
     private function filterTechnicalInfo(string $content): string
     {
-        // List of keywords and internal keys to remove.
+        // List of general technical keywords to remove.
         $technicalKeywords = [
             'Ziggy',
             'debugbar',
@@ -134,7 +134,7 @@ class WebSearchController extends Controller
             '/images/',
             '<!--',
             '-->',
-            // Additional technical keywords.
+            // HTTP method and route-related tokens.
             'GET ',
             'POST ',
             'PUT ',
@@ -163,22 +163,24 @@ class WebSearchController extends Controller
             'Admin'
         ];
 
-        // Remove each technical keyword or phrase (case-insensitive).
+        // Remove each technical keyword (case-insensitive).
         foreach ($technicalKeywords as $keyword) {
             $content = str_ireplace($keyword, '', $content);
         }
 
-        // Define a list of internal keys whose JSON blocks/arrays should be removed entirely.
+        // List of internal keys whose JSON blocks or arrays should be removed entirely.
         $keysToRemove = [
             'profile.edit',
             'dashboard',
             'relatedResource',
             'relatedResourceId',
-            'profile',
+            'profile.update',
             'forgot-password',
             'token',
             'verification.noti',
-            // You can add more keys as needed.
+            'password.email',
+            'password.reset',
+            'password.store'
         ];
 
         foreach ($keysToRemove as $key) {
@@ -196,6 +198,12 @@ class WebSearchController extends Controller
 
         // Remove any JSON objects that contain HTTP method arrays (e.g., ["POST"], ["GET","HEAD"], etc.).
         $content = preg_replace('/\{[^}]*\[[\sA-Z",]+\][^}]*\},?/i', '', $content);
+
+        // Remove any route tokens wrapped in curly braces.
+        $content = preg_replace('/\/\{[^}]+\}/', '', $content);
+
+        // Remove stray prefixes such as "hed\/" that often appear before route tokens.
+        $content = str_ireplace('hed\/', '', $content);
 
         // Collapse multiple newlines into a single newline.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
