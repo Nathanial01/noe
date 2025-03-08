@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// Set API base URL based on environment.
-const API_BASE_URL =
-    window.location.hostname === "localhost"
-        ? "http://localhost"
-        : "https://noecapital-24a1e658d2d0.herokuapp.com";
+// Use the current window origin as the API base URL.
+const API_BASE_URL = window.location.origin;
 
 const SearchBar = () => {
     const [query, setQuery] = useState("");

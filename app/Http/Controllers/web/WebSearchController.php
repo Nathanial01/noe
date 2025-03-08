@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
@@ -6,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response as InertiaResponse;
+use App\Http\Controllers\web\PageController; // Ensure correct namespace
 
 class WebSearchController extends Controller
 {
@@ -34,7 +36,7 @@ class WebSearchController extends Controller
             ];
             $results = [];
 
-            // Load your searchable configuration file from config/searchable.php
+            // Load searchable configuration file from config/searchable.php
             $searchableConfig = config('searchable');
 
             foreach ($pages as $page) {
@@ -52,36 +54,29 @@ class WebSearchController extends Controller
                         $rawContent = json_encode($response);
                     }
 
-                    // First, remove script tags and known technical JS fragments.
-                    $cleanedContent = $this->removeScriptsAndJs($rawContent);
-                    // Then filter out debug and technical-related content.
-                    $filteredContent = $this->filterTechnicalInfo($cleanedContent);
+                    // Filter out technical-related content in a less destructive way.
+                    $filteredRawContent = $this->filterTechnicalInfo($rawContent);
 
                     // Convert the filtered content to plain text.
-                    $plainContent = $this->htmlToPlainText($filteredContent);
+                    $plainContent = $this->htmlToPlainText($filteredRawContent);
                 } catch (\Exception $e) {
                     Log::error("Failed to load page: {$page} - " . $e->getMessage());
                     continue;
                 }
 
-                // If the plain text contains the search query, process the result.
+                // Check if the plain text contains the search query.
                 if (stripos($plainContent, $query) !== false) {
-                    // Determine URL for the dynamic page.
                     $url = route('dynamic.page', ['page' => $page]);
-
-                    // Determine a snippet and summary.
                     $snippet = $this->extractSnippet($plainContent, $query);
                     $summary = $this->summarizeSnippet($snippet);
 
                     // Determine the page title from the searchable config if available.
                     $pageTitle = ucfirst($page);
-                    $locale = app()->getLocale(); // e.g., 'en' or 'nl'
+                    $locale = app()->getLocale();
                     if (isset($searchableConfig[$page])) {
-                        // For pages that store title under a locale key.
                         if (isset($searchableConfig[$page][$locale]['hero_title'])) {
                             $pageTitle = $searchableConfig[$page][$locale]['hero_title'];
                         } elseif (isset($searchableConfig[$page]['heroTitle'])) {
-                            // For pages that use a different structure.
                             $pageTitle = $searchableConfig[$page]['heroTitle'];
                         }
                     }
@@ -116,29 +111,10 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Remove script tags and known JavaScript fragments.
-     */
-    private function removeScriptsAndJs(string $content): string
-    {
-        // Remove entire <script> blocks
-        $content = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $content);
-        // Remove common JS fragments
-        $jsPatterns = [
-            '/document\.head\.append\(.*?\);?/s',
-            '/loadNext\(JSON\.parse\(.*?\)\);?/s'
-        ];
-        foreach ($jsPatterns as $pattern) {
-            $content = preg_replace($pattern, '', $content);
-        }
-        return $content;
-    }
-
-    /**
-     * Filter out debug and technical-related content from the raw response.
+     * Filter out technical-related content from the raw response by replacing keywords instead of removing full lines.
      */
     private function filterTechnicalInfo(string $content): string
     {
-        // Keywords and patterns to remove
         $technicalKeywords = [
             'Ziggy',
             'debugbar',
@@ -155,17 +131,15 @@ class WebSearchController extends Controller
             '/storage/',
             '/images/',
             '<!--',
-            '-->',
-            'document.head.append',
-            'loadNext(JSON.parse'
+            '-->'
         ];
 
+        // Replace each technical keyword with an empty string
         foreach ($technicalKeywords as $keyword) {
-            // Remove lines or tags that contain technical keywords
-            $content = preg_replace('/^.*' . preg_quote($keyword, '/') . '.*$/mi', '', $content);
+            $content = str_ireplace($keyword, '', $content);
         }
 
-        // Collapse multiple newlines to simplify content
+        // Optionally, collapse multiple newlines to a single newline
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
         return trim($content);
@@ -202,15 +176,24 @@ class WebSearchController extends Controller
 
     /**
      * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
+     * If the snippet contains code or IT-related content, skip summarization.
      */
     private function summarizeSnippet(string $snippet): string
     {
-        if (empty(trim($snippet))) {
+        $trimmedSnippet = trim($snippet);
+        if (empty($trimmedSnippet)) {
             return "";
         }
+
+        // Check for common code markers or IT-related patterns.
+        if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+/', $trimmedSnippet)) {
+            // Return the original snippet if it seems to be code or technical content.
+            return $trimmedSnippet;
+        }
+
         try {
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Ignore any technical or debug information and focus only on describing the content that a visitor would see on the page:\n\n" . $snippet;
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Ignore any technical or debug information and focus only on describing the content that a visitor would see on the page:\n\n" . $trimmedSnippet;
             $response = $openAi->chat()->create([
                 'model'       => 'gpt-3.5-turbo',
                 'messages'    => [
@@ -222,12 +205,12 @@ class WebSearchController extends Controller
             $summary = $response['choices'][0]['message']['content'] ?? '';
             $summary = trim($summary);
             if (empty($summary) || stripos($summary, "i'm sorry") !== false) {
-                return $snippet;
+                return $trimmedSnippet;
             }
             return $summary;
         } catch (\Exception $e) {
             Log::error("OpenAI Summarization Error: " . $e->getMessage());
-            return $snippet;
+            return $trimmedSnippet;
         }
     }
 }
