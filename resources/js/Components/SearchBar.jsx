@@ -115,7 +115,7 @@ const SearchBar = () => {
                         </button>
                     )}
                     {results.length > 0 && (
-                        <div className="max-h-[1000PX] overflow-y-auto">
+                        <div className="max-h-[800PX] overflow-y-auto">
                             <ul className="space-y-2">
                                 {results.map((result, index) => (
                                     <li
