@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// Set the API base URL to the provided Heroku endpoint.
-const API_BASE_URL = "https://cbotbackend-97abad6f3162.herokuapp.com";
+// Use the current window origin as the API base URL.
+const API_BASE_URL = window.location.origin;
 
 const SearchBar = () => {
     const [query, setQuery] = useState("");
@@ -13,7 +13,7 @@ const SearchBar = () => {
     // Default placeholder text for the search input.
     const placeholderText = "How can I help you?";
 
-    // Fetch CSRF token on mount if needed (comment this out if not required).
+    // Fetch CSRF token on mount (if using Laravel Sanctum).
     useEffect(() => {
         axios.get(`${API_BASE_URL}/sanctum/csrf-cookie`, { withCredentials: true })
             .catch(err => console.error("CSRF Token Error:", err));
@@ -29,7 +29,7 @@ const SearchBar = () => {
         setResults([]);
         try {
             const response = await axios.post(
-                `${API_BASE_URL}/api/chat`,
+                `${API_BASE_URL}/api/search`,
                 { query },
                 { withCredentials: true, headers: { "Content-Type": "application/json" } }
             );
