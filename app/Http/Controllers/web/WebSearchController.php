@@ -69,7 +69,7 @@ class WebSearchController extends Controller
                     $url = route('dynamic.page', ['page' => $page]);
                     $snippet = $this->extractSnippet($plainContent, $query);
 
-                    // Further clean any remaining curly-brace fragments.
+                    // Further clean the snippet by removing any remaining technical fragments.
                     $cleanSnippet = $this->cleanSnippet($snippet);
                     $summary = $this->summarizeSnippet($cleanSnippet);
 
@@ -209,13 +209,18 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Further clean the snippet by removing any remaining content inside curly braces.
+     * Further clean the snippet by removing any remaining content inside curly braces,
+     * and extra fragments such as "loadNext(JSON.parse(...))" or bracketed text.
      */
     private function cleanSnippet(string $snippet): string
     {
         // Remove any content enclosed in curly braces.
         $cleaned = preg_replace('/\{[^}]+\}/', '', $snippet);
-        // Remove any extra whitespace.
+        // Remove patterns like loadNext(JSON.parse(...))
+        $cleaned = preg_replace('/loadNext\(JSON\.parse\([^)]*\)\)/i', '', $cleaned);
+        // Remove content inside square brackets (if they appear on their own).
+        $cleaned = preg_replace('/\[[^\]]+\]/', '', $cleaned);
+        // Remove extra whitespace.
         return trim(preg_replace('/\s+/', ' ', $cleaned));
     }
 
@@ -271,7 +276,7 @@ class WebSearchController extends Controller
         try {
             $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
-            // Log the prompt for debugging purposes.
+            // Log the prompt for debugging.
             Log::debug('Summarization prompt:', ['prompt' => $prompt]);
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
