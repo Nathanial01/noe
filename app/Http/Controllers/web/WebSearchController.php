@@ -68,7 +68,9 @@ class WebSearchController extends Controller
                 if (stripos($plainContent, $query) !== false) {
                     $url = route('dynamic.page', ['page' => $page]);
                     $snippet = $this->extractSnippet($plainContent, $query);
-                    $summary = $this->summarizeSnippet($snippet);
+                    // Extra cleaning step: remove any remaining curly-brace JSON-like content.
+                    $cleanSnippet = $this->cleanSnippet($snippet);
+                    $summary = $this->summarizeSnippet($cleanSnippet);
 
                     // Determine the page title from the searchable config if available.
                     $pageTitle = ucfirst($page);
@@ -186,7 +188,6 @@ class WebSearchController extends Controller
             // Remove JSON object blocks for the key.
             $patternObject = '/"' . preg_quote($key, '/') . '"\s*:\s*\{[^}]+\},?/i';
             $content = preg_replace($patternObject, '', $content);
-
             // Remove JSON array blocks for the key.
             $patternArray = '/"' . preg_quote($key, '/') . '"\s*:\s*\[[^\]]+\],?/i';
             $content = preg_replace($patternArray, '', $content);
@@ -194,20 +195,28 @@ class WebSearchController extends Controller
 
         // Remove any remaining JSON blocks that contain "uri" definitions.
         $content = preg_replace('/\{[^}]*"uri":\s*".*?"[^}]*\},?/s', '', $content);
-
         // Remove any JSON objects that contain HTTP method arrays (e.g., ["POST"], ["GET","HEAD"], etc.).
         $content = preg_replace('/\{[^}]*\[[\sA-Z",]+\][^}]*\},?/i', '', $content);
-
         // Remove any route tokens wrapped in curly braces.
         $content = preg_replace('/\/\{[^}]+\}/', '', $content);
-
         // Remove stray prefixes such as "hed\/" that often appear before route tokens.
         $content = str_ireplace('hed\/', '', $content);
-
         // Collapse multiple newlines into a single newline.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
         return trim($content);
+    }
+
+    /**
+     * Further clean the snippet by removing any remaining content in curly braces,
+     * which may indicate leftover JSON fragments.
+     */
+    private function cleanSnippet(string $snippet): string
+    {
+        // Remove any content enclosed in curly braces.
+        $cleaned = preg_replace('/\{[^}]+\}/', '', $snippet);
+        // Remove any extra whitespace.
+        return trim(preg_replace('/\s+/', ' ', $cleaned));
     }
 
     /**
@@ -251,7 +260,7 @@ class WebSearchController extends Controller
             return "";
         }
 
-        // If the snippet contains obvious technical markers, return it unchanged.
+        // If the snippet contains obvious technical markers, skip summarization.
         if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+|GET\s+\/|POST\s+\/|PUT\s+\/|DELETE\s+\/|HTTP\//i', $trimmedSnippet)) {
             Log::info('Snippet contains technical content; skipping summarization.', [
                 'snippet' => $trimmedSnippet,
@@ -261,6 +270,9 @@ class WebSearchController extends Controller
 
         try {
             $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
+
+            // Log the prompt for debugging (remove in production if needed).
+            Log::debug('Summarization prompt:', ['prompt' => $prompt]);
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
             $response = $openAi->chat()->create([
