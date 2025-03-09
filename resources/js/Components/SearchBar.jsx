@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
+import 'ldrs/ripples'; // Import the loading ring component
 
 // Allowed API base URLs.
 const allowedUrls = [
@@ -59,48 +60,69 @@ const SearchBar = () => {
     }, [query, fetchResults]);
 
     return (
-        <div className="relative">
-            <div className="p-5 overflow-hidden h-10 rounded-full flex items-center duration-300 bg-gray-600/80 backdrop-blur-3xl">
+        <div className="relative backdrop-blur-3xl">
+            <div className="p-5 overflow-hidden h-10 rounded-full flex items-center duration-300 bg-gray-100 dark:bg-gray-900 backdrop-blur-3xl">
                 <div className="flex items-center justify-center mr-8">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16">
-                        <path d="M18.9,16.776A10.539,10.539,0,1,0,16.776,18.9l5.1,5.1L24,21.88ZM10.5,18A7.5,7.5,0,1,1,18,10.5,7.507,7.507,0,0,1,10.5,18Z"></path>
-                    </svg>
+                    {loading ? (
+                        <l-ripples size="24" color="indigo" />
+                    ) : (
+                        <svg
+                            height="24"
+                            width="24"
+                            viewBox="0 0 24 24"
+                            data-name="Layer 1"
+                            id="Layer_1"
+                            className="sparkle"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <defs>
+                                <linearGradient id="indigoGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stopColor="#5c6ac4" />
+                                    <stop offset="100%" stopColor="#4c51bf" />
+                                </linearGradient>
+                            </defs>
+                            <path
+                                fill="url(#indigoGradient)"
+                                d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z"
+                            />
+                        </svg>
+                    )}
                 </div>
                 <input
                     type="text"
                     placeholder={placeholderText}
-                    className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:ring-0"
+                    className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:ring-0 text-gray-950 dark:text-gray-50"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                />
-                <span className="hidden sm:block">⌘</span>K
+                /><div className="w-px h-6 m-2 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>
+                <span className="hidden sm:block text-gray-950 dark:text-gray-50">⌘K</span>
             </div>
 
-            {loading && <p className="text-sm text-gray-400 mt-2">Searching...</p>}
-            {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
-            {(!loading && query.trim() && results.length === 0) && (
-                <p className="text-sm text-gray-500 mt-2">No results found. Please try another search term.</p>
-            )}
-
-            {results.length > 0 && (
-                <div className="absolute top-12 left-0 w-[270px] bg-white shadow-lg rounded-lg p-3">
-                    <h3 className="text-gray-700 font-semibold mb-2">Results:</h3>
-                    <ul className="space-y-2">
-                        {results.map((result, index) => (
-                            <li key={index} className="text-gray-800 text-sm p-2 bg-gray-100 rounded-md">
-                                <strong>{result.page}</strong>
-                                <p dangerouslySetInnerHTML={{ __html: result.description }}></p>
-                                <a
-                                    href={result.url}
-                                    className="text-blue-500 underline"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    View {result.page}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+            {query.trim() && (
+                <div className="absolute top-12 left-0 w-[450px] bg-gray-900/10 backdrop-blur-md shadow-lg rounded-lg p-3 text-gray-950 dark:text-gray-50">
+                    {loading && <div className="flex justify-center"><l-ripples size="45" color="indigo" /></div>}
+                    {error && <p className="text-sm text-red-500">{error}</p>}
+                    {!loading && !error && results.length === 0 && (
+                        <p className="text-sm text-gray-500">No results found. Please try another search term.</p>
+                    )}
+                    {results.length > 0 && (
+                        <ul className="space-y-2">
+                            {results.map((result, index) => (
+                                <li key={index} className="text-sm p-2 dark:bg-gray-900 bg-gray-200 rounded-md">
+                                    <strong>{result.page}</strong>
+                                    <p dangerouslySetInnerHTML={{ __html: result.description }}></p>
+                                    <a
+                                        href={result.url}
+                                        className="text-blue-500 underline"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        View {result.page}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             )}
         </div>

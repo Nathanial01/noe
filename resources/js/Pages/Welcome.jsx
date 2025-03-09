@@ -88,12 +88,13 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
                     <div className="gap-4 mt-44">
                         <Header />
                     </div>
-                    <div className="flex justify-center items-center">
+                    <div className="flex justify-center items-center">      <button className="hero__down" aria-label="scroll down">
                         <img
                             src="/img/landing/scroll.svg"
                             alt="Scroll Down"
                             className="h-10 mt-10 animate-bounce"
                         />
+                    </button>
                     </div>
                 </section>
 
