@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
 use Inertia\Response as InertiaResponse;
-use App\Http\Controllers\web\PageController;
+use App\Http\Controllers\web\PageController; // Ensure correct namespace
 
 class WebSearchController extends Controller
 {
     /**
-     * Search public pages and return results with a title, description, and link.
+     * Search public pages and return advanced AI-generated results.
      */
     public function search(Request $request): JsonResponse
     {
@@ -115,7 +115,7 @@ class WebSearchController extends Controller
 
     /**
      * Filter out technical-related content from the raw response by removing keywords,
-     * JSON blocks, route tokens, and extraneous characters.
+     * JSON blocks, and route tokens.
      */
     private function filterTechnicalInfo(string $content): string
     {
@@ -202,8 +202,6 @@ class WebSearchController extends Controller
         $content = preg_replace('/\/\{[^}]+\}/', '', $content);
         // Remove stray prefixes such as "hed\/".
         $content = str_ireplace('hed\/', '', $content);
-        // Remove all tokens that start with "nova." (case-insensitive).
-        $content = preg_replace('/\bnova\.[\w\-\.\:"]+/i', '', $content);
         // Collapse multiple newlines into one.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
@@ -220,7 +218,7 @@ class WebSearchController extends Controller
         $cleaned = preg_replace('/\{[^}]+\}/', '', $snippet);
         // Remove patterns like loadNext(JSON.parse(...))
         $cleaned = preg_replace('/loadNext\(JSON\.parse\([^)]*\)\)/i', '', $cleaned);
-        // Remove content inside square brackets.
+        // Remove content inside square brackets (if they appear on their own).
         $cleaned = preg_replace('/\[[^\]]+\]/', '', $cleaned);
         // Remove extra whitespace.
         return trim(preg_replace('/\s+/', ' ', $cleaned));
@@ -256,7 +254,7 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~12 words).
+     * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
      * If the snippet contains technical content or if an error occurs, return the original snippet.
      */
     private function summarizeSnippet(string $snippet): string
@@ -276,7 +274,7 @@ class WebSearchController extends Controller
         }
 
         try {
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 12 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content:\n\n" . $trimmedSnippet;
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 12 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
             // Log the prompt for debugging.
             Log::debug('Summarization prompt:', ['prompt' => $prompt]);
