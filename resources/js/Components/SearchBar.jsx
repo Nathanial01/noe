@@ -115,28 +115,29 @@ const SearchBar = () => {
                         </button>
                     )}
                     {results.length > 0 && (
-
-                        <ul className="space-y-2">
-                            {results.map((result, index) => (
-                                <li
-                                    key={index}
-                                    className="text-sm p-2 dark:bg-gray-900 bg-gray-200 rounded-md"
-                                >
-                                    <strong>{result.page}</strong>
-                                    <p
-                                        dangerouslySetInnerHTML={{ __html: result.description }}
-                                    ></p>
-                                    <a
-                                        href={result.url}
-                                        className="text-blue-500 underline"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                        <div className="max-h-[1000PX] overflow-y-auto">
+                            <ul className="space-y-2">
+                                {results.map((result, index) => (
+                                    <li
+                                        key={index}
+                                        className="text-sm p-2 dark:bg-gray-900 bg-gray-200 rounded-md"
                                     >
-                                        View {result.page}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
+                                        <strong>{result.page}</strong>
+                                        <p
+                                            dangerouslySetInnerHTML={{ __html: result.description }}
+                                        ></p>
+                                        <a
+                                            href={result.url}
+                                            className="text-blue-500 underline"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            View {result.page}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     )}
                 </div>
             )}
