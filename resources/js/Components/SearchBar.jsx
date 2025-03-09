@@ -99,7 +99,7 @@ const SearchBar = () => {
             </div>
 
             {query.trim() && (
-                <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full sm:w-[480px] bg-gray-900/10 backdrop-blur-md shadow-lg rounded-lg p-3 text-gray-950 dark:text-gray-50 mt-2">
+                <div className="absolute sm:top-16 left-1/2 transform -translate-x-1/2 w-full sm:w-[480px] bg-gray-900/10 backdrop-blur-md shadow-lg rounded-lg p-3 text-gray-950 dark:text-gray-50 mt-2">
                     {error && <p className="text-sm text-red-500">{error}</p>}
                     {!loading && !error && results.length === 0 && (
                         <p className="text-sm text-gray-500">
@@ -109,7 +109,7 @@ const SearchBar = () => {
                     {query && (
                         <button
                             onClick={() => setQuery("")}
-                            className="mr-2 flex items-center justify-center w-6 h-6 rounded-full focus:outline-none"
+                            className="mr-4 flex items-center justify-center w-6 h-6 rounded-full focus:outline-none"
                         >
                             <span className="text-red-500 dark:text-red-800 hover:scale-150 text-s font-bold">×</span>
                         </button>
