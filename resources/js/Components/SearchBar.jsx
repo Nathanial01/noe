@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import 'ldrs/ripples'; // Import the loading ring component
+import 'ldrs/ping'; // Ensure this library is installed and provides <l-ping>
 
 // Allowed API base URLs.
 const allowedUrls = [
@@ -51,7 +51,7 @@ const SearchBar = () => {
         }
     }, [query]);
 
-    // Debounce search input with a 500ms delay on every input change.
+    // Debounce search input with a 500ms delay.
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             fetchResults();
@@ -60,11 +60,13 @@ const SearchBar = () => {
     }, [query, fetchResults]);
 
     return (
-        <div className="relative backdrop-blur-3xl">
+        <div className="relative backdrop-blur-3xl px-4">
             <div className="p-5 overflow-hidden h-10 rounded-full flex items-center duration-300 bg-gray-100 dark:bg-gray-900 backdrop-blur-3xl">
-                <div className="flex items-center justify-center mr-8">
+                <div className="flex items-center justify-center mr-4">
                     {loading ? (
-                        <l-ripples size="24" color="indigo" />
+                        <div className="flex items-center justify-center">
+                            <l-ping size="45" speed="2" color="#818cf8" />
+                        </div>
                     ) : (
                         <svg
                             height="24"
@@ -94,13 +96,13 @@ const SearchBar = () => {
                     className="outline-none bg-transparent border-0 w-full font-normal px-4 focus:ring-0 text-gray-950 dark:text-gray-50"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                /><div className="w-px h-6 m-2 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>
+                />
+                <div className="w-px h-6 mx-2 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>
                 <span className="hidden sm:block text-gray-950 dark:text-gray-50">⌘K</span>
             </div>
 
             {query.trim() && (
-                <div className="absolute top-12 left-0 w-[450px] bg-gray-900/10 backdrop-blur-md shadow-lg rounded-lg p-3 text-gray-950 dark:text-gray-50">
-                    {loading && <div className="flex justify-center"><l-ripples size="45" color="indigo" /></div>}
+                <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full sm:w-[480px] bg-gray-900/10 backdrop-blur-md shadow-lg rounded-lg p-3 text-gray-950 dark:text-gray-50 mt-2">
                     {error && <p className="text-sm text-red-500">{error}</p>}
                     {!loading && !error && results.length === 0 && (
                         <p className="text-sm text-gray-500">No results found. Please try another search term.</p>
