@@ -68,7 +68,8 @@ class WebSearchController extends Controller
                 if (stripos($plainContent, $query) !== false) {
                     $url = route('dynamic.page', ['page' => $page]);
                     $snippet = $this->extractSnippet($plainContent, $query);
-                    // Extra cleaning step: remove any remaining curly-brace JSON-like content.
+
+                    // Further clean any remaining curly-brace fragments.
                     $cleanSnippet = $this->cleanSnippet($snippet);
                     $summary = $this->summarizeSnippet($cleanSnippet);
 
@@ -195,21 +196,20 @@ class WebSearchController extends Controller
 
         // Remove any remaining JSON blocks that contain "uri" definitions.
         $content = preg_replace('/\{[^}]*"uri":\s*".*?"[^}]*\},?/s', '', $content);
-        // Remove any JSON objects that contain HTTP method arrays (e.g., ["POST"], ["GET","HEAD"], etc.).
+        // Remove any JSON objects that contain HTTP method arrays.
         $content = preg_replace('/\{[^}]*\[[\sA-Z",]+\][^}]*\},?/i', '', $content);
         // Remove any route tokens wrapped in curly braces.
         $content = preg_replace('/\/\{[^}]+\}/', '', $content);
-        // Remove stray prefixes such as "hed\/" that often appear before route tokens.
+        // Remove stray prefixes such as "hed\/".
         $content = str_ireplace('hed\/', '', $content);
-        // Collapse multiple newlines into a single newline.
+        // Collapse multiple newlines into one.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
         return trim($content);
     }
 
     /**
-     * Further clean the snippet by removing any remaining content in curly braces,
-     * which may indicate leftover JSON fragments.
+     * Further clean the snippet by removing any remaining content inside curly braces.
      */
     private function cleanSnippet(string $snippet): string
     {
@@ -250,7 +250,7 @@ class WebSearchController extends Controller
 
     /**
      * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
-     * If the snippet contains code or technical content, or if an error occurs, return the original snippet.
+     * If the snippet contains technical content or if an error occurs, return the original snippet.
      */
     private function summarizeSnippet(string $snippet): string
     {
@@ -260,7 +260,7 @@ class WebSearchController extends Controller
             return "";
         }
 
-        // If the snippet contains obvious technical markers, skip summarization.
+        // Skip summarization if technical markers are detected.
         if (preg_match('/<\?php|<code>|<\/code>|function\s+\w+\s*\(|public\s+function|class\s+\w+|GET\s+\/|POST\s+\/|PUT\s+\/|DELETE\s+\/|HTTP\//i', $trimmedSnippet)) {
             Log::info('Snippet contains technical content; skipping summarization.', [
                 'snippet' => $trimmedSnippet,
@@ -271,7 +271,7 @@ class WebSearchController extends Controller
         try {
             $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
-            // Log the prompt for debugging (remove in production if needed).
+            // Log the prompt for debugging purposes.
             Log::debug('Summarization prompt:', ['prompt' => $prompt]);
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
