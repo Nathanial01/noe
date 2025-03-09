@@ -38,7 +38,7 @@ const NotificationBar = () => {
                     >
                         <div className="flex items-center space-x-2">
                             <img
-                                src={`/img/clients/${item.client}`}
+                                src="/img/logo.png"
                                 alt="logo"
                                 className="w-100 h-6"
                             />
@@ -57,7 +57,7 @@ const NotificationBar = () => {
                     >
                         <div className="flex items-center space-x-2">
                             <img
-                                src={`/img/clients/${item.client}`}
+                                src="/img/landing/logo.svg"
                                 alt="logo"
                                 className="w-100 h-6"
                             />
