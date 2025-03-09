@@ -44,27 +44,27 @@ export default function FeatureAboutUs() {
             <div className="overflow-hidden bg-none dark:bg-none py-24 sm:py-32">
                 <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
                     <div className="max-w-4xl">
-                        <p className="text-base/7 font-semibold text-green-400 dark:text-green-400">About us</p>
-                        <h1 className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl">
+                        <p className="text-base/7 font-semibold text-indigo-400 ">About us</p>
+                        <h1 className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-50 dark:text-gray-100 sm:text-5xl">
                             On a mission to empower remote teams
                         </h1>
-                        <p className="mt-6 text-balance text-xl/8 text-gray-700">
+                        <p className="mt-6 text-balance text-xl/8 text-gray-100">
                             Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh dui, diam eget
                             aliquam. Quisque id at vitae feugiat egestas.
                         </p>
                     </div>
                     <section className="mt-20 grid grid-cols-1 lg:grid-cols-2 lg:gap-x-8 lg:gap-y-16">
                         <div className="lg:pr-8">
-                            <h2 className="text-pretty text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
+                            <h2 className="text-pretty text-2xl font-semibold tracking-tight text-indigo-400">
                                 Our mission
                             </h2>
-                            <p className="mt-6 text-base/7 text-gray-600 dark:text-gray-300">
+                            <p className="mt-6 text-base/7 text-gray-50 dark:text-gray-300">
                                 Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet
                                 vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra tellus varius sit neque
                                 erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper
                                 sed amet vitae sed turpis id.
                             </p>
-                            <p className="mt-8 text-base/7 text-gray-600 dark:text-gray-300">
+                            <p className="mt-8 text-base/7 text-gray-50 dark:text-gray-300">
                                 Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie auctor
                                 fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac
                                 adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.
@@ -103,30 +103,30 @@ export default function FeatureAboutUs() {
                             </div>
                         </div>
                         <div className="max-lg:mt-16 lg:col-span-1">
-                            <p className="text-base/7 font-semibold text-gray-500 dark:text-gray-200">The numbers</p>
+                            <p className="text-base/7 font-semibold text-indigo-400">The numbers</p>
                             <hr className="mt-6 border-t border-gray-200" />
                             <dl className="mt-6 grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
                                 <div className="flex flex-col gap-y-2 border-b border-dotted border-gray-200 pb-4">
-                                    <dt className="text-sm/6 text-gray-600 dark:text-gray-300">Raised</dt>
-                                    <dd className="order-first text-6xl text-gray-600 dark:text-gray-300 font-semibold tracking-tight">
+                                    <dt className="text-sm/6 text-gray-50 dark:text-gray-300">Raised</dt>
+                                    <dd className="order-first text-6xl text-gray-50 dark:text-gray-300 font-semibold tracking-tight">
                                         $<CountUp target={150} />M
                                     </dd>
                                 </div>
                                 <div className="flex flex-col gap-y-2 border-b border-dotted border-gray-200 pb-4">
-                                    <dt className="text-sm/6 text-gray-600 dark:text-gray-300">Companies</dt>
-                                    <dd className="order-first text-6xl font-semibold tracking-tight text-gray-600 dark:text-gray-300">
+                                    <dt className="text-sm/6 text-gray-50 dark:text-gray-300">Companies</dt>
+                                    <dd className="order-first text-6xl font-semibold tracking-tight text-gray-50 dark:text-gray-300">
                                         <CountUp target={30} />K
                                     </dd>
                                 </div>
                                 <div className="flex flex-col gap-y-2 max-sm:border-b max-sm:border-dotted max-sm:border-gray-200 max-sm:pb-4">
-                                    <dt className="text-sm/6 text-gray-600 dark:text-gray-300">Deals Closed</dt>
-                                    <dd className="order-first text-6xl font-semibold tracking-tight text-gray-600 dark:text-gray-300">
+                                    <dt className="text-sm/6 text-gray-50 dark:text-gray-300">Deals Closed</dt>
+                                    <dd className="order-first text-6xl font-semibold tracking-tight text-gray-50 dark:text-gray-300">
                                         <CountUp target={1.5} duration={3} />M
                                     </dd>
                                 </div>
                                 <div className="flex flex-col gap-y-2">
-                                    <dt className="text-sm/6 text-gray-600 dark:text-gray-300">Leads Generated</dt>
-                                    <dd className="order-first text-6xl font-semibold tracking-tight text-gray-600 dark:text-gray-300">
+                                    <dt className="text-sm/6 text-gray-50">Leads Generated</dt>
+                                    <dd className="order-first text-6xl font-semibold tracking-tight text-gray-50 dark:text-gray-300">
                                         <CountUp target={200} />M
                                     </dd>
                                 </div>

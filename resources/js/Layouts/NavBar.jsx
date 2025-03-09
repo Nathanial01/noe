@@ -196,7 +196,7 @@ export const UserLinks = ({user}) => {
  * NavBar Component
  * Main navigation bar component.
  */
-export default function NavBar({ header, children }) {
+export default function NavBar({ header, children, offsetClass = 'top-0' }) {
     const { auth } = usePage().props;
     const user = auth.user;
 
@@ -211,7 +211,7 @@ export default function NavBar({ header, children }) {
             <div className="fixed inset-0 bg-none backdrop-blur-2xl -z-40"></div>
 
             {/* Fixed Navigation Bar */}
-            <Disclosure as="nav" className="fixed top-0 inset-x-0 z-50 bg-none backdrop-blur-2xl">
+            <Disclosure as="nav" className={`fixed ${offsetClass} inset-x-0 z-50 bg-none backdrop-blur-2xl`}>
                 {({ open }) => (
                     <>
                         <div className="mx-auto  px-2 sm:px-4 lg:px-8">

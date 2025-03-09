@@ -2,14 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import 'ldrs/ping'; // Ensure this library is installed and provides <l-ping>
 
-// Allowed API base URLs.
 const allowedUrls = [
     "http://localhost",
     "http://localhost:5173",
     "https://noecapital-24a1e658d2d0.herokuapp.com"
 ];
 
-// Use the current window origin if it's allowed, otherwise fallback to production.
 const API_BASE_URL = allowedUrls.includes(window.location.origin)
     ? window.location.origin
     : "https://noecapital-24a1e658d2d0.herokuapp.com";
@@ -20,13 +18,12 @@ const SearchBar = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // Default placeholder text for the search input.
     const placeholderText = "How can I help you?";
 
-    // Fetch CSRF token on mount (if using Laravel Sanctum).
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/sanctum/csrf-cookie`, { withCredentials: true })
-            .catch(err => console.error("CSRF Token Error:", err));
+        axios
+            .get(`${API_BASE_URL}/sanctum/csrf-cookie`, { withCredentials: true })
+            .catch((err) => console.error("CSRF Token Error:", err));
     }, []);
 
     const fetchResults = useCallback(async () => {
@@ -51,7 +48,6 @@ const SearchBar = () => {
         }
     }, [query]);
 
-    // Debounce search input with a 500ms delay.
     useEffect(() => {
         const delayDebounce = setTimeout(() => {
             fetchResults();
@@ -97,6 +93,7 @@ const SearchBar = () => {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                 />
+
                 <div className="w-px h-6 mx-2 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>
                 <span className="hidden sm:block text-gray-950 dark:text-gray-50">⌘K</span>
             </div>
@@ -105,14 +102,30 @@ const SearchBar = () => {
                 <div className="absolute top-16 left-1/2 transform -translate-x-1/2 w-full sm:w-[480px] bg-gray-900/10 backdrop-blur-md shadow-lg rounded-lg p-3 text-gray-950 dark:text-gray-50 mt-2">
                     {error && <p className="text-sm text-red-500">{error}</p>}
                     {!loading && !error && results.length === 0 && (
-                        <p className="text-sm text-gray-500">No results found. Please try another search term.</p>
+                        <p className="text-sm text-gray-500">
+                            No results found. Please try another search term.
+                        </p>
+                    )}   {/* Close button appears when query is non-empty */}
+                    {query && (
+                        <button
+                            onClick={() => setQuery("")}
+                            className="mr-2 flex items-center justify-center w-6 h-6 rounded-full focus:outline-none"
+                        >
+                            <span className="text-red-500 dark:text-red-800 hover:scale-150 text-s font-bold">×</span>
+                        </button>
                     )}
                     {results.length > 0 && (
+
                         <ul className="space-y-2">
                             {results.map((result, index) => (
-                                <li key={index} className="text-sm p-2 dark:bg-gray-900 bg-gray-200 rounded-md">
+                                <li
+                                    key={index}
+                                    className="text-sm p-2 dark:bg-gray-900 bg-gray-200 rounded-md"
+                                >
                                     <strong>{result.page}</strong>
-                                    <p dangerouslySetInnerHTML={{ __html: result.description }}></p>
+                                    <p
+                                        dangerouslySetInnerHTML={{ __html: result.description }}
+                                    ></p>
                                     <a
                                         href={result.url}
                                         className="text-blue-500 underline"

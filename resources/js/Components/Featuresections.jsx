@@ -62,10 +62,10 @@ export default function Featuresections() {
             </div>
 
             <div className="w-full mt-16 px-6">
-                <dl className="grid grid-cols-1 gap-x-6 gap-y-10 text-base text-gray-900 dark:text-gray-100 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
+                <dl className="grid grid-cols-1 gap-x-6 gap-y-10 text-base text-gray-50 dark:text-gray-100 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-16">
                     {features.map((feature) => (
                         <div key={feature.name} className="relative pl-9">
-                            <dt className="inline font-semibold text-gray-900 dark:text-gray-100">
+                            <dt className="inline font-semibold text-gray-50 dark:text-gray-100">
                                 <feature.icon
                                     aria-hidden="true"
                                     className="absolute left-1 top-1 h-5 w-5 text-indigo-500"

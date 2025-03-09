@@ -1,36 +1,33 @@
 import React from "react";
 
 const NotificationBar = () => {
-    const logos = [
-        "Untitled.svg", // Array with logos (can be more client logos later)
-    ];
     const items = [
         {
-            text: "ImmoScan.app",
+            text: "Noe Captal.app",
             subtext:
-                "Met ImmoScan kunt u eenvoudig een volledig huis, gebouw of gebied scannen met geavanceerde software. Ontvang een nauwkeurige plattegrond en gedetailleerde lay-out voor woningen en gebouwen.",
-            link: "https://www.immoscan.app",
-            client: "Untitled.svg", // You can associate each item with a specific logo file
+                "Met Noe Captal kunt u eenvoudig een volledig huis, gebouw of gebied scannen met geavanceerde software. Ontvang een nauwkeurige plattegrond en gedetailleerde lay-out voor woningen en gebouwen.",
+            link: "https://www.noecaptalinvestment.com",
+            client: "Untitled.svg",
         },
         {
-            text: "ImmoScan Technologie",
+            text: "Noe Captal Technologie",
             subtext:
-                "ImmoScan maakt gebruik van cutting-edge technologie om professionals en particulieren te helpen bij het in kaart brengen en plannen van vastgoedprojecten. Voor vragen: support@immoscan.app",
-            link: "mailto:support@immoscan.app",
-            client: "Untitled.svg", // Same logo for this one, you can change it for different logos
+                "Noe Captal maakt gebruik van cutting-edge technologie om professionals en particulieren te helpen bij het in kaart brengen en plannen van vastgoedprojecten. Voor vragen: support@noecaptalinvestment.com",
+            link: "mailto:support@noecaptalinvestment.com",
+            client: "Untitled.svg",
         },
         {
             text: "Innovatieve Vastgoedoplossingen",
             subtext:
-                "Ontdek de kracht van scannen met ImmoScan. Bespaar tijd en kosten bij het ontwerpen, renoveren of verkopen van uw vastgoed door nauwkeurige en snelle digitale indelingen.",
-            link: "https://www.immoscan.app",
-            client: "Untitled.svg", // Same logo for this one as well
+                "Ontdek de kracht van Noe Captal. Bespaar tijd en kosten bij het ontwerpen, renoveren of verkopen van uw vastgoed door nauwkeurige en snelle digitale indelingen.",
+            link: "https://www.noecaptalinvestment.com",
+            client: "Untitled.svg",
         },
     ];
 
     return (
-        <div className="relative overflow-hidden bg-gray-400 dark:bg-gray-800 text-gray-900 dark:text-gray-100 shadow-lg">
-            <div className="flex animate-marquee space-x-8">
+        <div className=" z-50 bg-none backdrop-blur-3xl">
+            <div className="flex animate-marquee space-x-8 text-gray-300 dark:text-gray-50">
                 {items.map((item, index) => (
                     <a
                         key={index}
@@ -40,7 +37,6 @@ const NotificationBar = () => {
                         className="flex-shrink-0 px-4 py-2 whitespace-nowrap"
                     >
                         <div className="flex items-center space-x-2">
-                            {/* Dynamically set the logo source using client */}
                             <img
                                 src={`/img/clients/${item.client}`}
                                 alt="logo"
@@ -50,7 +46,7 @@ const NotificationBar = () => {
                         </div>
                     </a>
                 ))}
-                {/* Duplicate content for seamless scrolling */}
+                {/* Duplicate items for seamless scrolling */}
                 {items.map((item, index) => (
                     <a
                         key={`duplicate-${index}`}
@@ -60,7 +56,6 @@ const NotificationBar = () => {
                         className="flex-shrink-0 px-4 py-2 whitespace-nowrap"
                     >
                         <div className="flex items-center space-x-2">
-                            {/* Dynamically set the logo source using client */}
                             <img
                                 src={`/img/clients/${item.client}`}
                                 alt="logo"

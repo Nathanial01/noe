@@ -10,7 +10,8 @@ import ChatBot from "../Pages/ChatBot/ChatBot";
 import Header from "../Components/Header";
 import Background from "../Components/Background";
 import HeroSection from "../Components/HeroSection.jsx";
-import NotificationBar  from "@/Components/NotificationBar.jsx"
+import NotificationBar from "@/Components/NotificationBar.jsx";
+
 // Lazy-load components with webpack prefetch hints
 const Featuresections = lazy(() =>
     import(/* webpackPrefetch: true */ "@/Components/Featuresections")
@@ -67,8 +68,16 @@ export default function Dashboard({ gigCount = 0, invitationCount = 0, user }) {
 
             {/* NavBar placed above backgrounds */}
             <div className="relative z-50">
-                <NavBar>
-                <NotificationBar/>
+                {/* Fixed NotificationBar */}
+                <div className="fixed top-0 inset-x-0 z-50">
+                    <NotificationBar />
+                </div>
+
+                {/* NavBar with a top offset to sit beneath the NotificationBar */}
+                <NavBar offsetClass="top-10" >
+
+
+
                     {/* Background layers (placed behind everything) */}
                     <div className="fixed inset-0 -z-20">
                         <Background
