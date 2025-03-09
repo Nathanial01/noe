@@ -1,8 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
-// Use the current window origin as the API base URL.
-const REACT_APP_API_UR = window.location.origin;
+// Allowed API base URLs.
+const allowedUrls = [
+    "http://localhost",
+    "http://localhost:5173",
+    "https://noecapital-24a1e658d2d0.herokuapp.com"
+];
+
+// Use the current window origin if it's allowed, otherwise fallback to production.
+const API_BASE_URL = allowedUrls.includes(window.location.origin)
+    ? window.location.origin
+    : "https://noecapital-24a1e658d2d0.herokuapp.com";
 
 const SearchBar = () => {
     const [query, setQuery] = useState("");
@@ -15,7 +24,7 @@ const SearchBar = () => {
 
     // Fetch CSRF token on mount (if using Laravel Sanctum).
     useEffect(() => {
-        axios.get(`${REACT_APP_API_UR}/sanctum/csrf-cookie`, { withCredentials: true })
+        axios.get(`${API_BASE_URL}/sanctum/csrf-cookie`, { withCredentials: true })
             .catch(err => console.error("CSRF Token Error:", err));
     }, []);
 
@@ -29,7 +38,7 @@ const SearchBar = () => {
         setResults([]);
         try {
             const response = await axios.post(
-                `${REACT_APP_API_UR}/api/search`,
+                `${API_BASE_URL}/api/search`,
                 { query },
                 { withCredentials: true, headers: { "Content-Type": "application/json" } }
             );
