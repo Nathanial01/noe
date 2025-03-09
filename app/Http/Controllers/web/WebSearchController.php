@@ -274,7 +274,7 @@ class WebSearchController extends Controller
         }
 
         try {
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 12 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 0 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
 
             // Log the prompt for debugging.
             Log::debug('Summarization prompt:', ['prompt' => $prompt]);
