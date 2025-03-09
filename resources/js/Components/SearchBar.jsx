@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 
 // Use the current window origin as the API base URL.
-const API_BASE_URL = window.location.origin;
+const REACT_APP_API_UR = window.location.origin;
 
 const SearchBar = () => {
     const [query, setQuery] = useState("");
@@ -15,7 +15,7 @@ const SearchBar = () => {
 
     // Fetch CSRF token on mount (if using Laravel Sanctum).
     useEffect(() => {
-        axios.get(`${API_BASE_URL}/sanctum/csrf-cookie`, { withCredentials: true })
+        axios.get(`${REACT_APP_API_UR}/sanctum/csrf-cookie`, { withCredentials: true })
             .catch(err => console.error("CSRF Token Error:", err));
     }, []);
 
@@ -29,7 +29,7 @@ const SearchBar = () => {
         setResults([]);
         try {
             const response = await axios.post(
-                `${API_BASE_URL}/api/search`,
+                `${REACT_APP_API_UR}/api/search`,
                 { query },
                 { withCredentials: true, headers: { "Content-Type": "application/json" } }
             );
