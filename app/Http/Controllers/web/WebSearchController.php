@@ -69,7 +69,7 @@ class WebSearchController extends Controller
                     $url = route('dynamic.page', ['page' => $page]);
                     $snippet = $this->extractSnippet($plainContent, $query);
 
-                    // Further clean the snippet by removing any leftover technical fragments.
+                    // Further clean the snippet by removing any remaining technical fragments.
                     $cleanSnippet = $this->cleanSnippet($snippet);
                     $summary = $this->summarizeSnippet($cleanSnippet);
 
@@ -114,7 +114,8 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Filter out technical-related content by removing keywords, JSON blocks, and route tokens.
+     * Filter out technical-related content from the raw response by removing keywords,
+     * JSON blocks, and route tokens.
      */
     private function filterTechnicalInfo(string $content): string
     {
@@ -164,6 +165,7 @@ class WebSearchController extends Controller
             'User',
             'Admin'
         ];
+
         foreach ($technicalKeywords as $keyword) {
             $content = str_ireplace($keyword, '', $content);
         }
@@ -180,10 +182,9 @@ class WebSearchController extends Controller
             'verification.noti',
             'password.email',
             'password.reset',
-            'password.store',
-            'edit-attached',
-            'verification.notice'
+            'password.store'
         ];
+
         foreach ($keysToRemove as $key) {
             // Remove JSON object blocks for the key.
             $patternObject = '/"' . preg_quote($key, '/') . '"\s*:\s*\{[^}]+\},?/i';
@@ -193,38 +194,33 @@ class WebSearchController extends Controller
             $content = preg_replace($patternArray, '', $content);
         }
 
-        // Remove any remaining JSON blocks containing "uri" definitions.
+        // Remove any remaining JSON blocks that contain "uri" definitions.
         $content = preg_replace('/\{[^}]*"uri":\s*".*?"[^}]*\},?/s', '', $content);
-        // Remove JSON objects containing HTTP method arrays.
+        // Remove any JSON objects that contain HTTP method arrays.
         $content = preg_replace('/\{[^}]*\[[\sA-Z",]+\][^}]*\},?/i', '', $content);
-        // Remove route tokens wrapped in curly braces.
+        // Remove any route tokens wrapped in curly braces.
         $content = preg_replace('/\/\{[^}]+\}/', '', $content);
-        // Remove stray prefixes like "hed\/".
+        // Remove stray prefixes such as "hed\/".
         $content = str_ireplace('hed\/', '', $content);
-        // Collapse multiple newlines.
+        // Collapse multiple newlines into one.
         $content = preg_replace("/[\r\n]+/", "\n", $content);
 
         return trim($content);
     }
 
     /**
-     * Further clean the snippet by removing any content inside curly braces,
-     * any calls like loadNext(JSON.parse(...)), text inside square brackets, and
-     * any lines starting with unwanted technical fragments.
+     * Further clean the snippet by removing any remaining content inside curly braces,
+     * and extra fragments such as "loadNext(JSON.parse(...))" or bracketed text.
      */
     private function cleanSnippet(string $snippet): string
     {
         // Remove any content enclosed in curly braces.
         $cleaned = preg_replace('/\{[^}]+\}/', '', $snippet);
-        // Remove calls like loadNext(JSON.parse(...))
+        // Remove patterns like loadNext(JSON.parse(...))
         $cleaned = preg_replace('/loadNext\(JSON\.parse\([^)]*\)\)/i', '', $cleaned);
-        // Remove content inside square brackets.
+        // Remove content inside square brackets (if they appear on their own).
         $cleaned = preg_replace('/\[[^\]]+\]/', '', $cleaned);
-        // Remove lines starting with unwanted technical phrases.
-        $cleaned = preg_replace('/^(Fonts Scripts.*)$/m', '', $cleaned);
-        $cleaned = preg_replace('/^(xt\(assets.*)$/m', '', $cleaned);
-        $cleaned = preg_replace('/^(document\.head\.append\(fragment\).*$/m', '', $cleaned);
-        // Collapse multiple spaces.
+        // Remove extra whitespace.
         return trim(preg_replace('/\s+/', ' ', $cleaned));
     }
 
@@ -244,7 +240,7 @@ class WebSearchController extends Controller
     }
 
     /**
-     * Extract a snippet of text around the search query.
+     * Extracts a snippet of text around the search query.
      */
     private function extractSnippet(string $content, string $query, int $window = 200): string
     {
@@ -259,7 +255,7 @@ class WebSearchController extends Controller
 
     /**
      * Summarize the snippet using OpenAI GPT-3.5 Turbo (limit to ~30 words).
-     * If technical content is detected or an error occurs, return the original snippet.
+     * If the snippet contains technical content or if an error occurs, return the original snippet.
      */
     private function summarizeSnippet(string $snippet): string
     {
@@ -278,7 +274,9 @@ class WebSearchController extends Controller
         }
 
         try {
-            $prompt = "Summarize the following text in a friendly, concise manner in no more than 30 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
+            $prompt = "Summarize the following text in a friendly, concise manner in no more than 12 words. Exclude any references to URIs, HTTP methods, routes, or technical information. Focus only on visitor-facing content such as key messages or topics like investment and real estate:\n\n" . $trimmedSnippet;
+
+            // Log the prompt for debugging.
             Log::debug('Summarization prompt:', ['prompt' => $prompt]);
 
             $openAi = \OpenAI::client(env('OPENAI_API_KEY'));
