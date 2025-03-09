@@ -57,7 +57,7 @@ const SearchBar = () => {
 
     return (
         <div className="relative backdrop-blur-3xl px-4">
-            <div className="p-5 overflow-hidden h-10 rounded-full flex items-center duration-300 bg-gray-100 dark:bg-gray-900 backdrop-blur-3xl">
+            <div className="p-5  h-10 rounded-full flex items-center duration-300 bg-gray-100 dark:bg-gray-900 backdrop-blur-3xl">
                 <div className="flex items-center justify-center mr-4">
                     {loading ? (
                         <div className="flex items-center justify-center">
@@ -115,7 +115,7 @@ const SearchBar = () => {
                         </button>
                     )}
                     {results.length > 0 && (
-                        <div className="max-h-[800PX] overflow-y-auto">
+                        <div className="max-h-[500PX] overflow-y-auto">
                             <ul className="space-y-2">
                                 {results.map((result, index) => (
                                     <li
