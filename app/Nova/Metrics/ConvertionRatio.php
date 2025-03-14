@@ -2,45 +2,48 @@
 
 namespace App\Nova\Metrics;
 
-use Carbon\Carbon;
 use App\Models\Company;
-use Laravel\Nova\Metrics\Progress;
+use Laravel\Nova\Metrics\Value;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class ConvertionRatio extends Progress
+class ConvertionRatio extends Value
 {
     /**
-     * Calculate the value of the metric.
+     * Calculate the conversion ratio metric.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
+        // Total companies count
+        $target = Company::count();
 
-        $target = Company::all()->count();
-
-        return $this->count($request, Company::whereHas('transactions', function($query) {
-          $query->where('status', 'paid');
-      }, '>', 0), function ($query) {
-            return $query;
-        }, target: $target);
+        // Count companies with at least one paid transaction
+        return $this->count(
+            $request,
+            Company::whereHas('transactions', function($query) {
+                $query->where('status', 'paid');
+            }, '>', 0),
+            function ($query) {
+                return $query;
+            },
+            target: $target
+        );
     }
 
     /**
-    * Get the displayable name of the metric
-    *
-    * @return string
-    */
+     * Get the displayable name of the metric.
+     *
+     * @return string
+     */
     public function name()
     {
         return 'Conversie ratio';
     }
 
     /**
-     * Determine the amount of time the results of the metric should be cached.
-     *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * Cache the metric for 5 minutes.
      */
     public function cacheFor()
     {
@@ -49,8 +52,6 @@ class ConvertionRatio extends Progress
 
     /**
      * Get the URI key for the metric.
-     *
-     * @return string
      */
     public function uriKey()
     {

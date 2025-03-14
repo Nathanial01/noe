@@ -83,7 +83,7 @@ class Transaction extends Resource
             Text::make('Factuurnummer', 'invoice_number')->sortable()->readonly(),
             Text::make('Mollie ID', 'mollie_id')->sortable()->readonly()->hideFromIndex(),
             BelongsTo::make('Company')->readonly(),
-            BelongsTo::make('User')->readonly()->hideFromIndex(),
+            BelongsTo::make('user')->readonly()->hideFromIndex(),
             Select::make('Status')->options([
                 'created'  => 'Aangemaakt',
                 'paid'     => 'Betaald',
@@ -129,7 +129,7 @@ class Transaction extends Resource
         return [];
     }
 
-    public function actions(NovaRequest $request)
+    public function actions(NovaRequest $request): array
     {
         return [
             CompanyCsvExport::make()->nameable(),

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Policies;
+namespace App\Policies;
 
 use App\Models\BotSetting;
 use App\Models\User;
@@ -13,7 +14,7 @@ class BotSettingPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -21,7 +22,7 @@ class BotSettingPolicy
      */
     public function view(User $user, BotSetting $botSetting): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -29,7 +30,7 @@ class BotSettingPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -37,7 +38,7 @@ class BotSettingPolicy
      */
     public function update(User $user, BotSetting $botSetting): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -45,7 +46,7 @@ class BotSettingPolicy
      */
     public function delete(User $user, BotSetting $botSetting): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -53,7 +54,7 @@ class BotSettingPolicy
      */
     public function restore(User $user, BotSetting $botSetting): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -61,6 +62,6 @@ class BotSettingPolicy
      */
     public function forceDelete(User $user, BotSetting $botSetting): bool
     {
-        return false;
+        return $user->is_admin;
     }
 }

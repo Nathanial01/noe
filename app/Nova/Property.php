@@ -81,7 +81,7 @@ class Property extends Resource
         return [];
     }
 
-    public function actions(NovaRequest $request)
+    public function actions(NovaRequest $request): array
     {
         return [
             ExportAsCsv::make(),

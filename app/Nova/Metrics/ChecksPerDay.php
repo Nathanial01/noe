@@ -11,7 +11,7 @@ class ChecksPerDay extends Trend
     /**
      * Calculate the value of the metric.
      *
-     * In this Mango (MongoDB) setup, we assume the Check model is configured for MongoDB.
+     * In this SQL setup, we assume the Check model is configured for MySQL.
      *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
@@ -38,7 +38,7 @@ class ChecksPerDay extends Trend
             60   => __('60 Days'),
             90   => __('90 Days'),
             183  => __('6 maanden'),
-            365  => __('1 Jaar')
+            365  => __('1 Jaar'),
         ];
     }
 

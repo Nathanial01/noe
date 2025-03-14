@@ -1,18 +1,18 @@
 services:
-    noe:
+    app:
         build:
             context: './vendor/laravel/sail/runtimes/8.4'
             dockerfile: Dockerfile
             args:
-                WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.4/app'
+                WWWGROUP: '${WWWGROUP:-1000}'
+        image: sail-8.4/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
             - '${APP_PORT:-80}:80'
             - '${VITE_PORT:-5173}:${VITE_PORT:-5173}'
         environment:
-            WWWUSER: '${WWWUSER}'
+            WWWUSER: '${WWWUSER:-1000}'
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
@@ -22,33 +22,30 @@ services:
         networks:
             - sail
         depends_on:
-            - mongo
-
-    mongo:
-        image: mongo:latest
+            mysql:
+                condition: service_healthy
+    mysql:
+        image: 'mysql:8.0'
+        restart: unless-stopped
         ports:
-            - '${FORWARD_DB_PORT:-27017}:27017'
+            - '${FORWARD_DB_PORT:-3306}:3306'
         environment:
-            MONGO_INITDB_ROOT_USERNAME: '${DB_USERNAME}'
-            MONGO_INITDB_ROOT_PASSWORD: '${DB_PASSWORD}'
-            MONGO_INITDB_DATABASE: '${DB_DATABASE}'
+            MYSQL_ROOT_PASSWORD: 'homestead'  # Set correct root password
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'no'
         volumes:
-            - 'sail-mongo:/data/db'
+            - 'sail-mysql:/var/lib/mysql'
         networks:
             - sail
         healthcheck:
-            test:
-                - CMD
-                - mongo
-                - --eval
-                - "db.adminCommand('ping')"
-            retries: 3
-            timeout: 5s
-
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-phomestead"]
+            retries: 5
+            timeout: 10s
 networks:
     sail:
         driver: bridge
 
 volumes:
-    sail-mongo:
-        driver: local
+    sail-mysql:

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Sitemap\Tags\Url;
 use Spatie\Sitemap\Contracts\Sitemapable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

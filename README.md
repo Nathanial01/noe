@@ -30,3 +30,6 @@ error db side forget not to add
 use MongoDB\Laravel\Auth\User as Authenticatable;
 protected $connection = 'mongodb';
 protected string $collection = '.....;
+
+nova
+php artisan nova:action...

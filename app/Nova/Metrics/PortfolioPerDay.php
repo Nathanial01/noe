@@ -36,10 +36,10 @@ class PortfolioPerDay extends Trend
     }
 
     /**
-    * Get the displayable name of the metric
-    *
-    * @return string
-    */
+     * Get the displayable name of the metric
+     *
+     * @return string
+     */
     public function name()
     {
         return 'Portefeuilles vandaag';

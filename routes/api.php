@@ -6,7 +6,9 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\BotSettingController;
 use App\Http\Controllers\web\WebSearchController;
-
+use App\Mail\Noe as NoeMailable;
+use App\Notifications\Noe as NoeNotification;
+use Laravel\Nova\Notifications\Notification;
 
 
 Route::post('/login', [LoginController::class, 'login']);
@@ -28,4 +30,24 @@ Route::prefix('admin')->group(function () {
     Route::get('/settings/{id}', [BotSettingController::class, 'show']);
     Route::put('/settings/{id}', [BotSettingController::class, 'update']);
     Route::delete('/settings/{id}', [BotSettingController::class, 'destroy']);
+});
+// API Mail Route (for React, Mobile, External Calls)
+Route::post('/api/send-mail', function (\Illuminate\Http\Request $request) {
+    $email = $request->input('email');
+    Mail::to($email)->send(new NoeMailable());
+    return response()->json(['message' => 'Mailable email sent!']);
+});
+
+
+
+Route::middleware('auth:sanctum')->get('/nova-api/notifications', function () {
+    return auth()->user()->unreadNotifications;
+});
+
+Route::middleware('auth:sanctum')->post('/nova-api/notifications/{id}/mark-as-read', function ($id) {
+    $notification = auth()->user()->notifications()->find($id);
+    if ($notification) {
+        $notification->markAsRead();
+    }
+    return response()->json(['message' => 'Notification marked as read']);
 });

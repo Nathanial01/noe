@@ -42,7 +42,7 @@ export default function ChatBot() {
 
     try {
       const res = await axios.post(API_URL, {
-        Name: "User Name",
+        Name: "user Name",
         message: userMessage.text,
         subscription_tier: "free",
       });
@@ -186,7 +186,7 @@ export default function ChatBot() {
                     </svg>
                   </button> */}
 
-             
+
 
                   {/* "o3-mini-high" text label */}
                   <span className="text-gray-700 dark:text-gray-100 text-sm">

@@ -247,7 +247,7 @@ export default function NavBar({ header, children, offsetClass = 'top-0' }) {
                                     <StripedDivider/>
                                     </div>
                                 </div>
-                                {/* Right Section: Desktop User Menu & Dark Mode Toggle */}
+                                {/* Right Section: Desktop user Menu & Dark Mode Toggle */}
                                 <div className="hidden lg:ml-4 lg:flex lg:items-center lg:space-x-4 lg:overflow-hidden lg:flex-nowrap">
                                     {/*
       Uncomment the following block if notifications are needed.

@@ -72,12 +72,6 @@ class Check extends Resource
         return [];
     }
 
-    public function actions(NovaRequest $request)
-    {
-        return [
-            ExportAsCsv::make(),
-        ];
-    }
 
     public static function authorizedToCreate(Request $request)
     {
@@ -88,5 +82,11 @@ class Check extends Resource
     {
         // Show this resource only to admin users.
         return $request->user()->is_admin?? false;
+    }
+    public function actions(NovaRequest $request): array
+    {
+        return [
+            ExportAsCsv::make(),
+        ];
     }
 }

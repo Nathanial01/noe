@@ -5,7 +5,6 @@ namespace App\Nova\Metrics;
 use App\Models\Company;
 use Illuminate\Support\Carbon;
 use Laravel\Nova\Metrics\Value;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ClientsProfessionalXl extends Value
@@ -13,22 +12,28 @@ class ClientsProfessionalXl extends Value
     /**
      * Calculate the value of the metric.
      *
+     * Counts companies with status 'professional-xl' and a billing expiration date in the future.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->count($request, Company::where('status', 'professional-xl')->whereDate('billing_expiration_date', '>', Carbon::today()))->format([
+        return $this->count(
+            $request,
+            Company::where('status', 'professional-xl')
+                ->whereDate('billing_expiration_date', '>', Carbon::today())
+        )->format([
             'thousandSeparated' => true,
             'mantissa' => 0,
         ]);
     }
 
     /**
-    * Get the displayable name of the metric
-    *
-    * @return string
-    */
+     * Get the displayable name of the metric.
+     *
+     * @return string
+     */
     public function name()
     {
         return 'Professional XL';
@@ -42,7 +47,7 @@ class ClientsProfessionalXl extends Value
     public function ranges()
     {
         return [
-            'ALL' => 'Huidig'
+            'ALL' => 'Huidig',
         ];
     }
 
@@ -54,5 +59,15 @@ class ClientsProfessionalXl extends Value
     public function cacheFor()
     {
         return now()->addMinutes(5);
+    }
+
+    /**
+     * Get the URI key for the metric.
+     *
+     * @return string
+     */
+    public function uriKey()
+    {
+        return 'clients-professional-xl';
     }
 }

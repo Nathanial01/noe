@@ -3,25 +3,13 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\web\AboutController;
-use App\Http\Controllers\web\AgendaEvent\AgendaEventController;
-use App\Http\Controllers\web\ContactController;
-use App\Http\Controllers\web\Masterclass\MasterclassController;
-use App\Http\Controllers\web\PrivateEquityController;
-use App\Http\Controllers\web\RealEstateController;
-use App\Http\Controllers\web\Webinar\WebinarController;
-use Inertia\Inertia;
-use Inertia\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PageController extends Controller
 {
-    /**
-     * Map page slugs to their corresponding controller classes.
-     *
-     * @var array
-     */
     protected array $controllers = [
         'private-equity' => \App\Http\Controllers\web\PrivateEquityController::class,
         'contact'        => \App\Http\Controllers\web\ContactController::class,
@@ -32,13 +20,6 @@ class PageController extends Controller
         'masterclass'    => \App\Http\Controllers\web\Masterclass\MasterclassController::class,
     ];
 
-    /**
-     * Get the controller instance for a given page and ensure the required method exists.
-     *
-     * @param  string  $page
-     * @param  string  $method
-     * @return object
-     */
     protected function getController(string $page, string $method)
     {
         $page = strtolower($page);
@@ -58,9 +39,6 @@ class PageController extends Controller
         return $controller;
     }
 
-    /**
-     * Render a static page dynamically.
-     */
     public function renderPage(string $page): Response
     {
         Log::debug("Rendering page: " . strtolower($page));
@@ -68,5 +46,15 @@ class PageController extends Controller
         return $controller->index();
     }
 
-    // Other dynamic methods (store, show, edit, update, destroy) can follow a similar pattern.
+    public function storePage(string $page, Request $request)
+    {
+        $controller = $this->getController($page, 'store');
+
+        $storeRequest = \App\Http\Requests\web\StoreContactRequest::createFrom($request);
+        $storeRequest->setContainer(app());
+        $storeRequest->setRedirector(app('redirect'));
+        $storeRequest->validateResolved();
+
+        return app()->call([$controller, 'store'], ['request' => $storeRequest]);
+    }
 }

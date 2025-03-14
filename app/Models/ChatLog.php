@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Eloquent\Model;
-
+//use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 class ChatLog extends Model
 {
     protected $connection = 'mongodb';
@@ -13,10 +13,10 @@ class ChatLog extends Model
 
     // Define mass-assignable fields
     protected $fillable = [
-        'Name',              // User name
-        'message',           // User message
+        'Name',              // user name
+        'message',           // user message
         'response',          // Bot's response
-        'subscription_tier', // User's subscription tier
+        'subscription_tier', // user's subscription tier
         'created_at',        // Timestamp
         'updated_at',        // Timestamp
     ];

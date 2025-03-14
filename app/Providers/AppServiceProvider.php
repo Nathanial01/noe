@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Observers\UserObserver;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Routing\Router; // Import Router
+use Illuminate\Routing\Router;
+use App\Models\User as EloquentUser;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +25,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(Router $router): void
     {
+        // Register the observer on the Eloquent User model.
+        EloquentUser::observe(UserObserver::class);
+
+        // Register the mail namespace so Laravel can find custom email templates.
+        View::addNamespace('mail', resource_path('views/mail'));
+
         // Prefetch assets using Vite with a concurrency limit.
         Vite::prefetch(concurrency: 3);
 

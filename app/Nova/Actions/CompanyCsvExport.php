@@ -24,7 +24,7 @@ class CompanyCsvExport extends Action
 {
     use InteractsWithQueue, Queueable;
 
-    /** 
+    /**
     * All of the defined action fields.
     *
     * @var \Illuminate\Support\Collection
@@ -44,7 +44,7 @@ class CompanyCsvExport extends Action
         $this->actionFields = collect();
     }
 
-        
+
     /**
      * Perform the action on the given models.
      *
@@ -54,16 +54,16 @@ class CompanyCsvExport extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        
+
         $inputs = [
             [
-                'id', 
-                'company', 
-                'user', 
-                'mollie_id', 
-                'invoice_number', 
-                'status', 
-                'credit_amount', 
+                'id',
+                'company',
+                'user',
+                'mollie_id',
+                'invoice_number',
+                'status',
+                'credit_amount',
                 'subtotal',
                 'payment_amount',
                 'product_description',
@@ -122,11 +122,11 @@ class CompanyCsvExport extends Action
         }
 
         fclose($output);
-        
+
         return Action::openInNewTab(route('dump-download', ['file' => $exportFilename]));
     }
 
-    
+
     /**
      * Get the fields available on the action.
      *

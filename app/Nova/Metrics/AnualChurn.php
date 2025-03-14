@@ -19,6 +19,7 @@ class AnualChurn extends Progress
     {
         $oneYearAgo = Carbon::today()->subYear();
 
+        // Count companies with specific statuses that expired in the last year
         $target = Company::where(function ($query) {
             $query->where('status', 'premium')
                 ->orWhere('status', 'standard')
@@ -31,6 +32,7 @@ class AnualChurn extends Progress
             ->where('billing_expiration_date', '>', $oneYearAgo)
             ->count();
 
+        // Count companies with exactly one paid transaction
         return $this->count(
             $request,
             Company::whereHas('transactions', function ($query) {
@@ -48,7 +50,7 @@ class AnualChurn extends Progress
     /**
      * Determine the amount of time the results of the metric should be cached.
      *
-     * @return  \DateTimeInterface|\DateInterval|float|int
+     * @return \DateTimeInterface|\DateInterval|float|int
      */
     public function cacheFor()
     {

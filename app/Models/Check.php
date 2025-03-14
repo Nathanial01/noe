@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 use App\Traits\PeriodTrait;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -164,13 +164,13 @@ class Check extends Model
 
         if ($point != null) {
             if (!$point->advice && $price == 0.00) {
-                return 'n.v.t.';
+                return 'user.v.t.';
             }
             return $point->advice && $price != 0.00 ? "Vrije sector (advies: € " . number_format($price, 2, ',', '.') . ")" : ($price == 0.00 ? 'Vrije sector' : '€ ' . number_format($price, 2, ',', '.'));
         }
 
         if ($this->points === 0) {
-            return 'n.v.t.';
+            return 'user.v.t.';
         }
         return 'Proef berekening';
     }

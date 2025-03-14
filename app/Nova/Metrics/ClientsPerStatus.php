@@ -12,12 +12,19 @@ class ClientsPerStatus extends Partition
     /**
      * Calculate the value of the metric.
      *
+     * This metric counts companies (clients) whose billing expiration date is in the future,
+     * partitioned by their subscription 'status'.
+     *
      * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return mixed
      */
     public function calculate(NovaRequest $request)
     {
-        return $this->count($request, Company::whereDate('billing_expiration_date', '>', Carbon::today()), 'status');
+        return $this->count(
+            $request,
+            Company::whereDate('billing_expiration_date', '>', Carbon::today()),
+            'status'
+        );
     }
 
     /**
@@ -31,10 +38,10 @@ class ClientsPerStatus extends Partition
     }
 
     /**
-    * Get the displayable name of the metric
-    *
-    * @return string
-    */
+     * Get the displayable name of the metric.
+     *
+     * @return string
+     */
     public function name()
     {
         return 'Abonnementen';

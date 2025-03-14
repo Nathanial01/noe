@@ -10,6 +10,7 @@
         "ext-pdo": "*",
         "inertiajs/inertia-laravel": "^2.0",
         "jenssegers/mongodb": "*",
+        "kirschbaum-development/nova-mail": "^4.9",
         "laravel/framework": "^11.31",
         "laravel/nova": "^5.2",
         "laravel/sanctum": "^4.0",
@@ -20,13 +21,13 @@
         "spatie/laravel-medialibrary": "^11.12",
         "spatie/laravel-sitemap": "^7.3",
         "spatie/period": "^2.4",
-        "tightenco/ziggy": "^2.0",
-        "fakerphp/faker": "^1.24",
-        "ext-libxml": "*"
+        "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.15",
+        "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.3",
+        "laravel/nova-devtool": "^1.7",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",

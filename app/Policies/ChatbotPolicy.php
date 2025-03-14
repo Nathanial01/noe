@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Policies;
 
 use App\Models\BotSetting;
@@ -13,7 +12,7 @@ class ChatbotPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -21,7 +20,7 @@ class ChatbotPolicy
      */
     public function view(User $user, BotSetting $chatbot): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -29,7 +28,7 @@ class ChatbotPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -37,7 +36,7 @@ class ChatbotPolicy
      */
     public function update(User $user, BotSetting $chatbot): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -45,7 +44,7 @@ class ChatbotPolicy
      */
     public function delete(User $user, BotSetting $chatbot): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -53,7 +52,7 @@ class ChatbotPolicy
      */
     public function restore(User $user, BotSetting $chatbot): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -61,6 +60,6 @@ class ChatbotPolicy
      */
     public function forceDelete(User $user, BotSetting $chatbot): bool
     {
-        return false;
+        return $user->is_admin;
     }
 }

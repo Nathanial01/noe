@@ -3,7 +3,7 @@
 //namespace App\Http\Controllers\Auth;
 //
 //use App\Http\Controllers\Controller;
-//use App\Models\User;
+//use App\Models\user;
 //use App\Models\Role; // Import the Role model for assigning roles
 //use Illuminate\Auth\Events\Registered;
 //use Illuminate\Http\Request;
@@ -21,7 +21,7 @@
 //    {
 //        return Inertia::render('Auth/Register', [
 //            'genders' => ['Male', 'Female', 'Other'], // Gender options for the form
-//            'user_types' => [User::ADMIN, User::CLIENT], // Only admin and client
+//            'user_types' => [user::ADMIN, user::CLIENT], // Only admin and client
 //        ]);
 //    }
 //
@@ -70,7 +70,7 @@
 //            : null;
 //
 //        // Create the user with the correct attributes
-//        $user = User::create([
+//        $user = user::create([
 //            'first_name'              => $request->first_name,
 //            'last_name'               => $request->last_name,
 //            'date_of_birth'           => $request->date_of_birth,
@@ -104,7 +104,7 @@
 //        Auth::login($user);
 //
 //        // Log debug info
-//        \Log::info('User registered', [
+//        \Log::info('user registered', [
 //            'id' => $user->id,
 //            'is_admin' => $user->is_admin,
 //            'redirect_to' => $user->is_admin ? '/nova' : '/dashboard',

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Storage;
@@ -14,11 +14,8 @@ class Lead extends Model implements HasMedia
 {
     use HasFactory, HasUuids, InteractsWithMedia;
 
-    // Use the MongoDB connection
-    protected $connection = 'mongodb';
 
-    // Specify the MongoDB collection name (defaults to 'leads' if not set)
-    protected string $collection = 'leads';
+
 
     protected $fillable = [
         'email',

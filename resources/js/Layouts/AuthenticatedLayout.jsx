@@ -120,7 +120,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             <div className="relative w-full"></div>
                         </form>
 
-                        {/* User Dropdown */}
+                        {/* user Dropdown */}
                         <div
                             className="relative z-50 "
                             ref={accountDropdownRef}
@@ -213,7 +213,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                                 />
                                             ))}
 
-                                            {/* User Actions */}
+                                            {/* user Actions */}
                                             {userActions.map((action) => (
                                                 <NavItem
                                                     key={action.href}

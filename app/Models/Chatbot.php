@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Models;
-
-
-use MongoDB\Laravel\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 class Chatbot extends Model
 {
-    protected $connection = 'mongodb';
+
 }

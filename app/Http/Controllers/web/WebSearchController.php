@@ -162,7 +162,7 @@ class WebSearchController extends Controller
             'Https',
             'Http',
             'SSH',
-            'User',
+            'user',
             'Admin'
         ];
 

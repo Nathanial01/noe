@@ -31,7 +31,7 @@ class AgendaEvent extends Resource
      * @var array
      */
     public static $search = [
-        '_id', 'title', 'description'
+        'id', 'title', 'description'
     ];
 
     /**
@@ -74,8 +74,8 @@ class AgendaEvent extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            // Use _id for the primary key field.
-            ID::make('ID', '_id')->sortable(),
+            // For MySQL, use the default primary key "id".
+            ID::make('ID')->sortable(),
 
             Text::make('Title')
                 ->sortable()
@@ -143,7 +143,7 @@ class AgendaEvent extends Resource
      * @param  NovaRequest  $request
      * @return array
      */
-    public function actions(NovaRequest $request)
+    public function actions(NovaRequest $request): array
     {
         return [];
     }
