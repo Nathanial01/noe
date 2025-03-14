@@ -1,0 +1,49 @@
+# GitLab CI/CD Pipeline for Laravel Nova Deployment with NPM
+
+stages:
+  - build
+  - deploy
+
+variables:
+  APP_ENV: "production"
+  DB_CONNECTION: "mysql"
+  NODE_ENV: "production"
+
+cache:
+  paths:
+    - vendor/
+    - node_modules/
+    - public/build/
+
+before_script:
+  - apt-get update -y && apt-get install -y unzip curl git
+  - php -v && composer -V && node -v && npm -v
+
+deploy:
+  stage: deploy
+  image: node:latest  # Use Node.js image for NPM commands
+  script:
+    - echo "Creating auth.json file for Nova authentication..."
+    - |
+      echo '{
+           "http-basic": {
+               "nova.laravel.com": {
+                   "username": "'"$NOVA_EMAIL"'",
+                   "password": "'"$NOVA_KEY"'"
+               }
+           }
+         }' > auth.json
+    - echo "Installing Composer dependencies..."
+    - composer install --no-dev --prefer-dist --no-interaction
+    - php artisan migrate --force
+    - php artisan config:clear
+    - php artisan route:clear
+    - php artisan cache:clear
+    - php artisan view:clear
+    - echo "Installing NPM dependencies..."
+    - npm install
+    - echo "Building assets with Vite..."
+    - npm run build
+    - echo "Deployment successful!"
+  only:
+    - main
