@@ -26,9 +26,16 @@ install-dependencies:
   dependencies:
     - setup-env
   before_script:
+    # Copy .env to production file
     - cp .env .env.production
-    # Securely add Nova authentication credentials to auth.json
+    # Set up SSH (if needed)
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+    # Create auth.json for Nova
     - echo '{ "http-basic": { "nova.laravel.com": { "username": "'"$NOVA_EMAIL"'", "password": "'"$NOVA_KEY"'" } } }' > auth.json
+    # Configure Composer with Nova credentials
     - composer config http-basic.nova.laravel.com $NOVA_EMAIL $NOVA_KEY
   script:
     - composer install --no-interaction --prefer-dist --no-progress
