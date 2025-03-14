@@ -27,10 +27,10 @@ install-dependencies:
     - setup-env
   before_script:
     - cp .env .env.production
-    # Add Nova authentication credentials
+    # Securely add Nova authentication credentials to auth.json
     - echo '{ "http-basic": { "nova.laravel.com": { "username": "'"$NOVA_EMAIL"'", "password": "'"$NOVA_KEY"'" } } }' > auth.json
-  script:
     - composer config http-basic.nova.laravel.com $NOVA_EMAIL $NOVA_KEY
+  script:
     - composer install --no-interaction --prefer-dist --no-progress
     - npm install
     - npm run build
@@ -45,6 +45,7 @@ install-dependencies:
 
 deploy:
   stage: deploy
+  image: composer:latest
   script:
     - php artisan migrate --force
     - php artisan cache:clear
