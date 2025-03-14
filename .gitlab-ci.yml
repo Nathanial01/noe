@@ -3,6 +3,12 @@ stages:
   - build
   - deploy
 
+variables:
+  APP_ENV: "production"
+  DB_CONNECTION: "mysql"
+  NODE_ENV: "production"
+
+# Setup stage: Create .env file with DB and other credentials
 setup-env:
   stage: setup
   image: alpine:latest
@@ -26,17 +32,15 @@ install-dependencies:
   dependencies:
     - setup-env
   before_script:
-    # Copy .env to production file
     - cp .env .env.production
-    # Set up SSH (if needed)
+    # Add Nova authentication credentials
+    - echo '{ "http-basic": { "nova.laravel.com": { "username": "'"$NOVA_EMAIL"'", "password": "'"$NOVA_KEY"'" } } }' > auth.json
+    - composer config http-basic.nova.laravel.com $NOVA_EMAIL $NOVA_KEY
+    # Setup SSH keys if needed (remove if not using SSH cloning)
     - mkdir -p ~/.ssh
     - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-    # Create auth.json for Nova
-    - echo '{ "http-basic": { "nova.laravel.com": { "username": "'"$NOVA_EMAIL"'", "password": "'"$NOVA_KEY"'" } } }' > auth.json
-    # Configure Composer with Nova credentials
-    - composer config http-basic.nova.laravel.com $NOVA_EMAIL $NOVA_KEY
   script:
     - composer install --no-interaction --prefer-dist --no-progress
     - npm install

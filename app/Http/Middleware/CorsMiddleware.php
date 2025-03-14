@@ -16,7 +16,6 @@ class CorsMiddleware
         $allowedOrigins = [
             'http://localhost',
             'http://localhost:5173', // Example: your local React/Vite app
-            'https://noecapital-24a1e658d2d0.herokuapp.com', // Production domain
         ];
 
         $origin = $request->headers->get('origin');

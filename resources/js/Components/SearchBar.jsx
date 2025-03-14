@@ -5,7 +5,6 @@ import 'ldrs/ping'; // Ensure this library is installed and provides <l-ping>
 const allowedUrls = [
     "http://localhost",
     "http://localhost:5173",
-    "https://noecapital-24a1e658d2d0.herokuapp.com"
 ];
 
 const API_BASE_URL = allowedUrls.includes(window.location.origin)
