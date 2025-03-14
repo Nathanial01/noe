@@ -1,49 +1,55 @@
-# GitLab CI/CD Pipeline for Laravel Nova Deployment with NPM
-
 stages:
+  - setup
   - build
   - deploy
 
-variables:
-  APP_ENV: "production"
-  DB_CONNECTION: "mysql"
-  NODE_ENV: "production"
+setup-env:
+  stage: setup
+  image: alpine:latest
+  script:
+    - echo "Setting up environment variables"
+    - echo "DB_CONNECTION=$DB_CONNECTION" >> .env
+    - echo "DB_HOST=$DB_HOST" >> .env
+    - echo "DB_PORT=$DB_PORT" >> .env
+    - echo "DB_DATABASE=$DB_DATABASE" >> .env
+    - echo "DB_USERNAME=$DB_USERNAME" >> .env
+    - echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+    - echo "SSL_MODE=$SSL_MODE" >> .env
+    - echo "OPENAI_API_KEY=$OPENAI_API_KEY" >> .env
+  artifacts:
+    paths:
+      - .env
 
-cache:
-  paths:
-    - vendor/
-    - node_modules/
-    - public/build/
-
-before_script:
-  - apt-get update -y && apt-get install -y unzip curl git
-  - php -v && composer -V && node -v && npm -v
+install-dependencies:
+  stage: build
+  image: composer:latest
+  dependencies:
+    - setup-env
+  before_script:
+    - cp .env .env.production
+    # Add Nova authentication credentials
+    - echo '{ "http-basic": { "nova.laravel.com": { "username": "'"$NOVA_EMAIL"'", "password": "'"$NOVA_KEY"'" } } }' > auth.json
+  script:
+    - composer config http-basic.nova.laravel.com $NOVA_EMAIL $NOVA_KEY
+    - composer install --no-interaction --prefer-dist --no-progress
+    - npm install
+    - npm run build
+  cache:
+    paths:
+      - vendor/
+      - node_modules/
+  artifacts:
+    paths:
+      - vendor/
+      - public/build/
 
 deploy:
   stage: deploy
-  image: node:latest  # Use Node.js image for NPM commands
   script:
-    - echo "Creating auth.json file for Nova authentication..."
-    - |
-      echo '{
-           "http-basic": {
-               "nova.laravel.com": {
-                   "username": "'"$NOVA_EMAIL"'",
-                   "password": "'"$NOVA_KEY"'"
-               }
-           }
-         }' > auth.json
-    - echo "Installing Composer dependencies..."
-    - composer install --no-dev --prefer-dist --no-interaction
     - php artisan migrate --force
-    - php artisan config:clear
-    - php artisan route:clear
     - php artisan cache:clear
-    - php artisan view:clear
-    - echo "Installing NPM dependencies..."
-    - npm install
-    - echo "Building assets with Vite..."
-    - npm run build
-    - echo "Deployment successful!"
+    - php artisan config:clear
+    - php artisan config:cache
+    - php artisan route:cache
   only:
     - main
